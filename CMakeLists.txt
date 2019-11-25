@@ -52,6 +52,19 @@ install(FILES ${GLFW_BIN_DIR}/glfw3.dll
 		COMPONENT MainLibrary
 )
 
+#GLEW
+set(GLEW_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/glew-2.1.0 CACHE PATH "Path to GLEW")
+set(GLEW_INC_DIR ${GLEW_DIR}/include)
+set(GLEW_LIB_DIR ${GLEW_DIR}/lib/Release/x64)
+set(GLEW_BIN_DIR ${GLEW_DIR}/bin/Release/x64)
+include_directories(${GLEW_INC_DIR})
+link_directories(${GLEW_LIB_DIR})
+
+install(FILES ${GLEW_BIN_DIR}/glew32.dll
+		DESTINATION bin
+		COMPONENT MainLibrary
+)
+
 #cmake dirs
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(src)

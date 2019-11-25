@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Visi_export.h"
+
 namespace Visi
 {
 	
@@ -8,15 +10,17 @@ namespace Visi
  *
  */
 	
-class Context
-{
+class VISI_EXPORT Context
+{        
+    private:
+        class ContextInternal;
+        ContextInternal* contextInternal;
+
 	public:
-		/**
-         * constructor.
-         * .
-         */
-		Context(); 
-		
+        Context(); 
+        ~Context(); 
+        void MakeCurrent();
+        
 };
 	
 }
