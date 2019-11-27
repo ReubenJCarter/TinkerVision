@@ -7,11 +7,13 @@
 namespace Visi
 {
 	
+class Image;
+
 /*
  *Image
  *
  */
-	
+
 class VISI_EXPORT ImageGPU
 {		
 	private:
@@ -28,8 +30,9 @@ class VISI_EXPORT ImageGPU
         unsigned int GetWidth();
 		unsigned int GetHeight();
         ImageType GetType();
-        void Copy(void* data, int w=-1, int h=-1, int offX=0, int offY=0);
         unsigned int GetTexture();
+        void Copy(void* data, int w, int h, int offX=0, int offY=0);
+        void Copy(Image* image); 
 };
 	
 }

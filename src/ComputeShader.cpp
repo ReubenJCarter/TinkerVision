@@ -13,11 +13,6 @@ ComputeShader::ComputeShader()
 {
 	
 }
- 
-ComputeShader::ComputeShader(std::string shaderSrc)
-{
-	Create(shaderSrc);
-}
 
 ComputeShader::~ComputeShader()
 {
@@ -25,7 +20,7 @@ ComputeShader::~ComputeShader()
 	glDeleteShader(computeShader);
 }
 
-void ComputeShader::Create(std::string shaderSrc)
+void ComputeShader::Compile(std::string shaderSrc)
 {
 	//create, compile shader src
 	const char* src[1];
@@ -114,22 +109,75 @@ void ComputeShader::SetMat2(std::string name, float value[4]) {glProgramUniformM
 void ComputeShader::SetMat3(std::string name, float value[9]) {glProgramUniformMatrix3fv(computeProgram, glGetUniformLocation(computeProgram, name.c_str()), 1, false, value);}
 void ComputeShader::SetMat4(std::string name, float value[16]){glProgramUniformMatrix4fv(computeProgram, glGetUniformLocation(computeProgram, name.c_str()), 1, false, value);}
  
-void ComputeShader::SetImage(std::string name, ImageGPU* shaderImage)
+void ComputeShader::SetImage(std::string name, ImageGPU* image)
 {
 	int imageUnit;
 	glGetUniformiv(computeProgram, glGetUniformLocation(computeProgram, name.c_str()), &imageUnit);
-	if(shaderImage->GetType() == ImageType::RGBA32F)
-		glBindImageTexture(imageUnit, shaderImage->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
-	else if(shaderImage->GetType() == ImageType::RGBA8)
-		glBindImageTexture(imageUnit, shaderImage->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+	
+	ImageType type = image->GetType(); 
+
+	if(type == GRAYSCALE8)
+    {
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R8);
+    }
+    else if(type == GRAYSCALE16)
+    {
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R16);
+    }
+    else if(type == GRAYSCALE32F)
+    {
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    }
+    else if(type == RGB8)
+    {
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB8);
+    }
+    else if(type == RGB32F)
+    {
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB32F);
+    }
+	else if(type == RGBA8)
+    {
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+    }
+    else if(type == RGBA32F)
+    {
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+    }
 }
 
-void ComputeShader::SetImage(std::string name, ImageGPU* shaderImage, int imageUnit)
+void ComputeShader::SetImage(std::string name, ImageGPU* image, int imageUnit)
 {
-	if(shaderImage->GetType() == ImageType::RGBA32F)
-		glBindImageTexture(imageUnit, shaderImage->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);	
-	else if(shaderImage->GetType() == ImageType::RGBA8)
-		glBindImageTexture(imageUnit, shaderImage->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+	ImageType type = image->GetType(); 
+
+	if(type == GRAYSCALE8)
+    {
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R8);
+    }
+    else if(type == GRAYSCALE16)
+    {
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R16);
+    }
+    else if(type == GRAYSCALE32F)
+    {
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    }
+    else if(type == RGB8)
+    {
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB8);
+    }
+    else if(type == RGB32F)
+    {
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB32F);
+    }
+	else if(type == RGBA8)
+    {
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+    }
+    else if(type == RGBA32F)
+    {
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+    }
 }
 
 }

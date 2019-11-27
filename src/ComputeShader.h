@@ -15,9 +15,8 @@ class ComputeShader
 		
 	public:
 		ComputeShader();
-		ComputeShader(std::string shaderSrc);
 		~ComputeShader();
-		void Create(std::string shaderSrc);
+		void Compile(std::string shaderSrc);
 		void Dispatch(unsigned int workGroupsX, unsigned int workGroupsY, unsigned int workGroupsZ);
 		void Block();
 		void SetFloat(std::string name, float value);
@@ -35,7 +34,7 @@ class ComputeShader
 		void SetMat2(std::string name, float value[4]);
 		void SetMat3(std::string name, float value[9]);
 		void SetMat4(std::string name, float value[16]);
-		void SetImage(std::string name, ImageGPU* shaderImage);
-		void SetImage(std::string name, ImageGPU* shaderImage, int imageUnit);
+		void SetImage(std::string name, ImageGPU* image);
+		void SetImage(std::string name, ImageGPU* image, int imageUnit);
 };
 }

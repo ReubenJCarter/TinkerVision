@@ -5,6 +5,7 @@ set(LIBRARYSRCFILES
 	ImageGPU.cpp
 	ReadImageFile.cpp
 	WriteImageFile.cpp
+	Sobel.cpp
 )
 
 add_library(${CMAKE_PROJECT_NAME} SHARED ${LIBRARYSRCFILES})

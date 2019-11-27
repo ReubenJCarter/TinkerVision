@@ -1,11 +1,17 @@
 #include "Context.h"
 #include "Image.h"
+#include "ImageGPU.h"
 #include "WriteImageFile.h"
+#include "Sobel.h"
+
+#include <iostream>
 
 int main()
 {
 	Visi::Context context; 
 	context.MakeCurrent(); 
+	
+	std::cout << "inited\n"; 
 
 	Visi::Image image0; 
 	image0.Allocate(256, 256, Visi::ImageType::RGBA8);
@@ -19,6 +25,16 @@ int main()
 			image0.GetData()[(i * 256 + j) * 4 + 3] = 255;
 		}
 	}
+
+	Visi::ImageGPU imageGPU0;
+	imageGPU0.Copy(&image0); 
+
+	Visi::Sobel sobel; 
+	sobel.
+
+	image0.Copy(&imageGPU0); 
+
+	std::cout << "writing image file\n"; 
 	Visi::WriteImageFile("image0Test.png", &image0);
 
 	std::string shaderSrc0=

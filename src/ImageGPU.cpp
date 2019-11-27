@@ -1,5 +1,7 @@
 #include "ImageGPU.h"
 
+#include "Image.h"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -20,10 +22,15 @@ ImageGPU::~ImageGPU()
 
 void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
 {
-    if(width != 0 || height !=0)
+    if(width == w && height == h && type == t)
     {
-        Deallocate();
+        return; 
     }
+
+    Deallocate();
+
+    if(w == 0 || h == 0)
+        return; 
 
     width = w;
 	height = h;
@@ -84,22 +91,57 @@ ImageType ImageGPU::GetType()
     return type; 
 }
 
+unsigned int ImageGPU::GetTexture()
+{
+    return texture; 
+}
+
 void ImageGPU::Copy(void* data, int w, int h, int offX, int offY)
 {
     int wfinal = w;
 	int hfinal = h;
-	if(w < 0 || h < 0)
-	{
-		wfinal = width;
-		hfinal = height;
-	}
 
-    glTextureSubImage2D(texture, 0, offX, offY, wfinal, hfinal, GL_RGBA, GL_FLOAT, data);
+    if(type == GRAYSCALE8)
+    {
+        glTextureSubImage2D(texture, 0, offX, offY, wfinal, hfinal, GL_RED, GL_UNSIGNED_BYTE, data);
+    }
+    else if(type == GRAYSCALE16)
+    {
+        glTextureSubImage2D(texture, 0, offX, offY, wfinal, hfinal, GL_RED, GL_UNSIGNED_SHORT, data);
+    }
+    else if(type == GRAYSCALE32F)
+    {
+        glTextureSubImage2D(texture, 0, offX, offY, wfinal, hfinal, GL_RED, GL_FLOAT, data);
+    }
+    else if(type == RGB8)
+    {
+		glTextureSubImage2D(texture, 0, offX, offY, wfinal, hfinal, GL_BGR, GL_UNSIGNED_BYTE, data);
+    }
+    else if(type == RGB32F)
+    {
+		glTextureSubImage2D(texture, 0, offX, offY, wfinal, hfinal, GL_BGR, GL_FLOAT, data);
+    }
+	else if(type == RGBA8)
+    {
+		glTextureSubImage2D(texture, 0, offX, offY, wfinal, hfinal, GL_BGRA, GL_UNSIGNED_BYTE, data);
+    }
+    else if(type == RGBA32F)
+    {
+		glTextureSubImage2D(texture, 0, offX, offY, wfinal, hfinal, GL_BGRA, GL_FLOAT, data);
+    }
 }
 
-unsigned int ImageGPU::GetTexture()
+void ImageGPU::Copy(Image* image)
 {
-    return texture; 
+    unsigned int w = image->GetWidth(); 
+    unsigned int h = image->GetHeight(); 
+    ImageType t = image->GetType(); 
+
+    if(w != width || h != height || t != type)
+    {
+        Allocate(w, h, t); 
+    }
+    Copy(image->GetData(), w, h, 0, 0); 
 }
 	
 }

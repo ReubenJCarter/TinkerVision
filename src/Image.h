@@ -7,6 +7,8 @@
 namespace Visi
 {
 	
+class ImageGPU; 
+
 /*
  *Image
  *
@@ -29,6 +31,7 @@ class VISI_EXPORT Image
 		unsigned int GetHeight();
         ImageType GetType();
         unsigned char* GetData();
+        void Copy(ImageGPU* image); 
 };
 	
 }
