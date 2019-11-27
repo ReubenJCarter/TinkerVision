@@ -21,6 +21,7 @@ class BrightnessContrast::Internal
     public:
         Internal(); 
         void Run(ImageGPU* input, ImageGPU* output);
+        void Run(Image* input, Image* output);
         void SetBrightness(float b);
         void SetContrast(float c);
 };
@@ -30,8 +31,8 @@ ComputeShader BrightnessContrast::Internal::computeShader ;
 std::string BrightnessContrast::Internal::shaderSrc = R"(
 #version 430
 
-layout(rgba32f, binding=0) writeonly uniform image2D outputImage;
-layout(rgba32f, binding=1) uniform image2D inputImage;
+layout(rgba8, binding=0) writeonly uniform image2D outputImage;
+layout(rgba8, binding=1) uniform image2D inputImage;
 
 uniform float contrast; 
 uniform float brightness;
@@ -91,6 +92,24 @@ void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.Block();
 }
 
+void BrightnessContrast::Internal::Run(Image* input, Image* output)
+{
+    if(!output->IsSameDimensions(input)) 
+    {
+        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
+    }
+    
+    unsigned char* inputData = input->GetData(); 
+    unsigned char* outputData = output->GetData(); 
+    for(int i = 0; i < input->GetHeight(); i++)
+    {
+        for(int j = 0; j < input->GetWidth(); j++)
+        {
+            int inx = (i * input->GetWidth() + i);
+        } 
+    } 
+}
+
 void BrightnessContrast::Internal::SetBrightness(float b)
 {
     brightness = b;
@@ -127,6 +146,11 @@ void BrightnessContrast::SetContrast(float c)
 }
 
 void BrightnessContrast::Run(ImageGPU* input, ImageGPU* output)
+{
+    internal->Run(input, output); 
+}
+
+void BrightnessContrast::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
 }

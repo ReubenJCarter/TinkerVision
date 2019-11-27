@@ -125,7 +125,7 @@ void ComputeShader::SetImage(std::string name, ImageGPU* image, Access access)
 	{
 		a = GL_READ_ONLY;
 	}
-	/*
+	
 	if(type == GRAYSCALE8)
     {
         glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_R8);
@@ -153,8 +153,7 @@ void ComputeShader::SetImage(std::string name, ImageGPU* image, Access access)
     else if(type == RGBA32F)
     {
 		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA32F);
-    }*/
-	glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA32F);
+    }
 }
 
 void ComputeShader::SetImage(std::string name, ImageGPU* image, int imageUnit, Access access)
@@ -171,7 +170,7 @@ void ComputeShader::SetImage(std::string name, ImageGPU* image, int imageUnit, A
 		a = GL_READ_ONLY;
 	}
 
-	/*
+	
 	if(type == GRAYSCALE8)
     {
         glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_R8);
@@ -199,8 +198,7 @@ void ComputeShader::SetImage(std::string name, ImageGPU* image, int imageUnit, A
     else if(type == RGBA32F)
     {
 		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA32F);
-    }*/
-	glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA32F);
+    }
 }
 /*
 void ComputeShader::SetTexture(std::string name, Texture& texture, int textureUnit)

@@ -37,7 +37,7 @@ void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
 	type = t;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	/*if(type == GRAYSCALE8)
+	if(type == GRAYSCALE8)
     {
         glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, width, height);
     }
@@ -64,8 +64,7 @@ void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
     else if(type == RGBA32F)
     {
 		glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, width, height);
-    }*/
-    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, width, height);
+    }
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 

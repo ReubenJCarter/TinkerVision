@@ -26,6 +26,7 @@ class VISI_EXPORT BrightnessContrast
         void SetBrightness(float b); 
         void SetContrast(float c); 
 		void Run(ImageGPU* input, ImageGPU* output); 
+        void Run(Image* input, Image* output); 
 };
 	
 }
