@@ -100,6 +100,11 @@ unsigned char* Image::GetData()
 
 void Image::Copy(ImageGPU* image)
 {
+    if(!IsSameDimensions(image))
+    {
+        Allocate(image->GetWidth(), image->GetHeight(), image->GetType()); 
+    }
+
     unsigned int texture = image->GetTexture();
 
     if(type == GRAYSCALE8)
@@ -130,6 +135,16 @@ void Image::Copy(ImageGPU* image)
     {
         glGetTextureImage(texture, 0, GL_BGRA, GL_FLOAT, width * height * 16, data);
     }
+}
+
+bool Image::IsSameDimensions(ImageGPU* image)
+{
+    return image->GetWidth() == width && image->GetHeight() == height && image->GetType() == type; 
+}
+
+bool Image::IsSameDimensions(Image* image)
+{
+    return image->GetWidth() == width && image->GetHeight() == height && image->GetType() == type; 
 }
 	
 }

@@ -33,6 +33,8 @@ class VISI_EXPORT ImageGPU
         unsigned int GetTexture();
         void Copy(void* data, int w, int h, int offX=0, int offY=0);
         void Copy(Image* image); 
+        bool IsSameDimensions(ImageGPU* image); 
+        bool IsSameDimensions(Image* image); 
 };
 	
 }

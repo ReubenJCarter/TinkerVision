@@ -2,7 +2,8 @@
 #include "Image.h"
 #include "ImageGPU.h"
 #include "WriteImageFile.h"
-#include "Sobel.h"
+#include "ReadImageFile.h"
+#include "BrightnessContrast.h"
 
 #include <iostream>
 
@@ -28,25 +29,23 @@ int main()
 
 	Visi::ImageGPU imageGPU0;
 	imageGPU0.Copy(&image0); 
-
-	Visi::Sobel sobel; 
-	sobel.
-
 	image0.Copy(&imageGPU0); 
-
 	std::cout << "writing image file\n"; 
 	Visi::WriteImageFile("image0Test.png", &image0);
 
-	std::string shaderSrc0=
-	R"(
-	#version 430
-	layout(rgba32f, binding=0) uniform image2D outputImage;
-	layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
-	void main()
-	{
-		
-	}
-	)";
+
+	Visi::Image image1; 
+	Visi::ReadImageFile("aruco.png", &image1);
+	Visi::ImageGPU imageGPU1;
+	Visi::ImageGPU imageGPU1_1;
+	imageGPU1.Copy(&image1);
+	Visi::BrightnessContrast bc; 
+	bc.SetBrightness(0.0f); 
+	bc.SetContrast(0.1f); 
+	bc.Run(&imageGPU1, &imageGPU1_1);
+	Visi::Image image1_1; 
+	image1_1.Copy(&imageGPU1_1);
+	Visi::WriteImageFile("image1Test.png", &image1_1);
 
 	return 1; 
 }

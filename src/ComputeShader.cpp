@@ -109,75 +109,114 @@ void ComputeShader::SetMat2(std::string name, float value[4]) {glProgramUniformM
 void ComputeShader::SetMat3(std::string name, float value[9]) {glProgramUniformMatrix3fv(computeProgram, glGetUniformLocation(computeProgram, name.c_str()), 1, false, value);}
 void ComputeShader::SetMat4(std::string name, float value[16]){glProgramUniformMatrix4fv(computeProgram, glGetUniformLocation(computeProgram, name.c_str()), 1, false, value);}
  
-void ComputeShader::SetImage(std::string name, ImageGPU* image)
+void ComputeShader::SetImage(std::string name, ImageGPU* image, Access access)
 {
 	int imageUnit;
 	glGetUniformiv(computeProgram, glGetUniformLocation(computeProgram, name.c_str()), &imageUnit);
 	
 	ImageType type = image->GetType(); 
 
+	int a = GL_READ_WRITE; 
+	if(access == Access::WRITE_ONLY)
+	{
+		a = GL_WRITE_ONLY;
+	}
+	else if(access == Access::READ_ONLY)
+	{
+		a = GL_READ_ONLY;
+	}
+	/*
 	if(type == GRAYSCALE8)
     {
-        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R8);
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_R8);
     }
     else if(type == GRAYSCALE16)
     {
-        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R16);
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_R16);
     }
     else if(type == GRAYSCALE32F)
     {
-        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_R32F);
     }
     else if(type == RGB8)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB8);
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGB8);
     }
     else if(type == RGB32F)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB32F);
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGB32F);
     }
 	else if(type == RGBA8)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA8);
     }
     else if(type == RGBA32F)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
-    }
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA32F);
+    }*/
+	glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA32F);
 }
 
-void ComputeShader::SetImage(std::string name, ImageGPU* image, int imageUnit)
+void ComputeShader::SetImage(std::string name, ImageGPU* image, int imageUnit, Access access)
 {
 	ImageType type = image->GetType(); 
 
+	int a = GL_READ_WRITE; 
+	if(access == Access::WRITE_ONLY)
+	{
+		a = GL_WRITE_ONLY;
+	}
+	else if(access == Access::READ_ONLY)
+	{
+		a = GL_READ_ONLY;
+	}
+
+	/*
 	if(type == GRAYSCALE8)
     {
-        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R8);
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_R8);
     }
     else if(type == GRAYSCALE16)
     {
-        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R16);
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_R16);
     }
     else if(type == GRAYSCALE32F)
     {
-        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+        glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_R32F);
     }
     else if(type == RGB8)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB8);
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGB8);
     }
     else if(type == RGB32F)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB32F);
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGB32F);
     }
 	else if(type == RGBA8)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA8);
     }
     else if(type == RGBA32F)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
-    }
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA32F);
+    }*/
+	glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA32F);
 }
-
+/*
+void ComputeShader::SetTexture(std::string name, Texture& texture, int textureUnit)
+{
+	glProgramUniform1i(computeProgram, glGetUniformLocation(computeProgram, name.c_str()), textureUnit);
+	Texture::TYPE type = texture.GetType();
+	if(type == Texture::TEXTURE_2D)
+	{
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_2D, texture.GetTexture());
+	}
+	else if(type == Texture::CUBE_MAP)
+	{
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texture.GetTexture());
+	}
+}
+*/
 }

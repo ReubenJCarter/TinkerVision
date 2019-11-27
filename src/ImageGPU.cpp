@@ -37,7 +37,7 @@ void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
 	type = t;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	if(type == GRAYSCALE8)
+	/*if(type == GRAYSCALE8)
     {
         glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, width, height);
     }
@@ -64,16 +64,20 @@ void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
     else if(type == RGBA32F)
     {
 		glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, width, height);
-    }
+    }*/
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, width, height);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void ImageGPU::Deallocate()
 {
-    glDeleteTextures(1, &texture);
-    width = 0;
-    height = 0; 
-    type = ImageType::RGBA8;
+    if(width != 0 && height != 0)
+    {
+        glDeleteTextures(1, &texture);
+        width = 0;
+        height = 0; 
+        type = ImageType::RGBA8;
+    }
 }
 
 unsigned int ImageGPU::GetWidth()
@@ -137,11 +141,21 @@ void ImageGPU::Copy(Image* image)
     unsigned int h = image->GetHeight(); 
     ImageType t = image->GetType(); 
 
-    if(w != width || h != height || t != type)
+    if(!IsSameDimensions(image))
     {
         Allocate(w, h, t); 
     }
     Copy(image->GetData(), w, h, 0, 0); 
+}
+
+bool ImageGPU::IsSameDimensions(ImageGPU* image)
+{
+    return image->GetWidth() == width && image->GetHeight() == height && image->GetType() == type; 
+}
+
+bool ImageGPU::IsSameDimensions(Image* image)
+{
+    return image->GetWidth() == width && image->GetHeight() == height && image->GetType() == type; 
 }
 	
 }

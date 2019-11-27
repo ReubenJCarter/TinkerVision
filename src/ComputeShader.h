@@ -9,6 +9,9 @@ namespace Visi
 	
 class ComputeShader
 {
+	public: 
+		enum Access{WRITE_ONLY, READ_ONLY, READ_WRITE}; 
+
 	private:
 		unsigned int computeShader;
 		unsigned int computeProgram;
@@ -34,7 +37,7 @@ class ComputeShader
 		void SetMat2(std::string name, float value[4]);
 		void SetMat3(std::string name, float value[9]);
 		void SetMat4(std::string name, float value[16]);
-		void SetImage(std::string name, ImageGPU* image);
-		void SetImage(std::string name, ImageGPU* image, int imageUnit);
+		void SetImage(std::string name, ImageGPU* image, Access access=READ_WRITE);
+		void SetImage(std::string name, ImageGPU* image, int imageUnit, Access access=READ_WRITE);
 };
 }

@@ -32,6 +32,8 @@ class VISI_EXPORT Image
         ImageType GetType();
         unsigned char* GetData();
         void Copy(ImageGPU* image); 
+        bool IsSameDimensions(ImageGPU* image); 
+        bool IsSameDimensions(Image* image); 
 };
 	
 }

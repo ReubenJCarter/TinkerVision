@@ -11,14 +11,16 @@ namespace Visi
 class Sobel::Internal
 {
     private:
-        static bool shaderCompiled; 
         static ComputeShader computeShader; 
         static std::string shaderSrc; 
+        static bool shaderCompiled; 
 
     public:
         Internal(); 
         void Run(ImageGPU* input, ImageGPU* output);
 };
+
+ComputeShader Sobel::Internal::computeShader ;
 
 std::string Sobel::Internal::shaderSrc = R"(
 layout(binding=0) uniform image2D inputImage;

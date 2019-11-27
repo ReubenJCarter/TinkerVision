@@ -1,4 +1,5 @@
 set(LIBRARYSRCFILES
+	BrightnessContrast.cpp
 	ComputeShader.cpp
 	Context.cpp
 	Image.cpp
