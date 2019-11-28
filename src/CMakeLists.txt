@@ -4,6 +4,7 @@ set(LIBRARYSRCFILES
 	Context.cpp
 	Image.cpp
 	ImageGPU.cpp
+	ProcessHelper.cpp
 	ReadImageFile.cpp
 	WriteImageFile.cpp
 	Sobel.cpp

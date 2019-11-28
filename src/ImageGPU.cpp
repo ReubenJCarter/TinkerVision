@@ -51,11 +51,11 @@ void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
     }
     else if(type == RGB8)
     {
-		glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, width, height);
+		glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
     }
     else if(type == RGB32F)
     {
-		glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB32F, width, height);
+		glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, width, height);
     }
 	else if(type == RGBA8)
     {

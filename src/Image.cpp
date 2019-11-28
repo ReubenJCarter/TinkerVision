@@ -100,6 +100,10 @@ unsigned char* Image::GetData()
 
 void Image::Copy(ImageGPU* image)
 {
+    if(!(image->GetWidth() > 0 && image->GetHeight() > 0))
+    {
+        return; 
+    }
     if(!IsSameDimensions(image))
     {
         Allocate(image->GetWidth(), image->GetHeight(), image->GetType()); 

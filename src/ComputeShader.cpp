@@ -140,11 +140,11 @@ void ComputeShader::SetImage(std::string name, ImageGPU* image, Access access)
     }
     else if(type == RGB8)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGB8);
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA8);
     }
     else if(type == RGB32F)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGB32F);
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA32F);
     }
 	else if(type == RGBA8)
     {
@@ -185,11 +185,11 @@ void ComputeShader::SetImage(std::string name, ImageGPU* image, int imageUnit, A
     }
     else if(type == RGB8)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGB8);
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA8);
     }
     else if(type == RGB32F)
     {
-		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGB32F);
+		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA32F);
     }
 	else if(type == RGBA8)
     {

@@ -1,9 +1,11 @@
 #include "BrightnessContrast.h"
 
 #include "ComputeShader.h"
+#include "ProcessHelper.h"
 
 #include <string>
 #include <iostream>
+#include <map>
 
 namespace Visi
 {
@@ -11,28 +13,28 @@ namespace Visi
 class BrightnessContrast::Internal
 {
     private:
-        static ComputeShader computeShader; 
+        static std::map<ImageType, ComputeShader> computeShaders; 
         static std::string shaderSrc; 
         static bool shaderCompiled; 
 
         float brightness;
         float contrast; 
-
+       
     public:
         Internal(); 
+        void CompileComputeShaders(std::string sSrc); 
         void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
         void SetBrightness(float b);
         void SetContrast(float c);
 };
 
-ComputeShader BrightnessContrast::Internal::computeShader ;
+std::map<ImageType, ComputeShader> BrightnessContrast::Internal::computeShaders;
 
 std::string BrightnessContrast::Internal::shaderSrc = R"(
-#version 430
 
-layout(rgba8, binding=0) writeonly uniform image2D outputImage;
-layout(rgba8, binding=1) uniform image2D inputImage;
+layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 uniform float contrast; 
 uniform float brightness;
@@ -42,7 +44,6 @@ void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
     vec4 d = imageLoad(inputImage, id) * contrast + vec4(brightness, brightness, brightness, 0.0f); 
-    //vec4 d = vec4(1, 1, 0, 1);
     imageStore(outputImage, id, d); 
 }
 
@@ -56,11 +57,12 @@ BrightnessContrast::Internal::Internal()
     contrast = 1; 
 }
 
+
 void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
-        computeShader.Compile(shaderSrc);
+        CompileImageComputeShaders(computeShaders, shaderSrc); 
         shaderCompiled = true; 
     }
 
@@ -69,26 +71,18 @@ void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
         output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     }
 
+    ImageType inputType = input->GetType();
+
+    ComputeShader& computeShader = computeShaders[inputType];
+
     computeShader.SetFloat("contrast", contrast); 
     computeShader.SetFloat("brightness", brightness); 
 
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
 
-    int targetWidth = input->GetWidth(); 
-    int targetHeight = input->GetHeight(); 
-
-    int groupSize = 16;
-
-    int groupW = targetWidth / groupSize; 
-    int groupH = targetHeight / groupSize; 
-
-    if(targetWidth % groupSize != 0)
-        groupW++;
-    if(targetHeight % groupSize != 0)
-        groupH++;   
-
-    computeShader.Dispatch(groupW, groupH, 1); 
+    glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(input->GetWidth(), input->GetHeight()), glm::i32vec2(16, 16)); 
+    computeShader.Dispatch(groupCount.x, groupCount.y, 1); 
     computeShader.Block();
 }
 
