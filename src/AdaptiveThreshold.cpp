@@ -1,4 +1,4 @@
-#include "BrightnessContrast.h"
+#include "AdaptiveThreshold.h"
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
@@ -10,55 +10,75 @@
 namespace Visi
 {
 
-class BrightnessContrast::Internal
+class AdaptiveThreshold::Internal
 {
     private:
         static std::map<ImageType, ComputeShader> computeShaders; 
         static std::string shaderSrc; 
         static bool shaderCompiled; 
 
-        float brightness;
-        float contrast; 
+        float threshold; 
+        int size; 
        
     public:
         Internal(); 
         void CompileComputeShaders(std::string sSrc); 
         void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
-        void SetBrightness(float b);
-        void SetContrast(float c);
+        void SetThreshold(float t);
+        void SetSize(int s);
 };
 
-std::map<ImageType, ComputeShader> BrightnessContrast::Internal::computeShaders;
+std::map<ImageType, ComputeShader> AdaptiveThreshold::Internal::computeShaders;
 
-std::string BrightnessContrast::Internal::shaderSrc = R"(
+//http://homepages.inf.ed.ac.uk/rbf/HIPR2/adpthrsh.htm
+std::string AdaptiveThreshold::Internal::shaderSrc = R"(
 
 layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
-uniform float contrast; 
-uniform float brightness;
+uniform float threshold; 
+uniform int size; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-    vec4 d = imageLoad(inputImage, id) * contrast + vec4(brightness, brightness, brightness, 0.0f); 
+    vec4 d = vec4(0, 0, 0, 1);
+
+    vec4 orig = imageLoad(inputImage, id);
+
+    for(int j = 0; j < size; j++ )
+    for(int i = 0; i < size; i++ )
+    {
+
+        vec4 px = imageLoad(inputImage, id + ivec2(i - size/2 , j - size/2));
+        d.rgb += px.rgb; 
+    }
+
+    d.rgb /= size*size; 
+
+    d.rgb -= orig.rgb;
+
+    d.r = d.r < threshold ? 1.0f : 0.0f; 
+    d.g = d.g < threshold ? 1.0f : 0.0f; 
+    d.b = d.b < threshold ? 1.0f : 0.0f; 
+
     imageStore(outputImage, id, d); 
 }
 
 )";
 
-bool BrightnessContrast::Internal::shaderCompiled = false; 
+bool AdaptiveThreshold::Internal::shaderCompiled = false; 
 
-BrightnessContrast::Internal::Internal()
+AdaptiveThreshold::Internal::Internal()
 {
-    brightness = 0;
-    contrast = 1; 
+    threshold = 0.5;
+    size = 7; 
 }
 
 
-void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
+void AdaptiveThreshold::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
@@ -75,8 +95,8 @@ void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     ComputeShader& computeShader = computeShaders[inputType];
 
-    computeShader.SetFloat("contrast", contrast); 
-    computeShader.SetFloat("brightness", brightness); 
+    computeShader.SetFloat("threshold", threshold);
+    computeShader.SetInt("size", size);  
 
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
@@ -86,7 +106,7 @@ void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.Block();
 }
 
-void BrightnessContrast::Internal::Run(Image* input, Image* output)
+void AdaptiveThreshold::Internal::Run(Image* input, Image* output)
 {
     if(!output->IsSameDimensions(input)) 
     {
@@ -100,51 +120,50 @@ void BrightnessContrast::Internal::Run(Image* input, Image* output)
         for(int j = 0; j < input->GetWidth(); j++)
         {
             int inx = (i * input->GetWidth() + j);
+
+
         } 
     } 
 }
 
-void BrightnessContrast::Internal::SetBrightness(float b)
+void AdaptiveThreshold::Internal::SetThreshold(float t)
 {
-    brightness = b;
+    threshold = t;
 }
 
-void BrightnessContrast::Internal::SetContrast(float c)
+void AdaptiveThreshold::Internal::SetSize(int s)
 {
-    contrast = c; 
+    size = s; 
 }
 
 
 
-
-
-
-BrightnessContrast::BrightnessContrast()
+AdaptiveThreshold::AdaptiveThreshold()
 {
     internal = new Internal(); 
 }
 
-BrightnessContrast::~BrightnessContrast()
+AdaptiveThreshold::~AdaptiveThreshold()
 {
     delete internal; 
 }
 
-void BrightnessContrast::SetBrightness(float b)
+void AdaptiveThreshold::SetThreshold(float t)
 {
-    internal->SetBrightness(b);
+    internal->SetThreshold(t);
 }
 
-void BrightnessContrast::SetContrast(float c)
+void AdaptiveThreshold::SetSize(int s)
 {
-    internal->SetContrast(c);
+    internal->SetSize(s);
 }
 
-void BrightnessContrast::Run(ImageGPU* input, ImageGPU* output)
+void AdaptiveThreshold::Run(ImageGPU* input, ImageGPU* output)
 {
     internal->Run(input, output); 
 }
 
-void BrightnessContrast::Run(Image* input, Image* output)
+void AdaptiveThreshold::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
 }

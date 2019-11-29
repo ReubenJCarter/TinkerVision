@@ -8,11 +8,6 @@
 
 namespace Visi
 {
-
-/*
- *Sobel
- *
- */
 	
 class VISI_EXPORT Threshold
 {
@@ -23,8 +18,9 @@ class VISI_EXPORT Threshold
 	public:
 		Threshold(); 
         ~Threshold(); 
-        void SetLevel(float t); 
+        void SetThreshold(float t);
 		void Run(ImageGPU* input, ImageGPU* output); 
+        void Run(Image* input, Image* output); 
 };
 	
 }

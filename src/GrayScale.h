@@ -9,17 +9,15 @@
 namespace Visi
 {
 
-class VISI_EXPORT BrightnessContrast
+class VISI_EXPORT GrayScale
 {
     private: 
         class Internal;
         Internal* internal;
 
 	public:
-		BrightnessContrast(); 
-        ~BrightnessContrast(); 
-        void SetBrightness(float b); 
-        void SetContrast(float c); 
+		GrayScale(); 
+        ~GrayScale(); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
 };

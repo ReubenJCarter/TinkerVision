@@ -1,11 +1,18 @@
 set(LIBRARYSRCFILES
+	AdaptiveThreshold.cpp
 	BrightnessContrast.cpp
 	ComputeShader.cpp
 	Context.cpp
+	GaussianBlur.cpp
+	GrayScale.cpp
+	HSVToRGB.cpp
 	Image.cpp
 	ImageGPU.cpp
+	MedianFilter.cpp
 	ProcessHelper.cpp
 	ReadImageFile.cpp
+	RGBToHSV.cpp
+	Threshold.cpp
 	WriteImageFile.cpp
 	Sobel.cpp
 )

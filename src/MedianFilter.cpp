@@ -1,4 +1,4 @@
-#include "BrightnessContrast.h"
+#include "MedianFilter.h"
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
@@ -10,55 +10,62 @@
 namespace Visi
 {
 
-class BrightnessContrast::Internal
+class MedianFilter::Internal
 {
     private:
         static std::map<ImageType, ComputeShader> computeShaders; 
         static std::string shaderSrc; 
         static bool shaderCompiled; 
 
-        float brightness;
-        float contrast; 
+        int size; 
        
     public:
         Internal(); 
         void CompileComputeShaders(std::string sSrc); 
         void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
-        void SetBrightness(float b);
-        void SetContrast(float c);
+        void SetThreshold(float t);
+        void SetSize(int s);
 };
 
-std::map<ImageType, ComputeShader> BrightnessContrast::Internal::computeShaders;
+std::map<ImageType, ComputeShader> MedianFilter::Internal::computeShaders;
 
-std::string BrightnessContrast::Internal::shaderSrc = R"(
+std::string MedianFilter::Internal::shaderSrc = R"(
 
 layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
-uniform float contrast; 
-uniform float brightness;
+uniform int size; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-    vec4 d = imageLoad(inputImage, id) * contrast + vec4(brightness, brightness, brightness, 0.0f); 
+    vec4 d = vec4(0, 0, 0, 1);
+
+    vec4 orig = imageLoad(inputImage, id);
+
+    for(int j = 0; j < size; j++ )
+    for(int i = 0; i < size; i++ )
+    {
+        vec4 px = imageLoad(inputImage, id + ivec2(i - size/2 , j - size/2));
+        
+    }
+    
     imageStore(outputImage, id, d); 
 }
 
 )";
 
-bool BrightnessContrast::Internal::shaderCompiled = false; 
+bool MedianFilter::Internal::shaderCompiled = false; 
 
-BrightnessContrast::Internal::Internal()
+MedianFilter::Internal::Internal()
 {
-    brightness = 0;
-    contrast = 1; 
+    size = 7; 
 }
 
 
-void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
+void MedianFilter::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
@@ -75,8 +82,7 @@ void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     ComputeShader& computeShader = computeShaders[inputType];
 
-    computeShader.SetFloat("contrast", contrast); 
-    computeShader.SetFloat("brightness", brightness); 
+    computeShader.SetInt("size", size);  
 
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
@@ -86,7 +92,7 @@ void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.Block();
 }
 
-void BrightnessContrast::Internal::Run(Image* input, Image* output)
+void MedianFilter::Internal::Run(Image* input, Image* output)
 {
     if(!output->IsSameDimensions(input)) 
     {
@@ -100,51 +106,40 @@ void BrightnessContrast::Internal::Run(Image* input, Image* output)
         for(int j = 0; j < input->GetWidth(); j++)
         {
             int inx = (i * input->GetWidth() + j);
+
+
         } 
     } 
 }
 
-void BrightnessContrast::Internal::SetBrightness(float b)
+void MedianFilter::Internal::SetSize(int s)
 {
-    brightness = b;
-}
-
-void BrightnessContrast::Internal::SetContrast(float c)
-{
-    contrast = c; 
+    size = s; 
 }
 
 
 
-
-
-
-BrightnessContrast::BrightnessContrast()
+MedianFilter::MedianFilter()
 {
     internal = new Internal(); 
 }
 
-BrightnessContrast::~BrightnessContrast()
+MedianFilter::~MedianFilter()
 {
     delete internal; 
 }
 
-void BrightnessContrast::SetBrightness(float b)
+void MedianFilter::SetSize(int s)
 {
-    internal->SetBrightness(b);
+    internal->SetSize(s);
 }
 
-void BrightnessContrast::SetContrast(float c)
-{
-    internal->SetContrast(c);
-}
-
-void BrightnessContrast::Run(ImageGPU* input, ImageGPU* output)
+void MedianFilter::Run(ImageGPU* input, ImageGPU* output)
 {
     internal->Run(input, output); 
 }
 
-void BrightnessContrast::Run(Image* input, Image* output)
+void MedianFilter::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
 }

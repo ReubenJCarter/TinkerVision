@@ -1,4 +1,4 @@
-#include "BrightnessContrast.h"
+#include "HSVToRGB.h"
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
@@ -10,55 +10,63 @@
 namespace Visi
 {
 
-class BrightnessContrast::Internal
+class HSVToRGB::Internal
 {
     private:
         static std::map<ImageType, ComputeShader> computeShaders; 
         static std::string shaderSrc; 
         static bool shaderCompiled; 
-
-        float brightness;
-        float contrast; 
        
     public:
         Internal(); 
         void CompileComputeShaders(std::string sSrc); 
         void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
-        void SetBrightness(float b);
-        void SetContrast(float c);
 };
 
-std::map<ImageType, ComputeShader> BrightnessContrast::Internal::computeShaders;
+std::map<ImageType, ComputeShader> HSVToRGB::Internal::computeShaders;
 
-std::string BrightnessContrast::Internal::shaderSrc = R"(
+//http://www.chilliant.com/rgb2hsv.html
+std::string HSVToRGB::Internal::shaderSrc = R"(
 
 layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
-uniform float contrast; 
-uniform float brightness;
+float Epsilon = 1e-10;
+
+vec3 HUEtoRGB(in float H)
+{
+    float R = abs(H * 6 - 3) - 1;
+    float G = 2 - abs(H * 6 - 2);
+    float B = 2 - abs(H * 6 - 4);
+    return clamp(vec3(R,G,B), 0.0f, 1.0f);
+}
+
+vec3 HSVToRGB(vec3 HSV)
+{
+    vec3 RGB = HUEtoRGB(HSV.x);
+    return ((RGB - 1) * HSV.y + 1) * HSV.z;
+}
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-    vec4 d = imageLoad(inputImage, id) * contrast + vec4(brightness, brightness, brightness, 0.0f); 
-    imageStore(outputImage, id, d); 
+    vec4 d = imageLoad(inputImage, id);
+    vec3 rgb = HSVToRGB(d.xyz); 
+    imageStore(outputImage, id, vec4(rgb, d.a)); 
 }
 
 )";
 
-bool BrightnessContrast::Internal::shaderCompiled = false; 
+bool HSVToRGB::Internal::shaderCompiled = false; 
 
-BrightnessContrast::Internal::Internal()
+HSVToRGB::Internal::Internal()
 {
-    brightness = 0;
-    contrast = 1; 
 }
 
 
-void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
+void HSVToRGB::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
@@ -75,9 +83,6 @@ void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     ComputeShader& computeShader = computeShaders[inputType];
 
-    computeShader.SetFloat("contrast", contrast); 
-    computeShader.SetFloat("brightness", brightness); 
-
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
 
@@ -86,7 +91,7 @@ void BrightnessContrast::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.Block();
 }
 
-void BrightnessContrast::Internal::Run(Image* input, Image* output)
+void HSVToRGB::Internal::Run(Image* input, Image* output)
 {
     if(!output->IsSameDimensions(input)) 
     {
@@ -104,47 +109,25 @@ void BrightnessContrast::Internal::Run(Image* input, Image* output)
     } 
 }
 
-void BrightnessContrast::Internal::SetBrightness(float b)
-{
-    brightness = b;
-}
-
-void BrightnessContrast::Internal::SetContrast(float c)
-{
-    contrast = c; 
-}
 
 
 
-
-
-
-BrightnessContrast::BrightnessContrast()
+HSVToRGB::HSVToRGB()
 {
     internal = new Internal(); 
 }
 
-BrightnessContrast::~BrightnessContrast()
-{
+HSVToRGB::~HSVToRGB()
+{ 
     delete internal; 
 }
 
-void BrightnessContrast::SetBrightness(float b)
-{
-    internal->SetBrightness(b);
-}
-
-void BrightnessContrast::SetContrast(float c)
-{
-    internal->SetContrast(c);
-}
-
-void BrightnessContrast::Run(ImageGPU* input, ImageGPU* output)
+void HSVToRGB::Run(ImageGPU* input, ImageGPU* output)
 {
     internal->Run(input, output); 
 }
 
-void BrightnessContrast::Run(Image* input, Image* output)
+void HSVToRGB::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
 }

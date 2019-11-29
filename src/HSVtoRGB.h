@@ -8,18 +8,16 @@
 
 namespace Visi
 {
-
-class VISI_EXPORT BrightnessContrast
+	
+class VISI_EXPORT HSVToRGB
 {
     private: 
         class Internal;
         Internal* internal;
 
 	public:
-		BrightnessContrast(); 
-        ~BrightnessContrast(); 
-        void SetBrightness(float b); 
-        void SetContrast(float c); 
+		HSVToRGB(); 
+        ~HSVToRGB(); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
 };

@@ -4,6 +4,13 @@
 #include "WriteImageFile.h"
 #include "ReadImageFile.h"
 #include "BrightnessContrast.h"
+#include "Threshold.h"
+#include "GrayScale.h"
+#include "RGBToHSV.h"
+#include "HSVToRGB.h"
+#include "AdaptiveThreshold.h"
+#include "MedianFilter.h"
+#include "GaussianBlur.h"
 
 #include <iostream>
 
@@ -14,38 +21,111 @@ int main()
 	
 	std::cout << "inited\n"; 
 
-	Visi::Image image0; 
-	image0.Allocate(256, 256, Visi::ImageType::RGBA8);
+
+	Visi::Image image1; 
+	Visi::Image image2; 
+	Visi::Image image3; 
+
+	Visi::ImageGPU imageGPU1;
+	Visi::ImageGPU imageGPU2;
+	Visi::ImageGPU imageGPU3;
+
+	//
+	//Pixel access
+	//
+	
+
+	image1.Allocate(256, 256, Visi::ImageType::RGBA8);
 	for(int i = 0; i < 256; i++)
 	{
 		for(int j = 0; j < 256; j++)
 		{
-			image0.GetData()[(i * 256 + j) * 4 + 0]  = i; 
-			image0.GetData()[(i * 256 + j) * 4 + 1]  = j; 
-			image0.GetData()[(i * 256 + j) * 4 + 2]  = (i + j) / 2; 
-			image0.GetData()[(i * 256 + j) * 4 + 3] = 255;
+			image1.GetData()[(i * 256 + j) * 4 + 0]  = i; 
+			image1.GetData()[(i * 256 + j) * 4 + 1]  = j; 
+			image1.GetData()[(i * 256 + j) * 4 + 2]  = (i + j) / 2; 
+			image1.GetData()[(i * 256 + j) * 4 + 3] = 255;
 		}
 	}
 
-	Visi::ImageGPU imageGPU0;
-	imageGPU0.Copy(&image0); 
-	image0.Copy(&imageGPU0); 
+	Visi::ImageGPU imageGPU;
+	imageGPU.Copy(&image1); 
+	image1.Copy(&imageGPU); 
 	std::cout << "writing image file\n"; 
-	Visi::WriteImageFile("image0Test.png", &image0);
+	Visi::WriteImageFile("image0Test.png", &image1);
 
 
-	Visi::Image image1; 
+	//
+	//Processes
+	//
+
 	Visi::ReadImageFile("aruco.png", &image1);
-	Visi::ImageGPU imageGPU1;
-	Visi::ImageGPU imageGPU1_1;
 	imageGPU1.Copy(&image1);
-	Visi::BrightnessContrast bc; 
-	bc.SetBrightness(0.0f); 
-	bc.SetContrast(0.1f); 
-	bc.Run(&imageGPU1, &imageGPU1_1);
-	Visi::Image image1_1; 
-	image1_1.Copy(&imageGPU1_1);
-	Visi::WriteImageFile("image1Test.png", &image1_1);
+
+	//Birghtness Contrast
+	Visi::BrightnessContrast brightnessContrast; 
+	brightnessContrast.SetBrightness(0.0f); 
+	brightnessContrast.SetContrast(0.1f); 
+	brightnessContrast.Run(&imageGPU1, &imageGPU2);
+	
+	
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image1Test.png", &image2);
+
+	//Threshold
+	Visi::Threshold threshold; 
+	threshold.SetThreshold(0.5); 
+	threshold.Run(&imageGPU1, &imageGPU2); 
+
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image2Test.png", &image2);
+
+	//GrayScale
+	Visi::GrayScale grayScale; 
+	grayScale.Run(&imageGPU1, &imageGPU2); 
+
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image3Test.png", &image2);
+
+	//RGBToHSV vv HSVToRGB
+	Visi::RGBToHSV rgbtohsv; 
+	rgbtohsv.Run(&imageGPU1, &imageGPU2); 
+	Visi::HSVToRGB hsvtorgb; 
+	hsvtorgb.Run(&imageGPU2, &imageGPU3); 
+
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image4_0Test.png", &image2);
+	image3.Copy(&imageGPU3);
+	Visi::WriteImageFile("image4_1Test.png", &image3);
+
+	//Adaptive Threshold
+	grayScale.Run(&imageGPU1, &imageGPU2); 
+	
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image5_1Test.png", &image2);
+	
+	Visi::AdaptiveThreshold adaptiveThreshold; 
+	adaptiveThreshold.SetThreshold(0.02); 
+	adaptiveThreshold.SetSize(7); 
+	adaptiveThreshold.Run(&imageGPU2, &imageGPU3); 
+
+	image3.Copy(&imageGPU3);
+	Visi::WriteImageFile("image5_2Test.png", &image3);
+
+	//Median Filter
+	Visi::MedianFilter medianFilter; 
+	medianFilter.SetSize(5); 
+	medianFilter.Run(&imageGPU1, &imageGPU2); 
+
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image6Test.png", &image2);
+
+	//Gaussian Blur
+	Visi::GaussianBlur gaussianBlur; 
+	gaussianBlur.SetSigma(3); 
+	gaussianBlur.Run(&imageGPU1, &imageGPU2); 
+
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image7Test.png", &image2);
 
 	return 1; 
 }

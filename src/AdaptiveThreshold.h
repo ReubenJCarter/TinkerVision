@@ -8,18 +8,18 @@
 
 namespace Visi
 {
-
-class VISI_EXPORT BrightnessContrast
+	
+class VISI_EXPORT AdaptiveThreshold
 {
     private: 
         class Internal;
         Internal* internal;
 
 	public:
-		BrightnessContrast(); 
-        ~BrightnessContrast(); 
-        void SetBrightness(float b); 
-        void SetContrast(float c); 
+		AdaptiveThreshold(); 
+        ~AdaptiveThreshold(); 
+        void SetThreshold(float t);
+        void SetSize(int s); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
 };
