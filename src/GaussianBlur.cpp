@@ -25,25 +25,26 @@ class GaussianBlur::Internal
         bool guassFuncGPUDirty; 
         ImageGPU guassFuncGPU; 
 
+        ImageGPU workingImage; 
+
         float sigma; 
         int size; 
        
         inline float guass(float x, float sigma)
         {
             const static float PI = 3.14159265359;
-            return 1.0f / (sqrt(2.0f * PI) * sigma) * exp( -(x*x / (2 * sigma * sigma)) ); 
+            return 1.0f / (sqrt(2.0f * PI) * sigma) * exp( -((x*x) / (2 * sigma * sigma)) ); 
         }
 
     public:
         Internal(); 
-        void CompileComputeShaders(std::string sSrc); 
         void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
-        void SetThreshold(float t);
         void SetSigma(float s);
 };
 
-std::map<ImageType, ComputeShader> GaussianBlur::Internal::computeShaders;
+std::map<ImageType, ComputeShader> GaussianBlur::Internal::computeShadersHorizontal;
+std::map<ImageType, ComputeShader> GaussianBlur::Internal::computeShadersVertical;
 
 std::string GaussianBlur::Internal::shaderHorizontalSrc = R"(
 
@@ -59,13 +60,20 @@ layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-    vec4 d = vec4(0, 0, 0, 1);
-
-    vec4 orig = imageLoad(inputImage, id);
+    vec4 d = vec4(0, 0, 0, 0);
 
     for(int i = 0; i < size; i++ )
     {
-        vec4 px = imageLoad(inputImage, id + ivec2(i - size/2 , 0));
+        vec4 g = imageLoad(guassFunc, ivec2(i, 0)); 
+        vec4 px = imageLoad(inputImage, id + ivec2(i, 0));
+        d += px * vec4(g.r, g.r, g.r, g.r);
+    }
+
+    for(int i = 1; i < size; i++)
+    {
+        vec4 g = imageLoad(guassFunc, ivec2(i, 0)); 
+        vec4 px = imageLoad(inputImage, id - ivec2(i, 0));
+        d += px * vec4(g.r, g.r, g.r, g.r);
     }
     
     imageStore(outputImage, id, d); 
@@ -89,11 +97,18 @@ void main()
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
     vec4 d = vec4(0, 0, 0, 1);
 
-    vec4 orig = imageLoad(inputImage, id);
-
     for(int i = 0; i < size; i++ )
     {
-        vec4 px = imageLoad(inputImage, id + ivec2(0 , i - size/2));
+        vec4 g = imageLoad(guassFunc, ivec2(i, 0)); 
+        vec4 px = imageLoad(inputImage, id + ivec2(0, i));
+        d += px * vec4(g.r, g.r, g.r, g.r);
+    }
+
+    for(int i = 1; i < size; i++)
+    {
+        vec4 g = imageLoad(guassFunc, ivec2(i, 0)); 
+        vec4 px = imageLoad(inputImage, id - ivec2(0, i));
+        d += px * vec4(g.r, g.r, g.r, g.r);
     }
     
     imageStore(outputImage, id, d); 
@@ -105,7 +120,6 @@ bool GaussianBlur::Internal::shaderCompiled = false;
 
 GaussianBlur::Internal::Internal()
 {
-    guassFuncGPUDirty = true; 
     SetSigma(1.6);  
 }
 
@@ -114,7 +128,8 @@ void GaussianBlur::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
-        CompileImageComputeShaders(computeShaders, shaderSrc); 
+        CompileImageComputeShaders(computeShadersHorizontal, shaderHorizontalSrc); 
+        CompileImageComputeShaders(computeShadersVertical, shaderVerticalSrc); 
         shaderCompiled = true; 
     }
 
@@ -129,21 +144,36 @@ void GaussianBlur::Internal::Run(ImageGPU* input, ImageGPU* output)
         guassFuncGPU.Copy(&guassFunc[0], size, 1); 
         guassFuncGPUDirty = false; 
     }
+
+    workingImage.Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     
     ImageType inputType = input->GetType();
 
-    ComputeShader& computeShader = computeShaders[inputType];
-
-    computeShader.SetFloat("sigma", sigma);  
-    computeShader.SetInt("size", size); 
-    computeShader.SetImage("guassFunc", &guassFuncGPU, ComputeShader::READ_ONLY);
-
-    computeShader.SetImage("inputImage", input);
-    computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
-
     glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(input->GetWidth(), input->GetHeight()), glm::i32vec2(16, 16)); 
-    computeShader.Dispatch(groupCount.x, groupCount.y, 1); 
-    computeShader.Block();
+
+    ComputeShader& computeShaderHorizontal = computeShadersHorizontal[inputType];
+
+    computeShaderHorizontal.SetFloat("sigma", sigma);  
+    computeShaderHorizontal.SetInt("size", size); 
+    computeShaderHorizontal.SetImage("guassFunc", &guassFuncGPU, ComputeShader::READ_ONLY);
+
+    computeShaderHorizontal.SetImage("inputImage", input);
+    computeShaderHorizontal.SetImage("outputImage", &workingImage, ComputeShader::WRITE_ONLY);
+
+    computeShaderHorizontal.Dispatch(groupCount.x, groupCount.y, 1); 
+    computeShaderHorizontal.Block();
+
+    ComputeShader& computeShaderVertical = computeShadersVertical[inputType];
+
+    computeShaderVertical.SetFloat("sigma", sigma);
+    computeShaderVertical.SetInt("size", size);
+    computeShaderVertical.SetImage("guassFunc", &guassFuncGPU, ComputeShader::READ_ONLY);
+
+    computeShaderVertical.SetImage("inputImage", &workingImage);
+    computeShaderVertical.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
+
+    computeShaderVertical.Dispatch(groupCount.x, groupCount.y, 1); 
+    computeShaderVertical.Block();
 }
 
 void GaussianBlur::Internal::Run(Image* input, Image* output)
@@ -161,17 +191,43 @@ void GaussianBlur::Internal::Run(Image* input, Image* output)
 void GaussianBlur::Internal::SetSigma(float s)
 {
     sigma = s; 
-    size = ceil(3 * sigma); 
+    size = ceil(3.0 * sigma); 
 
+    //Compute Guass 1d
     guassFunc.clear(); 
     guassFunc.reserve(size);
      
-    for(int i = 0;  i < size; i++)
+    for(int i = 0; i < size; i++)
     {
         float x = i;
         float v = guass(x, sigma); 
         guassFunc.push_back(v); 
     }
+
+    //compute the 2d kernel by multipling the 1d together
+    std::vector<float> gaussFuncFull;
+    gaussFuncFull.reserve(size * size);
+    for(int i = -size+1; i < size; i++)
+    {
+        for(int j = -size+1; j < size; j++)
+        {
+            gaussFuncFull.push_back(guassFunc[abs(i)] * guassFunc[abs(j)]); 
+        }
+    }
+
+    //Find the sum of the 2d kernel  
+    float sum = 0;
+    for(int i = 0; i < gaussFuncFull.size(); i++)
+    {
+        sum += gaussFuncFull[i];
+    }  
+
+    //normalise the 1d kernel
+    for(int i = 0; i < size; i++)
+    {
+        guassFunc[i] = guassFunc[i] / sum; 
+    }
+    
     guassFuncGPUDirty = true; 
 }
 

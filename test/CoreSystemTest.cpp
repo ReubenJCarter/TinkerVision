@@ -11,6 +11,7 @@
 #include "AdaptiveThreshold.h"
 #include "MedianFilter.h"
 #include "GaussianBlur.h"
+#include "Sobel.h"
 
 #include <iostream>
 
@@ -63,8 +64,8 @@ int main()
 
 	//Birghtness Contrast
 	Visi::BrightnessContrast brightnessContrast; 
-	brightnessContrast.SetBrightness(0.0f); 
-	brightnessContrast.SetContrast(0.1f); 
+	brightnessContrast.SetBrightness(-1); 
+	brightnessContrast.SetContrast(3); 
 	brightnessContrast.Run(&imageGPU1, &imageGPU2);
 	
 	
@@ -113,19 +114,32 @@ int main()
 
 	//Median Filter
 	Visi::MedianFilter medianFilter; 
+	medianFilter.SetSize(3); 
+	medianFilter.Run(&imageGPU1, &imageGPU2); 
+
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image6_1Test.png", &image2);
+
 	medianFilter.SetSize(5); 
 	medianFilter.Run(&imageGPU1, &imageGPU2); 
 
 	image2.Copy(&imageGPU2);
-	Visi::WriteImageFile("image6Test.png", &image2);
+	Visi::WriteImageFile("image6_2Test.png", &image2);
 
 	//Gaussian Blur
 	Visi::GaussianBlur gaussianBlur; 
-	gaussianBlur.SetSigma(3); 
+	gaussianBlur.SetSigma(10); 
 	gaussianBlur.Run(&imageGPU1, &imageGPU2); 
 
 	image2.Copy(&imageGPU2);
 	Visi::WriteImageFile("image7Test.png", &image2);
+
+	//Sobel
+	Visi::Sobel sobel; 
+	sobel.Run(&imageGPU1, &imageGPU2); 
+
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image8Test.png", &image2);
 
 	return 1; 
 }

@@ -5,6 +5,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <iostream>
+
 namespace Visi 
 {
 	
@@ -30,7 +32,10 @@ void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
     Deallocate();
 
     if(w == 0 || h == 0)
+    {
+        std::cerr << "Visi:ImageGPU:Allocate:w=0||h=0\n"; 
         return; 
+    }
 
     width = w;
 	height = h;

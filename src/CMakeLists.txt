@@ -11,10 +11,11 @@ set(LIBRARYSRCFILES
 	MedianFilter.cpp
 	ProcessHelper.cpp
 	ReadImageFile.cpp
+	Renderer.cpp
 	RGBToHSV.cpp
+	Sobel.cpp
 	Threshold.cpp
 	WriteImageFile.cpp
-	Sobel.cpp
 )
 
 add_library(${CMAKE_PROJECT_NAME} SHARED ${LIBRARYSRCFILES})

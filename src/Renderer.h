@@ -8,16 +8,20 @@
 
 namespace Visi
 {
-	
-class VISI_EXPORT Sobel
+
+class VISI_EXPORT Renderer
 {
     private: 
         class Internal;
         Internal* internal;
 
 	public:
-		Sobel(); 
-        ~Sobel(); 
+		Renderer(); 
+        ~Renderer(); 
+        void Clear();
+        void AddCircle(); 
+        void AddSquare(); 
+        void AddLine(); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
 };

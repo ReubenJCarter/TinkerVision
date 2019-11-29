@@ -111,11 +111,18 @@ void ComputeShader::SetMat4(std::string name, float value[16]){glProgramUniformM
  
 void ComputeShader::SetImage(std::string name, ImageGPU* image, Access access)
 {
-	int imageUnit;
-	glGetUniformiv(computeProgram, glGetUniformLocation(computeProgram, name.c_str()), &imageUnit);
-	
 	ImageType type = image->GetType(); 
 
+	int imageUnit;
+	GLint loc = glGetUniformLocation(computeProgram, name.c_str());
+	if(loc == -1)
+	{
+		std::cerr << "Visi:ComputeShader:SetImage:uniform location " << name << " could not be found\n"; 
+		return; 
+	}
+	
+	glGetUniformiv(computeProgram, loc, &imageUnit);
+	
 	int a = GL_READ_WRITE; 
 	if(access == Access::WRITE_ONLY)
 	{
