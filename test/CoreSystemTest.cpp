@@ -12,6 +12,7 @@
 #include "MedianFilter.h"
 #include "GaussianBlur.h"
 #include "Sobel.h"
+#include "Renderer.h"
 
 #include <iostream>
 
@@ -140,6 +141,14 @@ int main()
 
 	image2.Copy(&imageGPU2);
 	Visi::WriteImageFile("image8Test.png", &image2);
+
+	//Renderer
+	Visi::Renderer renderer; 
+	renderer.AddCircle(glm::vec2(100, 100), 20);
+	renderer.Run(&imageGPU1, &imageGPU2); 
+
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image9Test.png", &image2);
 
 	return 1; 
 }

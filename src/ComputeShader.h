@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ImageGPU.h"
+#include "ShaderStorageBuffer.h"
 
 #include <string>
 
@@ -39,5 +40,6 @@ class ComputeShader
 		void SetMat4(std::string name, float value[16]);
 		void SetImage(std::string name, ImageGPU* image, Access access=READ_WRITE);
 		void SetImage(std::string name, ImageGPU* image, int imageUnit, Access access=READ_WRITE);
+		void SetShaderStorageBuffer(std::string name, ShaderStorageBuffer* shaderStorageBuffer); 
 };
 }

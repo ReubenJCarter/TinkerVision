@@ -6,6 +6,8 @@
 #include "Image.h"
 #include "ImageGPU.h"
 
+#include <glm/glm.hpp>
+
 namespace Visi
 {
 
@@ -24,6 +26,7 @@ class VISI_EXPORT Renderer
         void AddLine(); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
+        void AddCircle(glm::vec2 centre, float radius, glm::vec4 color=glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), bool filled=false, float borderWidth=1); 
 };
 	
 }

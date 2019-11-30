@@ -13,6 +13,7 @@ set(LIBRARYSRCFILES
 	ReadImageFile.cpp
 	Renderer.cpp
 	RGBToHSV.cpp
+	ShaderStorageBuffer.cpp
 	Sobel.cpp
 	Threshold.cpp
 	WriteImageFile.cpp

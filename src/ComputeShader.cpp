@@ -207,6 +207,13 @@ void ComputeShader::SetImage(std::string name, ImageGPU* image, int imageUnit, A
 		glBindImageTexture(imageUnit, image->GetTexture(), 0, GL_FALSE, 0, a, GL_RGBA32F);
     }
 }
+
+void ComputeShader::SetShaderStorageBuffer(std::string name, ShaderStorageBuffer* shaderStorageBuffer)
+{
+	GLuint blockIndex = glGetProgramResourceIndex(computeProgram, GL_SHADER_STORAGE_BLOCK, name.c_str());
+	glShaderStorageBlockBinding(computeProgram, blockIndex, shaderStorageBuffer->GetBindingPoint());
+}
+
 /*
 void ComputeShader::SetTexture(std::string name, Texture& texture, int textureUnit)
 {
