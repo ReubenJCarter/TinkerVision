@@ -13,6 +13,8 @@
 #include "GaussianBlur.h"
 #include "Sobel.h"
 #include "Renderer.h"
+#include "FindContours.h"
+#include "Invert.h"
 
 #include <iostream>
 
@@ -21,7 +23,7 @@ int main()
 	Visi::Context context; 
 	context.MakeCurrent(); 
 	
-	std::cout << "inited\n"; 
+	std::cout << "Running Test\n"; 
 
 
 	Visi::Image image1; 
@@ -52,7 +54,6 @@ int main()
 	Visi::ImageGPU imageGPU;
 	imageGPU.Copy(&image1); 
 	image1.Copy(&imageGPU); 
-	std::cout << "writing image file\n"; 
 	Visi::WriteImageFile("image0Test.png", &image1);
 
 
@@ -146,9 +147,26 @@ int main()
 	Visi::Renderer renderer; 
 	renderer.AddCircle(glm::vec2(100, 100), 20);
 	renderer.Run(&imageGPU1, &imageGPU2); 
-
+	renderer.AddCircle(glm::ivec2(100, 100), 10, glm::vec4(1, 0, 0, 1), false, 1); 
+	
 	image2.Copy(&imageGPU2);
 	Visi::WriteImageFile("image9Test.png", &image2);
+
+	//Find Contours
+	Visi::FindContours findContours; 
+	grayScale.Run(&imageGPU1, &imageGPU2); 
+	adaptiveThreshold.Run(&imageGPU2, &imageGPU3); 
+	Visi::Invert invert;
+	invert.Run(&imageGPU3, &imageGPU2); 
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image10_1Test.png", &image2);
+	std::vector<Visi::FindContours::Contour> contours; 
+	findContours.Run(&image2, &image3, &contours); 
+	Visi::WriteImageFile("image10_2Test.png", &image3);
+	
+	std::vector<Visi::FindContours::Contour> contoursFiltered; 
+	Visi::FindContours::ContoursFilter(&contours, &contoursFiltered);
+	Visi::FindContours::ContoursToFile("image10_3Test.contours", &contoursFiltered); 
 
 	return 1; 
 }

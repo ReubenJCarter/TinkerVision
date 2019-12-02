@@ -68,7 +68,7 @@ struct Circle
 
 layout (std430) buffer circlesBlock
 {
-	Member circles[];
+	Circle circles[];
 };
 uniform int circlesCount;
 
@@ -76,15 +76,30 @@ layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-    vec4 d = imageLoad(inputImage, id); 
+    vec4 finalColor = imageLoad(inputImage, id); 
     
     for(int i = 0; i < circlesCount; i++)
     {
         Circle c = circles[i];
-        float dist = 
+        vec2 v = id - c.centre;
+        float dist = length(v); 
+        if(c.filled == 0)
+        {
+            if(abs(dist - c.radius) <= c.borderWidth * 0.5f)
+            {
+                finalColor.rgb = mix(finalColor.rgb, c.color.rgb, c.color.a).rgb; 
+            }
+        }
+        else 
+        {
+            if(dist <= c.radius)
+            {
+                finalColor.rgb = mix(finalColor.rgb, c.color.rgb, c.color.a).rgb; 
+            }
+        }
     }
     
-    imageStore(outputImage, id, d); 
+    imageStore(outputImage, id, finalColor); 
 }
 
 )";
@@ -145,8 +160,8 @@ void Renderer::Internal::Run(Image* input, Image* output)
         for(int j = 0; j < input->GetWidth(); j++)
         {
             int inx = (i * input->GetWidth() + j);
-        } 
-    } 
+        }
+    }
 }
 
 void Renderer::Internal::Clear()

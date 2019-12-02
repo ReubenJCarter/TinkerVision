@@ -3,11 +3,13 @@ set(LIBRARYSRCFILES
 	BrightnessContrast.cpp
 	ComputeShader.cpp
 	Context.cpp
+	FindContours.cpp
 	GaussianBlur.cpp
 	GrayScale.cpp
 	HSVToRGB.cpp
 	Image.cpp
 	ImageGPU.cpp
+	Invert.cpp
 	MedianFilter.cpp
 	ProcessHelper.cpp
 	ReadImageFile.cpp
@@ -15,6 +17,7 @@ set(LIBRARYSRCFILES
 	RGBToHSV.cpp
 	ShaderStorageBuffer.cpp
 	Sobel.cpp
+	SuzukiContour.cpp
 	Threshold.cpp
 	WriteImageFile.cpp
 )

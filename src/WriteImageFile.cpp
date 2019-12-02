@@ -62,8 +62,26 @@ void WriteImageFile(std::string fileName, Image* image)
     }
 
 
-    FIBITMAP* dib = FreeImage_ConvertFromRawBitsEx(FALSE, data, fit, width, height, width * bypp, bits,  
+    FIBITMAP* dib;
+    if(t == ImageType::GRAYSCALE16)
+    {
+        
+        dib = FreeImage_ConvertFromRawBitsEx(FALSE, data, fit, width, height, width * bypp, bits,  
+                                   0xFFFF, 0xFFFF, 0xFFFF, FALSE); 
+    }
+    else if(t == ImageType::GRAYSCALE8)
+    {
+        dib = FreeImage_ConvertFromRawBitsEx(FALSE, data, fit, width, height, width * bypp, bits,  
+                                   0xFF, 0xFF, 0xFF, FALSE); 
+    }
+    else
+    {
+        dib = FreeImage_ConvertFromRawBitsEx(FALSE, data, fit, width, height, width * bypp, bits,  
                                    FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, FALSE); 
+    }
+
+
+
     if(dib == NULL)
     {
         std::cerr << "Visi:WriteImageFile: Failed to create image:" << fileName << "\n";
@@ -88,14 +106,16 @@ void WriteImageFile(std::string fileName, Image* image)
         std::cerr << "Visi:WriteImageFile: Unknown file type:" << fileName << "\n";
         return ; 
     }
-
+/*
     // check that the plugin has sufficient writing and export capabilities ...
     WORD bpp = FreeImage_GetBPP(dib);
     if(!FreeImage_FIFSupportsWriting(fif) || !FreeImage_FIFSupportsExportBPP(fif, bpp)) 
     {
-        std::cerr << "Visi:WriteImageFile: can't write to the file type:" << fileName << "\n";
+        
+        std::cerr << "Visi:WriteImageFile: can't write to the file type:" << fileName << "  ";
+        std::cerr << "bits:" << bits << " bpp:" << bpp << " fif:" << fif << "\n"; 
         return ;
-    }
+    }*/
     // ok, we can save the file
     BOOL bSuccess = FALSE;
     bSuccess = FreeImage_Save(fif, dib, fileName.c_str(), flag);
