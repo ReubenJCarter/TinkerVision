@@ -146,10 +146,11 @@ int main()
 	//Renderer
 	Visi::Renderer renderer; 
 	renderer.AddCircle(glm::vec2(100, 100), 20);
-	renderer.Run(&imageGPU1, &imageGPU2); 
-	renderer.AddCircle(glm::ivec2(100, 100), 10, glm::vec4(1, 0, 0, 1), false, 1); 
+	renderer.AddCircle(glm::vec2(150, 100), 10, glm::vec4(1, 0, 0, 1), false, 1); 
+	std::vector<glm::vec2> pl = {{0, 0},{100, 100},{200, 100}};
+	renderer.AddPolyLine(&pl, glm::vec4(0, 0, 1, 1)); 
+	renderer.Run(&image1, &image2); 
 	
-	image2.Copy(&imageGPU2);
 	Visi::WriteImageFile("image9Test.png", &image2);
 
 	//Find Contours
@@ -165,8 +166,30 @@ int main()
 	Visi::WriteImageFile("image10_2Test.png", &image3);
 	
 	std::vector<Visi::FindContours::Contour> contoursFiltered; 
-	Visi::FindContours::ContoursFilter(&contours, &contoursFiltered);
-	Visi::FindContours::ContoursToFile("image10_3Test.contours", &contoursFiltered); 
+	Visi::FindContours::ContoursFilter(&contours, &contoursFiltered, 100);
+	std::vector<Visi::FindContours::Contour> contoursSimplified; 
+	Visi::FindContours::SimplifyContours(&contoursFiltered, &contoursSimplified, 10);
 
+	renderer.Clear(); 
+	for(int i =0; i < contoursFiltered.size(); i++)
+	{
+		glm::vec4 color; 
+		color.r = (float)rand() / (float)RAND_MAX ; 
+		color.g = (float)rand() / (float)RAND_MAX ; 
+		color.b = (float)rand() / (float)RAND_MAX ; 
+		for(int j = 0; j < contoursFiltered[i].verticies.size(); j++)
+		{
+			renderer.AddCircle(contoursFiltered[i].verticies[j], 3, color, false, 2);
+		} 
+		renderer.AddPolyLine(&contoursFiltered[i].verticies, color); 
+	}
+	renderer.Run(&image1, &image2); 
+	Visi::WriteImageFile("image10_3Test.png", &image2);
+
+
+	Visi::FindContours::ContoursToFile("image10_3Test.contours", &contoursSimplified); 
+
+	
+	std::cout << "DONE\n";
 	return 1; 
 }

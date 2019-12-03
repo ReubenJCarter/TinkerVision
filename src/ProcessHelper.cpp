@@ -74,7 +74,7 @@ glm::vec4 GetPixel(Image* image, int x, int y)
     glm::vec4 out;
     if(imageType == ImageType::GRAYSCALE8)
     {
-        inx = (y * image->GetWidth() + x) * 1;
+        inx = (y * image->GetWidth() + x) ;
         out.r = ((float)data[inx]) / 255.0f; 
         out.g = 0;
         out.b = 0;
@@ -82,8 +82,8 @@ glm::vec4 GetPixel(Image* image, int x, int y)
     }
     else if(imageType == ImageType::GRAYSCALE16)
     {
-        inx = (y * image->GetWidth() + x) * 2;
-        out.r = ((float)((uint16_t*)data)[inx]) / 255.0f; 
+        inx = (y * image->GetWidth() + x) ;
+        out.r = ((float)((uint16_t*)data)[inx]) / 65535.0f; 
         out.g = 0;
         out.b = 0;
         out.a = 1;
@@ -267,6 +267,61 @@ glm::ivec4 GetPixelI(Image* image, int x, int y)
         out.a = ((float*)data)[inx + 3] * 255; 
     }
     return out; 
+}
+
+void SetPixel(Image* image, int x, int y, glm::vec4 v)
+{
+    if(x < 0 || y < 0 || x >= image->GetWidth() || y >= image->GetHeight())
+        return; 
+
+    unsigned char* data = image->GetData(); 
+    ImageType imageType = image->GetType(); 
+    unsigned int inx; 
+    if(imageType == ImageType::GRAYSCALE8)
+    {
+        inx = (y * image->GetWidth() + x) * 1;
+        data[inx] = v.r * 255;
+    }
+    else if(imageType == ImageType::GRAYSCALE16)
+    {
+        inx = (y * image->GetWidth() + x) * 1;
+        ((uint16_t*)data)[inx] = v.r * 65535;
+    }
+    else if(imageType == ImageType::GRAYSCALE32F)
+    {
+        inx = (y * image->GetWidth() + x);
+        ((float*)data)[inx] = v.r;
+    }
+    else if(imageType == ImageType::RGB8)
+    {
+        inx = (y * image->GetWidth() + x) * 3;
+        data[inx + 2] = v.r * 255;
+        data[inx + 1] = v.g * 255;
+        data[inx + 0] = v.b * 255;
+    }
+    else if(imageType == ImageType::RGB32F)
+    {
+        inx = (y * image->GetWidth() + x) * 3;
+        ((float*)data)[inx + 2]  = v.r;
+        ((float*)data)[inx + 1]  = v.g;
+        ((float*)data)[inx + 0]  = v.b;
+    }
+    else if(imageType == ImageType::RGBA8)
+    {
+        inx = (y * image->GetWidth() + x) * 4;
+        data[inx + 2] = v.r * 255;
+        data[inx + 1] = v.g * 255;
+        data[inx + 0] = v.b * 255;
+        data[inx + 3] = v.a * 255;
+    }
+    else if(imageType == ImageType::RGBA32F)
+    {
+        inx = (y * image->GetWidth() + x) * 4;
+        ((float*)data)[inx + 2]  = v.r;
+        ((float*)data)[inx + 1]  = v.g;
+        ((float*)data)[inx + 0]  = v.b;
+        ((float*)data)[inx + 3]  = v.a;
+    }
 }
 
 }

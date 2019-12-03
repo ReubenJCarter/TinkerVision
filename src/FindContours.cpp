@@ -7,6 +7,7 @@
 #include <iostream>
 #include <map>
 #include <fstream>
+#include <functional>
 
 namespace Visi
 {
@@ -209,7 +210,8 @@ void FindContours::Internal::Run(Image* input, Image* output, std::vector<Contou
 
     static enum STATE {OUTSIDE, INSIDE} ;
     
-    
+    contours->clear();  
+
     STATE state = OUTSIDE; 
     int polyID = 30000; 
     
@@ -229,7 +231,7 @@ void FindContours::Internal::Run(Image* input, Image* output, std::vector<Contou
 
                 if(pix == 1)
                 {
-                    polyID++; 
+                    polyID += 1; 
                     if(contours != NULL)
                     {
                         contours->push_back(Contour()); 
@@ -295,7 +297,7 @@ void FindContours::ContoursToFile(std::string fileName, std::vector<Contour>* co
 
 void FindContours::ContoursFilter(std::vector<Contour>* input, std::vector<Contour>* output, int minVertCount)
 {
-
+    output->clear(); 
     for(int i = 0; i < input->size(); i++)
     {
         Contour& c = input->at(i);
@@ -311,6 +313,83 @@ void FindContours::ContoursFilter(std::vector<Contour>* input, std::vector<Conto
             }
         }
     }
+}
+
+void FindContours::SimplifyContours(std::vector<Contour>* input, std::vector<Contour>* output,
+                                    float keepDist)
+{
+
+
+    std::function<void(Contour*, Contour*, int, int)> recure = [&recure, input, keepDist ](Contour* c, Contour* cOut, int inxStart, int count)
+    {
+        if(count < 2)
+        {
+
+        }
+
+        glm::vec2 startPoint = c->verticies[inxStart];
+        glm::vec2 endPoint = c->verticies[inxStart + count -1]; 
+        glm::vec2 B = glm::normalize(endPoint - startPoint); 
+
+        //loop over points and find the furthest perpendicular dist from 
+        //the start and end of the segment
+        float maxDist = 0; 
+        int maxDistInx = -1; 
+        for(int i = 1; i < count-1; i++)
+        {
+            int inx = inxStart + i;
+            glm::vec2 point = c->verticies[inx];
+
+            //compute per dist squared 
+            glm::vec2 A = point - startPoint; 
+            float Alen2 = glm::dot(A, A);  //square length
+            float proj = glm::dot(A, B); 
+            float dist2 = Alen2 - proj * proj;
+
+            //test against max
+            if(dist2 > maxDist)
+            {
+                maxDist = dist2;
+                maxDistInx = i;
+            }
+        }
+
+        //sqrt to get actual dist
+        maxDist = sqrt(maxDist); 
+
+        // if the perp dist is greater than the keep dist, recure on each segnment
+        if(maxDist > keepDist && maxDistInx != -1)
+        {
+            //first part of polyline
+            recure(c, cOut, inxStart, maxDistInx - inxStart + 1); 
+
+            //Add max point to new polyline
+            cOut->verticies.push_back(c->verticies[maxDistInx]); 
+
+            //second part of polyline
+            recure(c, cOut, maxDistInx, count - maxDistInx); 
+        }
+    };
+
+    output->resize(input->size()); 
+
+    for(int i = 0; i < input->size(); i++)
+    {
+        Contour& c = input->at(i);
+        Contour& cOut = output->at(i);
+        cOut.verticies.clear();
+
+        //add the start vertex
+        glm::vec2 startPoint = c.verticies[0];
+        cOut.verticies.push_back(startPoint);
+
+        //start recursion
+        recure(&c, &cOut, 0, c.verticies.size());
+
+        glm::vec2 endPoint = c.verticies[c.verticies.size() - 1]; 
+        cOut.verticies.push_back(endPoint);
+    }
+
 }
 
 }

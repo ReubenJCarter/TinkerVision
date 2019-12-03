@@ -23,12 +23,13 @@ class VISI_EXPORT FindContours
         {
             Contour* parent; 
             std::vector<glm::vec2> verticies; 
-            float length; 
         }; 
 
         static void ContoursToFile(std::string fileName, std::vector<Contour>* contours); 
         static void ContoursFilter(std::vector<Contour>* input, std::vector<Contour>* output,
                                    int minVertCount=20); 
+        static void SimplifyContours(std::vector<Contour>* input, std::vector<Contour>* output,
+                                     float cullDist); 
 
 		FindContours(); 
         ~FindContours(); 

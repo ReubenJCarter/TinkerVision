@@ -21,6 +21,7 @@ class Renderer::Internal
             float radius;
             float borderWidth; 
             int filled; 
+            glm::vec3 pad;
         }; 
 
         struct Line
@@ -28,122 +29,34 @@ class Renderer::Internal
             glm::vec4 color; 
             glm::vec2 start;
             glm::vec2 end; 
-            float borderWidth; 
-            int filled; 
+            float lineWidth; 
         }; 
 
-        static std::map<ImageType, ComputeShader> computeShaders; 
-        static std::string shaderSrc; 
-        static bool shaderCompiled; 
+        struct PolyLine
+        {
+            glm::vec4 color; 
+            std::vector<glm::vec2> verts;
+            float lineWidth; 
+        }; 
+
 
         bool circlesDirty; 
         std::vector<Circle> circles; 
-        ShaderStorageBuffer circlesShaderBuf; 
+        bool polyLinesDirty;
+        std::vector<PolyLine> polyLines; 
 
     public:
         Internal(); 
-        void CompileComputeShaders(std::string sSrc); 
-        void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
         void Clear(); 
         void AddCircle(glm::vec2 centre, float radius, glm::vec4 color=glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), bool filled=false, float borderWidth=1); 
-
+        void AddPolyLine(std::vector<glm::vec2>* pl, glm::vec4 color, float lineWidth);
 };
-
-std::map<ImageType, ComputeShader> Renderer::Internal::computeShaders;
-
-std::string Renderer::Internal::shaderSrc = R"(
-
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
-layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
-
-struct Circle
-{
-    vec4 color; 
-    vec2 centre;
-    float radius;
-    float borderWidth;
-    int filled;
-};
-
-layout (std430) buffer circlesBlock
-{
-	Circle circles[];
-};
-uniform int circlesCount;
-
-layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
-void main()
-{
-    ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-    vec4 finalColor = imageLoad(inputImage, id); 
-    
-    for(int i = 0; i < circlesCount; i++)
-    {
-        Circle c = circles[i];
-        vec2 v = id - c.centre;
-        float dist = length(v); 
-        if(c.filled == 0)
-        {
-            if(abs(dist - c.radius) <= c.borderWidth * 0.5f)
-            {
-                finalColor.rgb = mix(finalColor.rgb, c.color.rgb, c.color.a).rgb; 
-            }
-        }
-        else 
-        {
-            if(dist <= c.radius)
-            {
-                finalColor.rgb = mix(finalColor.rgb, c.color.rgb, c.color.a).rgb; 
-            }
-        }
-    }
-    
-    imageStore(outputImage, id, finalColor); 
-}
-
-)";
-
-bool Renderer::Internal::shaderCompiled = false; 
 
 Renderer::Internal::Internal()
 {
     circlesDirty = true; 
-}
-
-
-void Renderer::Internal::Run(ImageGPU* input, ImageGPU* output)
-{
-    if(!shaderCompiled)
-    {
-        CompileImageComputeShaders(computeShaders, shaderSrc); 
-        shaderCompiled = true; 
-    }
-
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
-
-    ImageType inputType = input->GetType();
-
-    ComputeShader& computeShader = computeShaders[inputType];
-
-    if(circlesDirty)
-    {
-        circlesShaderBuf.Allocate(sizeof(Circle) * circles.size(), 0); 
-        circlesShaderBuf.Copy((unsigned char*)&circles[0]); 
-        circlesDirty = false; 
-    }
-    computeShader.SetInt("circlesCount", circles.size() );
-    computeShader.SetShaderStorageBuffer("circlesBlock", &circlesShaderBuf); 
-
-    computeShader.SetImage("inputImage", input);
-    computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
-
-    glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(input->GetWidth(), input->GetHeight()), glm::i32vec2(16, 16)); 
-    computeShader.Dispatch(groupCount.x, groupCount.y, 1); 
-    computeShader.Block();
+    polyLinesDirty = true; 
 }
 
 void Renderer::Internal::Run(Image* input, Image* output)
@@ -153,20 +66,137 @@ void Renderer::Internal::Run(Image* input, Image* output)
         output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     }
     
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
+    //copy input image to output
     for(int i = 0; i < input->GetHeight(); i++)
     {
         for(int j = 0; j < input->GetWidth(); j++)
         {
-            int inx = (i * input->GetWidth() + j);
+            glm::vec4 p = GetPixel(input, j, i);
+            SetPixel(output, j, i, p);
+        } 
+    } 
+
+    //Draw Lines
+    for(int inx = 0; inx < polyLines.size(); inx++)
+    {
+        PolyLine& pl = polyLines[inx]; 
+        if(pl.verts.size() <= 1)
+            continue;
+        
+        for(int l = 1; l < pl.verts.size(); l++)
+        {
+            int x2, y2, x1, y1; 
+            if(pl.verts[l-1].x < pl.verts[l].x)
+            {
+                x1 = pl.verts[l-1].x;
+                x2 = pl.verts[l].x;
+            }
+            else
+            {
+                x2 = pl.verts[l-1].x;
+                x1 = pl.verts[l].x;
+            }
+
+            if(pl.verts[l-1].y < pl.verts[l].y)
+            {
+                y1 = pl.verts[l-1].y;
+                y2 = pl.verts[l].y;
+            }
+            else
+            {
+                y2 = pl.verts[l-1].y;
+                y1 = pl.verts[l].y;
+            }
+            int m_new = 2 * (y2 - y1); 
+            int slope_error_new = m_new - (x2 - x1); 
+            for (int x = x1, y = y1; x <= x2; x++) 
+            { 
+                SetPixel(output, x, y, pl.color);
+            
+                // Add slope to increment angle formed 
+                slope_error_new += m_new; 
+            
+                // Slope error reached limit, time to 
+                // increment y and update slope error. 
+                if (slope_error_new >= 0) 
+                { 
+                    y++; 
+                    slope_error_new  -= 2 * (x2 - x1); 
+                } 
+            } 
+
         }
+    }
+
+    //Draw circles
+    for(int inx = 0; inx < circles.size(); inx++)
+    {
+        Circle c = circles[inx];
+        glm::vec2 centre = c.centre;
+        float radius = c.radius; 
+        int x = radius;
+        int y = 0; 
+        float r2 = radius * radius;
+
+        //Simple brute algo 
+        for(int i = -radius; i < radius; i++)
+        {
+            for(int j = -radius; j < radius; j++)
+            {
+                glm::vec2 a = glm::vec2(i, j);
+                float aLen = glm::length( a); 
+             
+                if(c.filled == 0)
+                {
+                    if((c.radius - aLen) <= c.borderWidth && aLen < c.radius)
+                    {
+                        int x = j + centre.x; 
+                        int y = i + centre.y;
+                        SetPixel(output, x, y, c.color);
+                    }
+                }
+                else 
+                {
+                    if(aLen <= c.radius)
+                    {
+                        int x = j + centre.x; 
+                        int y = i + centre.y;
+                        SetPixel(output, x, y, c.color);
+                    }
+                }
+            }
+        }
+
+
+        /*
+        //B  algo
+        while(x > y)
+        {
+            //Draw Pixel
+            glm::vec4 p = GetPixel(output, x, y);
+            SetPixel(output, centre.x + x, centre.y + y, c.color);
+
+            //SetPixel(output, centre.x - x, centre.y + y, c.color);
+            
+            //SetPixel(output, centre.x + x, centre.y - y, c.color);
+
+            //Advance
+            int x2 = x * x;
+            x = sqrt(x2 - 2 * y - 1);
+            y++;
+        }*/
     }
 }
 
 void Renderer::Internal::Clear()
 {
     circlesDirty = true; 
+    circles.clear(); 
+    circles.resize(0); 
+
+    polyLines.clear(); 
+    polyLinesDirty= true;
+    polyLines.resize(0);
 }
 
 void Renderer::Internal::AddCircle(glm::vec2 centre, float radius, glm::vec4 color, bool filled, float borderWidth)
@@ -181,6 +211,17 @@ void Renderer::Internal::AddCircle(glm::vec2 centre, float radius, glm::vec4 col
     circlesDirty = true;
 }
 
+void Renderer::Internal::AddPolyLine(std::vector<glm::vec2>* pl, glm::vec4 color, float lineWidth)
+{
+    polyLines.push_back(PolyLine());  
+    PolyLine& polyLine = polyLines[polyLines.size()-1];
+    polyLine.color = color;
+    polyLine.lineWidth = lineWidth; 
+    polyLine.verts.resize(pl->size()); 
+    for(int i = 0; i < pl->size(); i++)
+        polyLine.verts[i] = (pl->at(i));
+    
+}
 
 
 
@@ -194,14 +235,19 @@ Renderer::~Renderer()
     delete internal; 
 }
 
-void Renderer::Run(ImageGPU* input, ImageGPU* output)
+void Renderer::Clear()
 {
-    internal->Run(input, output); 
+    internal->Clear(); 
 }
 
 void Renderer::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
+}
+
+void Renderer::AddPolyLine(std::vector<glm::vec2>* pl, glm::vec4 color, float lineWidth)
+{
+    internal->AddPolyLine(pl, color, lineWidth); 
 }
 
 void Renderer::AddCircle(glm::vec2 centre, float radius, glm::vec4 color, bool filled, float borderWidth)
