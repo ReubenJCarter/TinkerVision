@@ -172,11 +172,15 @@ void FindContours::Internal::TraceBorder(Image* im, int startI, int startJ, int 
 
         if(ladybirdI == startI && ladybirdJ == startJ && rotateCounter == 0)
             startCounter++; 
+
         int inx = im->GetWidth() * ladybirdJ + ladybirdI; 
-        outputData[inx] = polyID;
-        if(contour != NULL)
+        if(outputData[inx] != polyID) //new ground
         {
-            contour->verticies.push_back(glm::vec2(ladybirdI, ladybirdJ)); 
+            outputData[inx] = polyID;
+            if(contour != NULL)
+            {
+                contour->verticies.push_back(glm::vec2(ladybirdI, ladybirdJ)); 
+            }
         }
     }
 }
@@ -237,6 +241,7 @@ void FindContours::Internal::Run(Image* input, Image* output, std::vector<Contou
                         contours->push_back(Contour()); 
                         Contour* c = &contours->at(contours->size()-1);
                         TraceBorder(output, i, j, polyID, c);
+                        //SetPixel(output, i, j, glm::vec4(1, 0, 0, 0)); //Mark start pixel
                     }
                     else
                     {
@@ -371,6 +376,27 @@ void FindContours::SimplifyContours(std::vector<Contour>* input, std::vector<Con
         }
     };
 
+    auto MergeVerticies = [](Contour* c, float dist2)
+    {
+        if(c->verticies.size() <= 1)
+            return; 
+        std::vector<glm::vec2> newVerts; 
+        glm::vec2 vPrev = c->verticies[0];
+        for(int i = 1; i < c->verticies.size(); i++)
+        {
+            glm::vec2 v = c->verticies[i];
+            glm::vec2 diff = v - vPrev; 
+            if(!(glm::dot(diff, diff) < dist2))
+            {
+                //add to new countout vert list
+                newVerts.push_back(v); 
+                vPrev = v;
+            }
+        }
+
+        c->verticies = newVerts; 
+    };
+
     output->resize(input->size()); 
 
     for(int i = 0; i < input->size(); i++)
@@ -388,7 +414,11 @@ void FindContours::SimplifyContours(std::vector<Contour>* input, std::vector<Con
 
         glm::vec2 endPoint = c.verticies[c.verticies.size() - 1]; 
         cOut.verticies.push_back(endPoint);
+
+        //remove duplicates
+        MergeVerticies(&cOut, 3);
     }
+    
 
 }
 

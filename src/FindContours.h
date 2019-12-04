@@ -29,7 +29,7 @@ class VISI_EXPORT FindContours
         static void ContoursFilter(std::vector<Contour>* input, std::vector<Contour>* output,
                                    int minVertCount=20); 
         static void SimplifyContours(std::vector<Contour>* input, std::vector<Contour>* output,
-                                     float cullDist); 
+                                     float keepDist); 
 
 		FindContours(); 
         ~FindContours(); 

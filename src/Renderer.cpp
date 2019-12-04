@@ -86,45 +86,68 @@ void Renderer::Internal::Run(Image* input, Image* output)
         for(int l = 1; l < pl.verts.size(); l++)
         {
             int x2, y2, x1, y1; 
-            if(pl.verts[l-1].x < pl.verts[l].x)
+            if(pl.verts[l-1].x <= pl.verts[l].x)
             {
                 x1 = pl.verts[l-1].x;
                 x2 = pl.verts[l].x;
-            }
-            else
-            {
-                x2 = pl.verts[l-1].x;
-                x1 = pl.verts[l].x;
-            }
 
-            if(pl.verts[l-1].y < pl.verts[l].y)
-            {
                 y1 = pl.verts[l-1].y;
                 y2 = pl.verts[l].y;
             }
             else
             {
+                x2 = pl.verts[l-1].x;
+                x1 = pl.verts[l].x;
+                
                 y2 = pl.verts[l-1].y;
                 y1 = pl.verts[l].y;
             }
-            int m_new = 2 * (y2 - y1); 
-            int slope_error_new = m_new - (x2 - x1); 
-            for (int x = x1, y = y1; x <= x2; x++) 
-            { 
-                SetPixel(output, x, y, pl.color);
-            
-                // Add slope to increment angle formed 
-                slope_error_new += m_new; 
-            
-                // Slope error reached limit, time to 
-                // increment y and update slope error. 
-                if (slope_error_new >= 0) 
-                { 
-                    y++; 
-                    slope_error_new  -= 2 * (x2 - x1); 
-                } 
-            } 
 
+            int dx = x2 - x1;
+            int dy = y2 - y1;
+
+            if(dx == 0 && dy == 0)
+                continue; 
+
+            float m; 
+            if(dx >= abs(dy))
+            {
+                m = (float)dy / (float)dx; 
+            }
+            else
+            {
+                m = abs((float)dx / (float)dy); 
+            }
+
+            if(dx >= abs(dy))
+            {
+                float y = y1; 
+                for (int x = x1; x <= x2; x++) 
+                {    
+                    y += m;
+                    SetPixel(output, x, y, pl.color); 
+                }
+            }
+            else 
+            {
+                float x = x1; 
+                if(y2 > y1)
+                {
+                    for (int y = y1; y <= y2; y++) 
+                    {    
+                        x += m;
+                        SetPixel(output, x, y, pl.color); 
+                    }
+                }
+                else
+                {
+                    for (int y = y1; y >= y2; y--) 
+                    {    
+                        x += m;
+                        SetPixel(output, x, y, pl.color); 
+                    }
+                }
+            }
         }
     }
 
@@ -137,6 +160,12 @@ void Renderer::Internal::Run(Image* input, Image* output)
         int x = radius;
         int y = 0; 
         float r2 = radius * radius;
+
+        if(radius < 1)
+        {
+            SetPixel(output, centre.x, centre.y, c.color);
+            continue;
+        }
 
         //Simple brute algo 
         for(int i = -radius; i < radius; i++)

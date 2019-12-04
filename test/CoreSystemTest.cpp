@@ -147,7 +147,7 @@ int main()
 	Visi::Renderer renderer; 
 	renderer.AddCircle(glm::vec2(100, 100), 20);
 	renderer.AddCircle(glm::vec2(150, 100), 10, glm::vec4(1, 0, 0, 1), false, 1); 
-	std::vector<glm::vec2> pl = {{0, 0},{100, 100},{200, 100}};
+	std::vector<glm::vec2> pl = {{100, 100}, {100, 140}, {300, 300}, {100, 300}};
 	renderer.AddPolyLine(&pl, glm::vec4(0, 0, 1, 1)); 
 	renderer.Run(&image1, &image2); 
 	
@@ -168,7 +168,7 @@ int main()
 	std::vector<Visi::FindContours::Contour> contoursFiltered; 
 	Visi::FindContours::ContoursFilter(&contours, &contoursFiltered, 100);
 	std::vector<Visi::FindContours::Contour> contoursSimplified; 
-	Visi::FindContours::SimplifyContours(&contoursFiltered, &contoursSimplified, 10);
+	Visi::FindContours::SimplifyContours(&contoursFiltered, &contoursSimplified, 5);
 
 	renderer.Clear(); 
 	for(int i =0; i < contoursFiltered.size(); i++)
@@ -179,12 +179,47 @@ int main()
 		color.b = (float)rand() / (float)RAND_MAX ; 
 		for(int j = 0; j < contoursFiltered[i].verticies.size(); j++)
 		{
-			renderer.AddCircle(contoursFiltered[i].verticies[j], 3, color, false, 2);
+			renderer.AddCircle(contoursFiltered[i].verticies[j], 0.1, color, false);
 		} 
-		renderer.AddPolyLine(&contoursFiltered[i].verticies, color); 
+		//renderer.AddPolyLine(&contoursFiltered[i].verticies, color); 
 	}
 	renderer.Run(&image1, &image2); 
 	Visi::WriteImageFile("image10_3Test.png", &image2);
+
+	renderer.Clear(); 
+	for(int i =0; i < contoursSimplified.size(); i++)
+	{
+		glm::vec4 color; 
+		color.r = (float)rand() / (float)RAND_MAX ; 
+		color.g = (float)rand() / (float)RAND_MAX ; 
+		color.b = (float)rand() / (float)RAND_MAX ; 
+		for(int j = 0; j < contoursSimplified[i].verticies.size(); j++)
+		{
+			renderer.AddCircle(contoursSimplified[i].verticies[j], 3, color, false, 2);
+		} 
+		renderer.AddPolyLine(&contoursSimplified[i].verticies, color); 
+	}
+	renderer.Run(&image1, &image2); 
+	Visi::WriteImageFile("image10_4Test.png", &image2);
+
+	renderer.Clear(); 
+	for(int i =0; i < contoursSimplified.size(); i++)
+	{
+		if(contoursSimplified[i].verticies.size() == 4)
+		{
+			glm::vec4 color; 
+			color.r = (float)rand() / (float)RAND_MAX ; 
+			color.g = (float)rand() / (float)RAND_MAX ; 
+			color.b = (float)rand() / (float)RAND_MAX ; 
+			for(int j = 0; j < contoursSimplified[i].verticies.size(); j++)
+			{
+				renderer.AddCircle(contoursSimplified[i].verticies[j], 3, color, false, 2);
+			} 
+			renderer.AddPolyLine(&contoursSimplified[i].verticies, color); 
+		}
+	}
+	renderer.Run(&image1, &image2); 
+	Visi::WriteImageFile("image10_5Test.png", &image2);
 
 
 	Visi::FindContours::ContoursToFile("image10_3Test.contours", &contoursSimplified); 
