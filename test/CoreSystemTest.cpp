@@ -168,7 +168,9 @@ int main()
 	std::vector<Visi::FindContours::Contour> contoursFiltered; 
 	Visi::FindContours::ContoursFilter(&contours, &contoursFiltered, 100);
 	std::vector<Visi::FindContours::Contour> contoursSimplified; 
-	Visi::FindContours::SimplifyContours(&contoursFiltered, &contoursSimplified, 5);
+	Visi::FindContours::ContoursSimplify(&contoursFiltered, &contoursSimplified, 5);
+	std::vector<Visi::FindContours::Contour> contoursMerged; 
+	Visi::FindContours::ContoursMergeVerticies(&contoursSimplified, &contoursMerged, 4);
 
 	renderer.Clear(); 
 	for(int i =0; i < contoursFiltered.size(); i++)
@@ -197,32 +199,32 @@ int main()
 		{
 			renderer.AddCircle(contoursSimplified[i].verticies[j], 3, color, false, 2);
 		} 
-		renderer.AddPolyLine(&contoursSimplified[i].verticies, color); 
+		renderer.AddPolyLine(&contoursSimplified[i].verticies, color, 1, true); 
 	}
 	renderer.Run(&image1, &image2); 
 	Visi::WriteImageFile("image10_4Test.png", &image2);
 
 	renderer.Clear(); 
-	for(int i =0; i < contoursSimplified.size(); i++)
+	for(int i =0; i < contoursMerged.size(); i++)
 	{
-		if(contoursSimplified[i].verticies.size() == 4)
+		//if(contoursMerged[i].verticies.size() == 4)
 		{
 			glm::vec4 color; 
 			color.r = (float)rand() / (float)RAND_MAX ; 
 			color.g = (float)rand() / (float)RAND_MAX ; 
 			color.b = (float)rand() / (float)RAND_MAX ; 
-			for(int j = 0; j < contoursSimplified[i].verticies.size(); j++)
+			for(int j = 0; j < contoursMerged[i].verticies.size(); j++)
 			{
-				renderer.AddCircle(contoursSimplified[i].verticies[j], 3, color, false, 2);
+				renderer.AddCircle(contoursMerged[i].verticies[j], 3, color, false, 1);
 			} 
-			renderer.AddPolyLine(&contoursSimplified[i].verticies, color); 
+			renderer.AddPolyLine(&contoursMerged[i].verticies, color, 1, true); 
 		}
 	}
 	renderer.Run(&image1, &image2); 
 	Visi::WriteImageFile("image10_5Test.png", &image2);
 
 
-	Visi::FindContours::ContoursToFile("image10_3Test.contours", &contoursSimplified); 
+	Visi::FindContours::ContoursToFile("image10_3Test.contours", &contoursMerged); 
 
 	
 	std::cout << "DONE\n";

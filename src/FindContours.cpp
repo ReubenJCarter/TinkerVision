@@ -320,7 +320,7 @@ void FindContours::ContoursFilter(std::vector<Contour>* input, std::vector<Conto
     }
 }
 
-void FindContours::SimplifyContours(std::vector<Contour>* input, std::vector<Contour>* output,
+void FindContours::ContoursSimplify(std::vector<Contour>* input, std::vector<Contour>* output,
                                     float keepDist)
 {
 
@@ -376,26 +376,6 @@ void FindContours::SimplifyContours(std::vector<Contour>* input, std::vector<Con
         }
     };
 
-    auto MergeVerticies = [](Contour* c, float dist2)
-    {
-        if(c->verticies.size() <= 1)
-            return; 
-        std::vector<glm::vec2> newVerts; 
-        glm::vec2 vPrev = c->verticies[0];
-        for(int i = 1; i < c->verticies.size(); i++)
-        {
-            glm::vec2 v = c->verticies[i];
-            glm::vec2 diff = v - vPrev; 
-            if(!(glm::dot(diff, diff) < dist2))
-            {
-                //add to new countout vert list
-                newVerts.push_back(v); 
-                vPrev = v;
-            }
-        }
-
-        c->verticies = newVerts; 
-    };
 
     output->resize(input->size()); 
 
@@ -412,14 +392,61 @@ void FindContours::SimplifyContours(std::vector<Contour>* input, std::vector<Con
         //start recursion
         recure(&c, &cOut, 0, c.verticies.size());
 
+        //Add the end vertex
         glm::vec2 endPoint = c.verticies[c.verticies.size() - 1]; 
         cOut.verticies.push_back(endPoint);
-
-        //remove duplicates
-        MergeVerticies(&cOut, 3);
     }
     
 
 }
+
+void FindContours::ContoursMergeVerticies(std::vector<Contour>* input, std::vector<Contour>* output, float mergeDist)
+{
+    auto MergeVerticies = [](Contour* c, Contour* cOut, float dist2)
+    {
+        if(c->verticies.size() <= 1)
+            return; 
+        glm::vec2 vPrev = c->verticies[0];
+
+        //cOut->verticies.push_back(vPrev); 
+
+        glm::vec2 av = vPrev; 
+        int avCount = 1; 
+        for(int i = 1; i < c->verticies.size(); i++)
+        {
+            glm::vec2 v = c->verticies[i];
+            glm::vec2 diff = v - vPrev; 
+            if(!(glm::dot(diff, diff) < dist2))
+            {
+                //add to new countout vert list
+                av/=avCount;
+                cOut->verticies.push_back(av); 
+                vPrev = v;
+                av = vPrev; 
+                avCount = 1; 
+            }
+            else
+            {
+                av += v; 
+                avCount++; 
+            }
+        }
+
+        
+    };
+
+
+    output->resize(input->size()); 
+    float dist2 = mergeDist * mergeDist; 
+    for(int i = 0; i < input->size(); i++)
+    {
+        Contour& c = input->at(i);
+        Contour& cOut = output->at(i);
+        cOut.verticies.clear();
+
+        MergeVerticies(&c, &cOut, dist2);
+    }
+}
+
 
 }

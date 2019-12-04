@@ -28,8 +28,9 @@ class VISI_EXPORT FindContours
         static void ContoursToFile(std::string fileName, std::vector<Contour>* contours); 
         static void ContoursFilter(std::vector<Contour>* input, std::vector<Contour>* output,
                                    int minVertCount=20); 
-        static void SimplifyContours(std::vector<Contour>* input, std::vector<Contour>* output,
+        static void ContoursSimplify(std::vector<Contour>* input, std::vector<Contour>* output,
                                      float keepDist); 
+        static void ContoursMergeVerticies(std::vector<Contour>* input, std::vector<Contour>* output, float mergeDist);
 
 		FindContours(); 
         ~FindContours(); 
