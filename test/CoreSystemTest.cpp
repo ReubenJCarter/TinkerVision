@@ -16,6 +16,7 @@
 #include "FindContours.h"
 #include "Invert.h"
 #include "Contour.h"
+#include "ChannelDemux.h"
 
 #include <iostream>
 
@@ -141,7 +142,11 @@ int main()
 	Visi::Sobel sobel; 
 	sobel.Run(&imageGPU1, &imageGPU2); 
 
-	image2.Copy(&imageGPU2);
+	Visi::ChannelDemux demux; 
+	demux.SetChannel(2);
+	demux.Run(&imageGPU2, &imageGPU3);
+
+	image2.Copy(&imageGPU3);
 	Visi::WriteImageFile("image8Test.png", &image2);
 
 	//Renderer

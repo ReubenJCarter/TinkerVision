@@ -86,9 +86,9 @@ void ChannelDemux::Internal::Run(ImageGPU* input, ImageGPU* output)
     }
 
     
-    if(input->GetType() == ImageType::RGB8 || input->GetType() == ImageType::RGBA8)
+    if(input->GetType() == ImageType::RGB8 || input->GetType() == ImageType::RGBA8 || input->GetType() != ImageType::GRAYSCALE8)
     {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || input->GetType() != ImageType::GRAYSCALE8) 
+        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() ) 
         {
             output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
         }
