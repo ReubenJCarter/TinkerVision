@@ -16,14 +16,17 @@ class VISI_EXPORT Blend
         Internal* internal;
 
 	public:
-        enum BlendMode{ADDITION, SUBTRACT, DIFFERENCE, DIVIDE, MULTIPLY, ALPHABLEND};
+        enum BlendMode{ADDITION, SUBTRACT, DIFFERENCE, DIVIDE, MULTIPLY};
 
 		Blend(); 
         ~Blend(); 
 
         void SetMode(BlendMode bm);
 
-		void Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* output); 
+		void Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* output, ImageGPU* blendMask); 
+        void Run(Image* inputSrc, Image* inputDst, Image* output, Image* blendMask); 
+
+        void Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* output); 
         void Run(Image* inputSrc, Image* inputDst, Image* output); 
 };
 	

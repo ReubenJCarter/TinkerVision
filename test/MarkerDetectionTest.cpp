@@ -59,16 +59,16 @@ int main()
 	image2.Copy(&imageGPU2);
 	Visi::WriteImageFile("MarkerTestHSV.png", &image2);
 	
-	//threshold all saturation values above thresh
+	//threshold all s values above thresh
 	Visi::Threshold saturationThreshold; 
-	saturationThreshold.SetThreshold(glm::vec3(1, 0.1, 1));
+	saturationThreshold.SetThreshold(glm::vec3(1, 0.3, 1));
 	saturationThreshold.Run(&imageGPU2, &imageGPU3);
 	image2.Copy(&imageGPU3);
 	Visi::WriteImageFile("MarkerTestHSVHThresh.png", &image2);
 
 	//Blur
 	Visi::GaussianBlur blur; 
-	blur.SetSigma(1.6); 
+	blur.SetSigma(2); 
 	blur.Run(&imageGPU3, &imageGPU4);
 	image2.Copy(&imageGPU4);
 	Visi::WriteImageFile("MarkerTestHSVHThreshBlur.png", &image2);

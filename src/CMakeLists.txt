@@ -3,6 +3,7 @@ set(LIBRARYSRCFILES
 	Blend.cpp
 	BrightnessContrast.cpp
 	ChannelDemux.cpp
+	ClearColor.cpp
 	ComputeShader.cpp
 	Context.cpp
 	Contour.cpp
