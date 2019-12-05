@@ -1,8 +1,11 @@
 set(LIBRARYSRCFILES
 	AdaptiveThreshold.cpp
+	Blend.cpp
 	BrightnessContrast.cpp
+	ChannelDemux.cpp
 	ComputeShader.cpp
 	Context.cpp
+	Contour.cpp
 	FindContours.cpp
 	GaussianBlur.cpp
 	GrayScale.cpp

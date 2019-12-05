@@ -299,4 +299,24 @@ void Renderer::AddCircle(glm::vec2 centre, float radius, glm::vec4 color, bool f
     internal->AddCircle(centre, radius, color, filled, borderWidth); 
 }
 
+void Renderer::AddContours(std::vector<Contour>* contours, bool renderVerts, float vertRad, bool renderLines, bool closed)
+{
+    for(int i = 0; i < contours->size(); i++)
+	{
+		glm::vec4 color; 
+		color.r = (float)rand() / (float)RAND_MAX ; 
+		color.g = (float)rand() / (float)RAND_MAX ; 
+		color.b = (float)rand() / (float)RAND_MAX ; 
+        if(renderVerts)
+        {
+            for(int j = 0; j < (*contours)[i].verticies.size(); j++)
+            {
+                AddCircle((*contours)[i].verticies[j], vertRad, color, false, 1);
+            }
+        } 
+        if(renderLines)
+		    AddPolyLine(&((*contours)[i].verticies), color, 1, closed); 
+	}
+}
+
 }

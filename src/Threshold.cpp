@@ -3,6 +3,8 @@
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <string>
 #include <iostream>
 #include <map>
@@ -17,7 +19,7 @@ class Threshold::Internal
         static std::string shaderSrc; 
         static bool shaderCompiled; 
 
-        float threshold; 
+        glm::vec3 threshold; 
        
     public:
         Internal(); 
@@ -25,6 +27,7 @@ class Threshold::Internal
         void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
         void SetThreshold(float t);
+        void SetThreshold(glm::vec3 t);
 };
 
 std::map<ImageType, ComputeShader> Threshold::Internal::computeShaders;
@@ -34,16 +37,16 @@ std::string Threshold::Internal::shaderSrc = R"(
 layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
-uniform float threshold; 
+uniform vec3 threshold; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
     vec4 d = imageLoad(inputImage, id);
-    d.r = d.r < threshold ? 0.0f : 1.0f; 
-    d.g = d.g < threshold ? 0.0f : 1.0f; 
-    d.b = d.b < threshold ? 0.0f : 1.0f; 
+    d.r = d.r <= threshold.r ? 0.0f : 1.0f; 
+    d.g = d.g <= threshold.g ? 0.0f : 1.0f; 
+    d.b = d.b <= threshold.b ? 0.0f : 1.0f; 
     imageStore(outputImage, id, d); 
 }
 
@@ -53,7 +56,7 @@ bool Threshold::Internal::shaderCompiled = false;
 
 Threshold::Internal::Internal()
 {
-    threshold = 0.5;
+    threshold = glm::vec3(0.5, 0.5, 0.5);
 }
 
 
@@ -74,7 +77,7 @@ void Threshold::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     ComputeShader& computeShader = computeShaders[inputType];
 
-    computeShader.SetFloat("threshold", threshold); 
+    computeShader.SetFloat3("threshold", glm::value_ptr(threshold)); 
 
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
@@ -106,9 +109,13 @@ void Threshold::Internal::Run(Image* input, Image* output)
 
 void Threshold::Internal::SetThreshold(float t)
 {
-    threshold = t;
+    threshold = glm::vec3(t, t, t);
 }
 
+void Threshold::Internal::SetThreshold(glm::vec3 t)
+{
+    threshold = t;
+}
 
 
 
@@ -123,6 +130,11 @@ Threshold::~Threshold()
 }
 
 void Threshold::SetThreshold(float t)
+{
+    internal->SetThreshold(t);
+}
+
+void Threshold::SetThreshold(glm::vec3 t)
 {
     internal->SetThreshold(t);
 }

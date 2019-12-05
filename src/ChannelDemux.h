@@ -6,22 +6,19 @@
 #include "Image.h"
 #include "ImageGPU.h"
 
-#include <glm/glm.hpp>
-
 namespace Visi
 {
 	
-class VISI_EXPORT Threshold
+class VISI_EXPORT ChannelDemux
 {
     private: 
         class Internal;
         Internal* internal;
-
+        
 	public:
-		Threshold(); 
-        ~Threshold(); 
-        void SetThreshold(float t);
-        void SetThreshold(glm::vec3 t);
+		ChannelDemux(); 
+        ~ChannelDemux(); 
+        void SetChannel(int ch); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
 };
