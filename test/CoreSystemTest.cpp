@@ -161,23 +161,30 @@ int main()
 
 	//Contour Simplify Test
 	Visi::Contour c;
-	c.verticies = {{10, 10}, {11, 11}, {12, 12}, {13, 13}, {14, 14}, {15, 15},
-				   {16, 16}, {17, 17}, {18, 18}, {19, 19}, {20, 20}, {21, 20},
+	c.verticies = {
+				   {11, 16}, {11, 17}, {11, 18}, {11, 19}, {20, 20}, {21, 20},
 
 				   {22, 20}, {23, 21}, {25, 19}, {26, 21}, {27, 20}, {28, 20},
-				   {29, 19}, {30, 20}, {31, 21}, {32, 21}, {33, 20}, {34, 20}, 
+				   {29, 19}, {30, 20}, {31, 21}, {31, 21}, {33, 20}, {34, 20}, 
 				   {35, 20}, {36, 20}, {37, 20}, {38, 19}, {39, 21}, {40, 20}, 
 				   {42, 20}, {46, 20}, {47, 20}, {48, 19}, {52, 21}, {55, 20},
 
 				   {55, 19}, {55, 18}, {55, 17}, {56, 16}, {55, 15}, {54, 14},
-				   {55, 13}, {55, 12}, {55, 11}, {56, 10}, {55, 9}, {54, 8}, 
-				   {55, 7}, {54, 6}, {54, 5}, {54, 4}, {53, 3}, {53, 2},
+
+				   {53, 19}, {52, 18}, {51, 17}, {50, 16}, {49, 15}, {46, 14},
+
+				   {46, 13}, {46, 12}, {46, 11}, {56, 10}, {46, 9}, {46, 8}, 
+				   {46, 7}, {46, 6}, {47, 5}, {49, 4}, {51, 3}, {52, 2},
 
 				   {53, 2}, {52, 3}, {51, 2}, {50, 3}, {49, 3}, {48, 2},
 				   {47, 2}, {46, 3}, {45, 2}, {44, 2}, {43, 3}, {42, 2}, 
 				   {41, 2}, {40, 3}, {38, 2}, {36, 3}, {35, 3}, {33, 2}, 
 				   {32, 2}, {30, 3}, {27, 2}, {26, 2}, {25, 3}, {23, 2},
 				   {21, 2}, {20, 3}, {19, 2}, {18, 2}, {16, 3}, {14, 2},  
+				   {12, 2}, {10, 2},
+				   {10, 3}, {10, 4}, {10, 5}, {10, 6}, {10, 7}, {11, 8},
+				   {11, 9}, {11, 10}, {10, 11}, {10, 12}, {10, 13}, {11, 14},
+				   {11, 17}
 				   };
 
 	std::vector<Visi::Contour> cs;
@@ -202,6 +209,7 @@ int main()
 	adaptiveThreshold.SetThreshold(0.02); 
 	adaptiveThreshold.SetSize(7); 
 	adaptiveThreshold.Run(&imageGPU2, &imageGPU3); 
+	threshold.Run(&imageGPU2, &imageGPU3); 
 	Visi::Invert invert;
 	invert.Run(&imageGPU3, &imageGPU2); 
 	image2.Copy(&imageGPU2);
@@ -213,7 +221,7 @@ int main()
 	std::vector<Visi::Contour> contoursFiltered; 
 	Visi::Contour::ContoursVertCountFilter(&contours, &contoursFiltered, 100);
 	std::vector<Visi::Contour> contoursSimplified; 
-	Visi::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 3);
+	Visi::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 1);
 	std::vector<Visi::Contour> contoursMerged; 
 	Visi::Contour::ContoursMergeVerticies(&contoursSimplified, &contoursMerged, 4);
 	std::vector<Visi::Contour> contoursQuads; 
@@ -240,7 +248,7 @@ int main()
 	Visi::WriteImageFile("image10_6Test.png", &image2);
 
 
-	Visi::Contour::ContoursToFile("image10_3Test.contours", &contoursMerged); 
+	Visi::Contour::ContoursToFile("image10_3Test.contours", &contoursFiltered); 
 
 	
 

@@ -59,11 +59,11 @@ void Contour::ContoursSimplify(std::vector<Contour>* input, std::vector<Contour>
 {
 
 
-    std::function<void(Contour*, Contour*, int, int)> recure = [&recure, input, keepDist ](Contour* c, Contour* cOut, int inxStart, int count)
+    std::function<void(Contour*, Contour*, int, int)> recure = [&recure, keepDist ](Contour* c, Contour* cOut, int inxStart, int count)
     {
-        if(count < 2)
+        if(count <= 2)
         {
-
+            return; 
         }
 
         glm::vec2 startPoint = c->verticies[inxStart];
@@ -106,10 +106,9 @@ void Contour::ContoursSimplify(std::vector<Contour>* input, std::vector<Contour>
             cOut->verticies.push_back(c->verticies[maxDistInx]); 
 
             //second part of polyline
-            recure(c, cOut, maxDistInx, count - maxDistInx); 
+            recure(c, cOut, maxDistInx, count - (maxDistInx - inxStart));  
         }
     };
-
 
     output->resize(input->size()); 
 
@@ -117,18 +116,50 @@ void Contour::ContoursSimplify(std::vector<Contour>* input, std::vector<Contour>
     {
         Contour& c = input->at(i);
         Contour& cOut = output->at(i);
-        cOut.verticies.clear();
 
-        //add the start vertex
+        //continue if contour has 2 or fewer verts (no point simplifying)
+        if(c.verticies.size() <= 2)
+        {
+            continue; 
+        }
+
         glm::vec2 startPoint = c.verticies[0];
-        cOut.verticies.push_back(startPoint);
+        glm::vec2 endPoint = c.verticies[c.verticies.size() - 1];
 
+        cOut.verticies.clear();
+    
         //start recursion
         recure(&c, &cOut, 0, c.verticies.size());
 
-        //Add the end vertex
-        glm::vec2 endPoint = c.verticies[c.verticies.size() - 1]; 
-        cOut.verticies.push_back(endPoint);
+        //if there is 1 or 0 points in cout, not need to simplify 
+        if(cOut.verticies.size() < 2)
+        {
+            cOut.verticies.push_back(endPoint); 
+            cOut.verticies.push_back(startPoint); 
+            continue; 
+        }
+
+        // we want [last-1 last start start+1] Then "recure" on the 4 elements
+        //at this point we have [start+1 ..... last-1] in cout
+        //This only works if you assumen tthe contour is a closed polygon.         
+        
+        
+
+        Contour temp1;
+        Contour temp2;
+        temp1.verticies.push_back(cOut.verticies[cOut.verticies.size()-1]); 
+        temp1.verticies.push_back(endPoint); 
+        temp1.verticies.push_back(startPoint); 
+        temp1.verticies.push_back(cOut.verticies[0]); 
+
+        recure(&temp1, &temp2, 0, temp1.verticies.size());
+
+        //the start and end points may be present in the mini contour and need to be added to the end of the list temp2=[endPOint, startPoint]
+        for(int j = 0; j < temp2.verticies.size(); j++)
+        {
+            cOut.verticies.push_back(temp2.verticies[j]); 
+        }
+        
     }
     
 
