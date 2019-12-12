@@ -171,13 +171,13 @@ void Contour::ContoursMergeVerticies(std::vector<Contour>* input, std::vector<Co
     {
         if(c->verticies.size() <= 1)
             return; 
-        glm::vec2 vPrev = c->verticies[0];
+        glm::vec2 vPrev = c->verticies[c->verticies.size()-1];
 
         //cOut->verticies.push_back(vPrev); 
 
         glm::vec2 av = vPrev; 
         int avCount = 1; 
-        for(int i = 1; i < c->verticies.size(); i++)
+        for(int i = 0; i < c->verticies.size(); i++)
         {
             glm::vec2 v = c->verticies[i];
             glm::vec2 diff = v - vPrev; 

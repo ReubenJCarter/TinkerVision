@@ -65,6 +65,11 @@ install(FILES ${GLEW_BIN_DIR}/glew32.dll
 		COMPONENT MainLibrary
 )
 
+#rapid JSON
+set(RAPIDJSON_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/rapidjson-1.1.0 CACHE PATH "Path to Rapid JSON")
+set(RAPIDJSON_INC_DIR ${RAPIDJSON_DIR}/include)
+include_directories(${RAPIDJSON_INC_DIR})
+
 #cmake dirs
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(src)

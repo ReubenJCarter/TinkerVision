@@ -21,8 +21,14 @@
 
 #include <iostream>
 
-int main()
+int main(int argc, char *argv[])
 {
+	if(argc <= 1)
+	{
+		std::cerr << "To Few Arguments \n"; 
+		return 0 ; 
+	}
+
 	Visi::Context context; 
 	context.MakeCurrent(); 
 	
@@ -43,7 +49,7 @@ int main()
 	//Processes
 	//
 
-	Visi::ReadImageFile("img3.jpeg", &image1);
+	Visi::ReadImageFile(argv[1], &image1);
 	imageGPU1.Copy(&image1);
 
 	//Median Filter
@@ -53,42 +59,9 @@ int main()
 	image2.Copy(&imageGPU2);
 	Visi::WriteImageFile("MarkerTestMedian.png", &image2);
 
-	//RGBToHSV 
-	Visi::RGBToHSV rgbtohsv; 
-	rgbtohsv.Run(&imageGPU1, &imageGPU2); 
-	image2.Copy(&imageGPU2);
-	Visi::WriteImageFile("MarkerTestHSV.png", &image2);
-	
-	//threshold all s values above thresh
-	Visi::Threshold saturationThreshold; 
-	saturationThreshold.SetThreshold(glm::vec3(1, 0.3, 1));
-	saturationThreshold.Run(&imageGPU2, &imageGPU3);
-	image2.Copy(&imageGPU3);
-	Visi::WriteImageFile("MarkerTestHSVHThresh.png", &image2);
-
-	//Blur
-	Visi::GaussianBlur blur; 
-	blur.SetSigma(2); 
-	blur.Run(&imageGPU3, &imageGPU4);
-	image2.Copy(&imageGPU4);
-	Visi::WriteImageFile("MarkerTestHSVHThreshBlur.png", &image2);
-
-	//subtract
-	Visi::Blend blend; 
-	blend.SetMode(Visi::Blend::BlendMode::SUBTRACT);
-	blend.Run(&imageGPU4, &imageGPU2, &imageGPU3);
-	image2.Copy(&imageGPU3);
-	Visi::WriteImageFile("MarkerTestHSVSubtract.png", &image2);
-
-	//Back to rgb
-	Visi::HSVToRGB hsvtorgb; 
-	hsvtorgb.Run(&imageGPU3, &imageGPU4); 
-	image2.Copy(&imageGPU4);
-	Visi::WriteImageFile("MarkerTestrgbSubtract.png", &image2);
-
 	//Greyscale
 	Visi::GrayScale grayScale;
-	grayScale.Run(&imageGPU4, &imageGPU2); 
+	grayScale.Run(&imageGPU1, &imageGPU2); 
 	image2.Copy(&imageGPU2);
 	Visi::WriteImageFile("MarkerTestGrey.png", &image2);
 

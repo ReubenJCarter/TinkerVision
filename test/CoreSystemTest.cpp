@@ -221,7 +221,7 @@ int main()
 	std::vector<Visi::Contour> contoursFiltered; 
 	Visi::Contour::ContoursVertCountFilter(&contours, &contoursFiltered, 100);
 	std::vector<Visi::Contour> contoursSimplified; 
-	Visi::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 1);
+	Visi::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 3);
 	std::vector<Visi::Contour> contoursMerged; 
 	Visi::Contour::ContoursMergeVerticies(&contoursSimplified, &contoursMerged, 4);
 	std::vector<Visi::Contour> contoursQuads; 
