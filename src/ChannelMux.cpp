@@ -42,29 +42,26 @@ void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
     vec4 d = imageLoad(inputImage, id);
+	vec4 dout = imageLoad(outImage, id);
 
     if(channel == 0)
     {
-        d = glm::vec4(d.r, 0, 0, 1);
+        dout.r = d.r;
     }
     else if(channel == 1)
     {
-        d = glm::vec4(0, d.r, 0, 1);
+		dout.g = d.r;
     }
     else if(channel == 2)
     {
-        d = glm::vec4(0, 0, d.r, 1);
+		dout.b = d.r;
     }
     else if(channel == 3)
     {
-        d = glm::vec4(0, 0, 0, d.r);
-    }
-    else 
-    {
-        d = vec4(0, 0, 0, 1); 
+		dout.a = d.r;
     }
 
-    imageStore(outputImage, id, d); 
+    imageStore(outputImage, id, dout); 
 }
 
 )";
@@ -84,29 +81,19 @@ void ChannelMux::Internal::Run(ImageGPU* input, ImageGPU* output)
         CompileImageComputeShaders(computeShaders, shaderSrc); 
         shaderCompiled = true; 
     }
-
-    
-    if(output->GetType() == ImageType::RGB8 || output->GetType() == ImageType::RGBA8)
-    {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || input->GetType() != ImageType::GRAYSCALE8) 
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
-        }
-    }
-    else if(output->GetType() == ImageType::RGB32F || output->GetType() == ImageType::RGBA32F)
-    {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight()) 
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE32F); 
-        }
-    }
+	
+	if(input->GetWidth() != output->GetWidth() || input->GetHeight() != output->GetHeight() || output->GetWidth() == 0 || output->GetHeight() == 0)
+	{
+		
+		return; 
+	}
 
     ImageType inputType = input->GetType();
 
     ComputeShader& computeShader = computeShaders[inputType];
 
     computeShader.SetImage("inputImage", input);
-    computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
+    computeShader.SetImage("outputImage", output);
 
     computeShader.SetInt("channel", channel); 
 
