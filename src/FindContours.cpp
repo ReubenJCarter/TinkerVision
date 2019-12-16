@@ -241,7 +241,6 @@ void FindContours::Internal::Run(Image* input, Image* output, std::vector<Contou
                         contours->push_back(Contour()); 
                         Contour* c = &contours->at(contours->size()-1);
                         TraceBorder(output, i, j, polyID, c);
-                        //SetPixel(output, i, j, glm::vec4(1, 0, 0, 0)); //Mark start pixel
                     }
                     else
                     {
