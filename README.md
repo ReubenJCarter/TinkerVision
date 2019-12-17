@@ -1,3 +1,3 @@
 # Visi
 
-A vomputer vision library using OpenGL Compute Shaders
+A computer vision library using OpenGL Compute Shaders
