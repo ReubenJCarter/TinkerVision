@@ -19,11 +19,20 @@
 #include "ChannelDemux.h"
 #include "NonMaximumSuppression.h"
 #include "CopyImage.h"
+#include "CannyEdgeDetect.h"
 
 #include <iostream>
 
-int main()
+int main(int argc, char *argv[])
 {
+	std::string testFileName = "aruco.png"; 
+	if(argc > 1)
+	{
+		testFileName = argv[1]; 
+	}
+
+
+
 	Visi::Context context; 
 	context.MakeCurrent(); 
 	
@@ -66,7 +75,7 @@ int main()
 	//Processes
 	//
 
-	Visi::ReadImageFile("aruco.png", &image1);
+	Visi::ReadImageFile(testFileName, &image1);
 	imageGPU1.Copy(&image1);
 
 	//Birghtness Contrast
@@ -270,7 +279,11 @@ int main()
 
 	Visi::Contour::ContoursToFile("image10_3Test.contours", &contoursFiltered); 
 
-	
+	//Canny Edges
+	Visi::CannyEdgeDetect canny; 
+	canny.SetBlurSigma(2); 
+	canny.Run(&imageGPU1, &image2); 
+	Visi::WriteImageFile("image12_1Test.png", &image2);
 
 	
 	std::cout << "DONE\n";

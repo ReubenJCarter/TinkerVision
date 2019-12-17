@@ -31,7 +31,7 @@ std::map<ImageType, ComputeShader> ChannelDemux::Internal::computeShaders;
 
 std::string ChannelDemux::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout(binding=0) writeonly uniform image2D outputImage; //Output here does not need a format qualifier because its write only
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 uniform int channel;
@@ -85,23 +85,10 @@ void ChannelDemux::Internal::Run(ImageGPU* input, ImageGPU* output)
     }
 
     
-    if(input->GetType() == ImageType::RGB8 || input->GetType() == ImageType::RGBA8 || input->GetType() == ImageType::GRAYSCALE8)
+    if(input->GetWidth() != output->GetWidth() || input->GetHeight() != output->GetHeight())
     {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE8) 
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
-        }
-    }
-    else if(input->GetType() == ImageType::RGB32F || input->GetType() == ImageType::RGBA32F || input->GetType() == ImageType::GRAYSCALE32F)
-    {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE32F) 
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE32F); 
-        }
-    }
-    else
-    {
-        return; 
+        ImageType outputType = output->GetType(); 
+        output->Allocate(input->GetWidth(), input->GetHeight(), outputType ); 
     }
 
     ImageType inputType = input->GetType();

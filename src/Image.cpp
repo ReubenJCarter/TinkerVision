@@ -5,6 +5,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <iostream>
+
 namespace Visi 
 {
 	
@@ -113,7 +115,19 @@ void Image::Copy(ImageGPU* image)
 
     if(type == GRAYSCALE8)
     {
+        int W, H, intFor; 
+        glGetTextureLevelParameteriv(texture, 0, GL_TEXTURE_WIDTH, &W); 
+        glGetTextureLevelParameteriv(texture, 0, GL_TEXTURE_HEIGHT, &H); 
+        glGetTextureLevelParameteriv(texture, 0, GL_TEXTURE_INTERNAL_FORMAT, &intFor); 
+        int pack, unpack; 
+        glGetIntegerv(GL_PACK_ALIGNMENT, &pack); 
+        glGetIntegerv(GL_UNPACK_ALIGNMENT, &unpack); 
+        
+        std::cout  << "Image::Copy:GRAYSCALE8:w, h:" << W << " " << H << " pack/unpack align:"<< pack << " " << unpack << " intform " << intFor <<  "\n"; 
+        std::cout  << "Image::Copy:GRAYSCALE8:bufSize:" << width * height << " imageSize:" << W*H <<  "\n"; 
+        //This seems to fail with some non standard image sizes. 
         glGetTextureImage(texture, 0, GL_RED, GL_UNSIGNED_BYTE, width * height, data);
+        std::cout << "Image::Copy:GRAYSCALE8  Done\n"; 
     }
     else if(type == GRAYSCALE16)
     {

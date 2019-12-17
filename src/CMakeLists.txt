@@ -2,6 +2,7 @@ set(LIBRARYSRCFILES
 	AdaptiveThreshold.cpp
 	Blend.cpp
 	BrightnessContrast.cpp
+	CannyEdgeDetect.cpp
 	ChannelDemux.cpp
 	ClearColor.cpp
 	ComputeShader.cpp
@@ -12,6 +13,7 @@ set(LIBRARYSRCFILES
 	GaussianBlur.cpp
 	GrayScale.cpp
 	HSVToRGB.cpp
+	HysteresisEdgeThreshold.cpp
 	Image.cpp
 	ImageGPU.cpp
 	Invert.cpp

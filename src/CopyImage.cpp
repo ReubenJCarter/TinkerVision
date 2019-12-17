@@ -32,7 +32,7 @@ std::map<ImageType, ComputeShader> CopyImage::Internal::computeShaders;
 
 std::string CopyImage::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout( binding=0) writeonly uniform image2D outputImage; //Output here does not need a format qualifier because its write only
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;

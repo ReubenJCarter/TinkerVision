@@ -27,7 +27,7 @@ std::map<ImageType, ComputeShader> GrayScale::Internal::computeShaders;
 
 std::string GrayScale::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout( binding=0) writeonly uniform image2D outputImage; //Output here does not need a format qualifier because its write only
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
@@ -55,10 +55,19 @@ void GrayScale::Internal::Run(ImageGPU* input, ImageGPU* output)
         CompileImageComputeShaders(computeShaders, shaderSrc); 
         shaderCompiled = true; 
     }
-
-    if(!output->IsSameDimensions(input)) 
+    if(input->GetType() == ImageType::RGB32F || input->GetType() == ImageType::RGBA32F)
     {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
+        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE32F)
+        {
+            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE32F); 
+        }
+    }
+    else
+    {
+        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE8)
+        {
+            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
+        }
     }
 
     ImageType inputType = input->GetType();
