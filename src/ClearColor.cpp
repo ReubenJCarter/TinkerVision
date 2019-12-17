@@ -23,7 +23,6 @@ class ClearColor::Internal
        
     public:
         Internal(); 
-        void CompileComputeShaders(std::string sSrc); 
         void Run(ImageGPU* output);
         void Run(Image* output);
         void SetColor(glm::vec4 c);

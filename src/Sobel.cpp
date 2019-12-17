@@ -29,8 +29,8 @@ std::map<ImageType, ComputeShader> Sobel::Internal::computeShaders;
 
 std::string Sobel::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
-layout(rgba32f, binding=1) uniform image2D inputImage;
+layout(rgba32f, binding=0) writeonly uniform image2D outputImage;
+layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
@@ -63,7 +63,6 @@ void main()
     float ori = atan(dy, dx); //equivelent of atan2 in glsl ...hmmm
 
     vec4 outVec = vec4(dx, dy, mag, ori); 
-
     imageStore(outputImage, id, outVec); 
 }
 

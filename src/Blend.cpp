@@ -21,7 +21,6 @@ class Blend::Internal
        
     public:
         Internal(); 
-        void CompileComputeShaders(std::string sSrc); 
         void Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* output, ImageGPU* blendMask=NULL);
         void Run(Image* inputSrc, Image* inputDst, Image* output, Image* blendMask=NULL);
 

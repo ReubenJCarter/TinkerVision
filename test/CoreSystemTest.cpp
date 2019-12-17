@@ -17,6 +17,8 @@
 #include "Invert.h"
 #include "Contour.h"
 #include "ChannelDemux.h"
+#include "NonMaximumSuppression.h"
+#include "CopyImage.h"
 
 #include <iostream>
 
@@ -35,6 +37,7 @@ int main()
 	Visi::ImageGPU imageGPU1;
 	Visi::ImageGPU imageGPU2;
 	Visi::ImageGPU imageGPU3;
+	Visi::ImageGPU imageGPU4;
 
 	//
 	//Pixel access
@@ -146,8 +149,25 @@ int main()
 	demux.SetChannel(2);
 	demux.Run(&imageGPU2, &imageGPU3);
 
-	image2.Copy(&imageGPU3);
-	Visi::WriteImageFile("image8Test.png", &image2);
+	Visi::CopyImage copyImage; 
+	imageGPU4.Allocate(imageGPU3.GetWidth(), imageGPU3.GetWidth(), Visi::ImageType::GRAYSCALE8);
+	copyImage.Run(&imageGPU3, &imageGPU4); 	
+
+	image2.Copy(&imageGPU4);
+	Visi::WriteImageFile("image8_1Test.png", &image2);
+
+	//NMS
+	Visi::NonMaximumSuppression nms; 
+	nms.Run(&imageGPU2, &imageGPU3); 
+
+	demux.SetChannel(2);
+	demux.Run(&imageGPU3, &imageGPU2);
+
+	imageGPU4.Allocate(imageGPU2.GetWidth(), imageGPU2.GetWidth(), Visi::ImageType::GRAYSCALE8);
+	copyImage.Run(&imageGPU2, &imageGPU4); 	
+
+	image2.Copy(&imageGPU4);
+	Visi::WriteImageFile("image8_2Test.png", &image2);
 
 	//Renderer
 	Visi::Renderer renderer; 

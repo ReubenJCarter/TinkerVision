@@ -23,7 +23,6 @@ class MedianFilter::Internal
        
     public:
         Internal(); 
-        void CompileComputeShaders(std::string sSrc); 
         void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
         void SetSize(int s);

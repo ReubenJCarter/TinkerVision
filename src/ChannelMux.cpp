@@ -21,7 +21,6 @@ class ChannelMux::Internal
        
     public:
         Internal(); 
-        void CompileComputeShaders(std::string sSrc); 
         void Run(ImageGPU* input,ImageGPU* output);
         void Run(Image* input, Image* output);
 

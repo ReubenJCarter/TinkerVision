@@ -21,7 +21,6 @@ class ChannelDemux::Internal
        
     public:
         Internal(); 
-        void CompileComputeShaders(std::string sSrc); 
         void Run(ImageGPU* input,ImageGPU* output);
         void Run(Image* input, Image* output);
 
@@ -86,19 +85,23 @@ void ChannelDemux::Internal::Run(ImageGPU* input, ImageGPU* output)
     }
 
     
-    if(input->GetType() == ImageType::RGB8 || input->GetType() == ImageType::RGBA8 || input->GetType() != ImageType::GRAYSCALE8)
+    if(input->GetType() == ImageType::RGB8 || input->GetType() == ImageType::RGBA8 || input->GetType() == ImageType::GRAYSCALE8)
     {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() ) 
+        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE8) 
         {
             output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
         }
     }
-    else if(input->GetType() == ImageType::RGB32F || input->GetType() == ImageType::RGBA32F || input->GetType() != ImageType::GRAYSCALE32F)
+    else if(input->GetType() == ImageType::RGB32F || input->GetType() == ImageType::RGBA32F || input->GetType() == ImageType::GRAYSCALE32F)
     {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight()) 
+        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE32F) 
         {
             output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE32F); 
         }
+    }
+    else
+    {
+        return; 
     }
 
     ImageType inputType = input->GetType();

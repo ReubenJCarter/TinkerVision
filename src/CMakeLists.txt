@@ -7,6 +7,7 @@ set(LIBRARYSRCFILES
 	ComputeShader.cpp
 	Context.cpp
 	Contour.cpp
+	CopyImage.cpp
 	FindContours.cpp
 	GaussianBlur.cpp
 	GrayScale.cpp
@@ -15,6 +16,7 @@ set(LIBRARYSRCFILES
 	ImageGPU.cpp
 	Invert.cpp
 	MedianFilter.cpp
+	NonMaximumSuppression.cpp
 	ProcessHelper.cpp
 	ReadImageFile.cpp
 	Renderer.cpp

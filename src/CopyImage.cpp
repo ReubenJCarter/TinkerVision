@@ -1,4 +1,4 @@
-#include "Threshold.h"
+#include "CopyImage.h"
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
@@ -12,54 +12,48 @@
 namespace Visi
 {
 
-class Threshold::Internal
+class CopyImage::Internal
 {
     private:
         static std::map<ImageType, ComputeShader> computeShaders; 
         static std::string shaderSrc; 
-        static bool shaderCompiled; 
+        static bool shaderCompiled;    
+        
+        bool formatTranslate; 
 
-        glm::vec3 threshold; 
-       
     public:
         Internal(); 
         void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
-        void SetThreshold(float t);
-        void SetThreshold(glm::vec3 t);
+        void SetFormatTranslate(bool ftr);
 };
 
-std::map<ImageType, ComputeShader> Threshold::Internal::computeShaders;
+std::map<ImageType, ComputeShader> CopyImage::Internal::computeShaders;
 
-std::string Threshold::Internal::shaderSrc = R"(
+std::string CopyImage::Internal::shaderSrc = R"(
 
 layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
-
-uniform vec3 threshold; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
     vec4 d = imageLoad(inputImage, id);
-    d.r = d.r <= threshold.r ? 0.0f : 1.0f; 
-    d.g = d.g <= threshold.g ? 0.0f : 1.0f; 
-    d.b = d.b <= threshold.b ? 0.0f : 1.0f; 
     imageStore(outputImage, id, d); 
 }
 
 )";
 
-bool Threshold::Internal::shaderCompiled = false; 
+bool CopyImage::Internal::shaderCompiled = false; 
 
-Threshold::Internal::Internal()
+CopyImage::Internal::Internal()
 {
-    threshold = glm::vec3(0.5, 0.5, 0.5);
+    formatTranslate = true; 
 }
 
 
-void Threshold::Internal::Run(ImageGPU* input, ImageGPU* output)
+void CopyImage::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
@@ -67,16 +61,25 @@ void Threshold::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(!output->IsSameDimensions(input)) 
+
+    if(formatTranslate)
     {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
+        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() )
+        {
+            output->Allocate(input->GetWidth(), input->GetHeight(), output->GetType()); 
+        }
+    }
+    else
+    {
+        if(!output->IsSameDimensions(input)) 
+        {
+            output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
+        }
     }
 
     ImageType inputType = input->GetType();
 
     ComputeShader& computeShader = computeShaders[inputType];
-
-    computeShader.SetFloat3("threshold", glm::value_ptr(threshold)); 
 
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
@@ -86,7 +89,7 @@ void Threshold::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.Block();
 }
 
-void Threshold::Internal::Run(Image* input, Image* output)
+void CopyImage::Internal::Run(Image* input, Image* output)
 {
     if(!output->IsSameDimensions(input)) 
     {
@@ -106,46 +109,36 @@ void Threshold::Internal::Run(Image* input, Image* output)
     } 
 }
 
-void Threshold::Internal::SetThreshold(float t)
+void CopyImage::Internal::SetFormatTranslate(bool ftr)
 {
-    threshold = glm::vec3(t, t, t);
-}
-
-void Threshold::Internal::SetThreshold(glm::vec3 t)
-{
-    threshold = t;
+    formatTranslate = ftr;
 }
 
 
 
-Threshold::Threshold()
+CopyImage::CopyImage()
 {
     internal = new Internal(); 
 }
 
-Threshold::~Threshold()
+CopyImage::~CopyImage()
 {
     delete internal; 
 }
 
-void Threshold::SetThreshold(float t)
-{
-    internal->SetThreshold(t);
-}
-
-void Threshold::SetThreshold(glm::vec3 t)
-{
-    internal->SetThreshold(t);
-}
-
-void Threshold::Run(ImageGPU* input, ImageGPU* output)
+void CopyImage::Run(ImageGPU* input, ImageGPU* output)
 {
     internal->Run(input, output); 
 }
 
-void Threshold::Run(Image* input, Image* output)
+void CopyImage::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
+}
+
+void CopyImage::SetFormatTranslate(bool ftr)
+{
+    internal->SetFormatTranslate(ftr);
 }
 
 }
