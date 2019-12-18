@@ -138,6 +138,9 @@ void GaussianBlur::Internal::Run(ImageGPU* input, ImageGPU* output)
         output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     }
 
+    if(sigma == 0)
+        return; 
+
     if(guassFuncGPUDirty)
     {
         guassFuncGPU.Allocate(size, 1, ImageType::GRAYSCALE32F); 
@@ -191,12 +194,16 @@ void GaussianBlur::Internal::Run(Image* input, Image* output)
 void GaussianBlur::Internal::SetSigma(float s)
 {
     sigma = s; 
+
+    if(sigma == 0)
+        return; 
+
     size = ceil(3.0 * sigma); 
 
     //Compute Guass 1d
     guassFunc.clear(); 
     guassFunc.reserve(size);
-     
+
     for(int i = 0; i < size; i++)
     {
         float x = i;

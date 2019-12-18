@@ -65,19 +65,28 @@ void CannyEdgeDetect::Internal::Run(ImageGPU* input, Image* output)
         RunGray(input, &tempGPU[0]); 
         input = &tempGPU[0]; 
     }
+    if(sigma != 0)
+    {
+        tempGPU[1].Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
+        RunBlur(input, &tempGPU[1]); 
+        RunSobel(&tempGPU[1], &tempGPU[2]); 
+    }
+    else
+    {
+        tempGPU[1].Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
+        RunSobel(&tempGPU[0], &tempGPU[2]); 
+    }
 
-    RunBlur(input, &tempGPU[1]); 
-    RunSobel(&tempGPU[1], &tempGPU[2]); 
     RunNMS(&tempGPU[2], &tempGPU[3]); 
 
     Visi::ChannelDemux demux; 
-	demux.SetChannel(2);
-	demux.Run(&tempGPU[3], &tempGPU[1]);
-   
+    demux.SetChannel(2);
+    demux.Run(&tempGPU[3], &tempGPU[1]);
+
     temp.Copy(&tempGPU[1]); 
     RunThresholding(&temp, output); 
-
-    output->Copy(&tempGPU[1]); 
+    
+    //output->Copy(&tempGPU[1]); 
 }
 
 

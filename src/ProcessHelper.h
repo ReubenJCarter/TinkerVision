@@ -20,5 +20,6 @@ glm::ivec4 GetPixelUI(Image* image, int x, int y);
 glm::ivec4 GetPixelI(Image* image, int x, int y); 
 
 void SetPixel(Image* image, int x, int y, glm::vec4 v); 
+void SetPixelUI(Image* image, int x, int y, glm::ivec4 v); 
 
 }

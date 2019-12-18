@@ -281,7 +281,10 @@ int main(int argc, char *argv[])
 
 	//Canny Edges
 	Visi::CannyEdgeDetect canny; 
-	canny.SetBlurSigma(2); 
+	canny.SetBlurSigma(0.5); 
+	canny.SetLowEdgeThreshold(0.25);
+	canny.SetHighEdgeThreshold(0.5);
+
 	canny.Run(&imageGPU1, &image2); 
 	Visi::WriteImageFile("image12_1Test.png", &image2);
 

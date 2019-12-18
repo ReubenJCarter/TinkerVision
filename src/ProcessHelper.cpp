@@ -324,4 +324,59 @@ void SetPixel(Image* image, int x, int y, glm::vec4 v)
     }
 }
 
+void SetPixelUI(Image* image, int x, int y, glm::ivec4 v)
+{
+    if(x < 0 || y < 0 || x >= image->GetWidth() || y >= image->GetHeight())
+        return; 
+
+    unsigned char* data = image->GetData(); 
+    ImageType imageType = image->GetType(); 
+    unsigned int inx; 
+    if(imageType == ImageType::GRAYSCALE8)
+    {
+        inx = (y * image->GetWidth() + x) * 1;
+        data[inx] = v.r;
+    }
+    else if(imageType == ImageType::GRAYSCALE16)
+    {
+        inx = (y * image->GetWidth() + x) * 1;
+        ((uint16_t*)data)[inx] = v.r;
+    }
+    else if(imageType == ImageType::GRAYSCALE32F)
+    {
+        inx = (y * image->GetWidth() + x);
+        ((float*)data)[inx] = v.r / 255.0f;
+    }
+    else if(imageType == ImageType::RGB8)
+    {
+        inx = (y * image->GetWidth() + x) * 3;
+        data[inx + 2] = v.r;
+        data[inx + 1] = v.g;
+        data[inx + 0] = v.b;
+    }
+    else if(imageType == ImageType::RGB32F)
+    {
+        inx = (y * image->GetWidth() + x) * 3;
+        ((float*)data)[inx + 2]  = v.r / 255.0f;
+        ((float*)data)[inx + 1]  = v.g / 255.0f;
+        ((float*)data)[inx + 0]  = v.b / 255.0f;
+    }
+    else if(imageType == ImageType::RGBA8)
+    {
+        inx = (y * image->GetWidth() + x) * 4;
+        data[inx + 2] = v.r;
+        data[inx + 1] = v.g;
+        data[inx + 0] = v.b;
+        data[inx + 3] = v.a;
+    }
+    else if(imageType == ImageType::RGBA32F)
+    {
+        inx = (y * image->GetWidth() + x) * 4;
+        ((float*)data)[inx + 2]  = v.r / 255.0f;
+        ((float*)data)[inx + 1]  = v.g / 255.0f;
+        ((float*)data)[inx + 0]  = v.b / 255.0f;
+        ((float*)data)[inx + 3]  = v.a / 255.0f;
+    }
+}
+
 }
