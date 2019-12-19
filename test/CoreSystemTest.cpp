@@ -313,7 +313,7 @@ int main(int argc, char *argv[])
 	Visi::CornerDetector cornerDetector; 
 	cornerDetector.Run(&imageGPU2, &imageGPU3);
 
-	demux.SetChannel(0);
+	demux.SetChannel(2);
 	demux.Run(&imageGPU3, &imageGPU4);
 
 	image2.Copy(&imageGPU4);

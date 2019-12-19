@@ -80,10 +80,7 @@ void main()
     float traceA = d.x + d.z;
 
     float harrisResponse = detA - k * traceA * traceA; 
-
-
-
-    imageStore(outputImage, id, vec4(harrisResponse, 0, 0, 1)); 
+    imageStore(outputImage, id, vec4(harrisResponse, harrisResponse, harrisResponse, 1)); 
 }
 
 )";
@@ -146,6 +143,7 @@ void CornerDetector::Internal::Run(ImageGPU* input, ImageGPU* output)
     harrisShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
     harrisShader.Dispatch(groupCount.x, groupCount.y, 1); 
     harrisShader.Block();
+    
 }
 
 void CornerDetector::Internal::Run(Image* input, Image* output)
