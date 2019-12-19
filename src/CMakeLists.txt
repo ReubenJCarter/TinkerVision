@@ -1,5 +1,6 @@
 set(LIBRARYSRCFILES
 	AdaptiveThreshold.cpp
+	BilateralFilter.cpp
 	Blend.cpp
 	BrightnessContrast.cpp
 	CannyEdgeDetect.cpp
@@ -9,8 +10,10 @@ set(LIBRARYSRCFILES
 	Context.cpp
 	Contour.cpp
 	CopyImage.cpp
+	CornerDetector.cpp
 	FindContours.cpp
 	GaussianBlur.cpp
+	GaussianDerivative.cpp
 	GrayScale.cpp
 	HSVToRGB.cpp
 	HysteresisEdgeThreshold.cpp
@@ -18,7 +21,9 @@ set(LIBRARYSRCFILES
 	ImageGPU.cpp
 	Invert.cpp
 	MedianFilter.cpp
+	Morph.cpp
 	NonMaximumSuppression.cpp
+	Normalize.cpp
 	ProcessHelper.cpp
 	ReadImageFile.cpp
 	Renderer.cpp

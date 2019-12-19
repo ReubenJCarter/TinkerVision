@@ -20,6 +20,9 @@
 #include "NonMaximumSuppression.h"
 #include "CopyImage.h"
 #include "CannyEdgeDetect.h"
+#include "GaussianDerivative.h"
+#include "CornerDetector.h"
+#include "Normalize.h"
 
 #include <iostream>
 
@@ -288,7 +291,44 @@ int main(int argc, char *argv[])
 	canny.Run(&imageGPU1, &image2); 
 	Visi::WriteImageFile("image12_1Test.png", &image2);
 
+	//GaussianDerivative
+	grayScale.Run(&imageGPU1, &imageGPU2); 
+
+	Visi::GaussianDerivative guassDeriv; 
+	guassDeriv.SetDirection(Visi::GaussianDerivative::Direction::HORIZONTAL); 
+	guassDeriv.Run(&imageGPU2, &imageGPU3); 
+
+	image2.Copy(&imageGPU3);
+	Visi::WriteImageFile("image13_1Test.png", &image2);
+
+	guassDeriv.SetDirection(Visi::GaussianDerivative::Direction::VERTICAL); 
+	guassDeriv.Run(&imageGPU2, &imageGPU3); 
+
+	image2.Copy(&imageGPU3);
+	Visi::WriteImageFile("image13_2Test.png", &image2);
 	
+	//Corner detector
+	grayScale.Run(&imageGPU1, &imageGPU2); 
+
+	Visi::CornerDetector cornerDetector; 
+	cornerDetector.Run(&imageGPU2, &imageGPU3);
+
+	demux.SetChannel(0);
+	demux.Run(&imageGPU3, &imageGPU4);
+
+	image2.Copy(&imageGPU4);
+
+	Visi::Normalize normalize; 
+	normalize.Run(&image2, &image3); 
+	
+	imageGPU3.Copy(&image3);
+
+	imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Visi::ImageType::GRAYSCALE8); 
+	copyImage.Run(&imageGPU3, &imageGPU2); 
+	image2.Copy(&imageGPU2);
+
+	Visi::WriteImageFile("image14_1Test.png", &image2);
+
 	std::cout << "DONE\n";
 	return 1; 
 }
