@@ -17,6 +17,8 @@
 namespace Visi
 {
 
+//http://www.ipol.im/pub/art/2018/229/article_lr.pdf
+
 class CornerDetector::Internal
 {
     private:
@@ -32,7 +34,8 @@ class CornerDetector::Internal
 
         ImageGPU temp[4]; 
 
-        float sigma; 
+        float sigmaD; 
+        float sigmaI; 
         float k; 
 
     public:
@@ -40,7 +43,8 @@ class CornerDetector::Internal
         void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
 
-        void SetSigma(float sig); 
+        void SetSigmaI(float sig); 
+        void SetSigmaD(float sig); 
         void SetK(float kk); 
 };
 
@@ -89,7 +93,8 @@ bool CornerDetector::Internal::shaderCompiled = false;
 
 CornerDetector::Internal::Internal()
 {
-    sigma = 1; 
+    sigmaI = 1; 
+    sigmaD = 1; 
     k = 0.05;
 }
 
@@ -117,29 +122,33 @@ void CornerDetector::Internal::Run(ImageGPU* input, ImageGPU* output)
         input = &temp[0]; 
     } 
 
+    //Gaussian Blur ( gray in, gray output)
+    gaussianBlur.SetSigma(sigmaD); 
+    gaussianBlur.Run(input, &temp[1]);
+
     //Sobel Gradients ( gray in, 4xfloat output)
-    sobel.Run(input, &temp[1]); 
+    sobel.Run(&temp[1], &temp[2]); 
 
     //Compute Ix^2 IxIy Iy^2
-    if( temp[2].GetWidth() != input->GetWidth() || temp[2].GetHeight() != input->GetHeight() || temp[2].GetType() != ImageType::RGBA32F)
+    if( temp[3].GetWidth() != input->GetWidth() || temp[3].GetHeight() != input->GetHeight() || temp[3].GetType() != ImageType::RGBA32F)
     {
-        temp[2].Allocate(input->GetWidth(), input->GetHeight(), ImageType::RGBA32F);
+        temp[3].Allocate(input->GetWidth(), input->GetHeight(), ImageType::RGBA32F);
     }
     ComputeShader& structureTensorShader = structureTensorShaders[ImageType::RGBA32F];
-    structureTensorShader.SetImage("inputImage", &temp[1]);
-    structureTensorShader.SetImage("outputImage", &temp[2], ComputeShader::WRITE_ONLY);
+    structureTensorShader.SetImage("inputImage", &temp[2]);
+    structureTensorShader.SetImage("outputImage", &temp[3], ComputeShader::WRITE_ONLY);
     structureTensorShader.Dispatch(groupCount.x, groupCount.y, 1); 
-    structureTensorShader.Block();
+    structureTensorShader.Block(); 
 
     //Gaussian Blur ( gray in, gray output)
-    gaussianBlur.SetSigma(sigma); 
-    gaussianBlur.Run(&temp[2], &temp[1]); 
+    gaussianBlur.SetSigma(sigmaI); 
+    gaussianBlur.Run(&temp[3], &temp[2]);
 
     //Compute Harris response
     ImageType inputType = input->GetType();
     ComputeShader& harrisShader = harrisShaders[inputType];
     harrisShader.SetFloat("k", k); 
-    harrisShader.SetImage("inputImage", &temp[1]);
+    harrisShader.SetImage("inputImage", &temp[2]);
     harrisShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
     harrisShader.Dispatch(groupCount.x, groupCount.y, 1); 
     harrisShader.Block();
@@ -160,9 +169,14 @@ void CornerDetector::Internal::Run(Image* input, Image* output)
     
 }
 
-void CornerDetector::Internal::SetSigma(float sig)
+void CornerDetector::Internal::SetSigmaI(float sig)
 {
-    sigma = sig; 
+    sigmaI = sig; 
+}
+
+void CornerDetector::Internal::SetSigmaD(float sig)
+{
+    sigmaD = sig; 
 }
 
 void CornerDetector::Internal::SetK(float kk)

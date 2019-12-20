@@ -59,6 +59,11 @@ void main()
     dy += imageLoad(inputImage, id + ivec2(0,  1)).r * -2.0f;
     dy += imageLoad(inputImage, id + ivec2(1,  1)).r * -1.0f;
 
+    //Normalization Neeeded??
+    dx /= 8.0f;
+    dy /= 8.0f;
+
+    //mag ori calc
     float mag = length(vec2(dx, dy)); 
     float ori = atan(dy, dx); //equivelent of atan2 in glsl ...hmmm
 
