@@ -256,8 +256,9 @@ int main(int argc, char *argv[])
 	Visi::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 3);
 	std::vector<Visi::Contour> contoursMerged; 
 	Visi::Contour::ContoursMergeVerticies(&contoursSimplified, &contoursMerged, 4);
+	Visi::Contour::ContoursSimplify(&contoursMerged, &contoursSimplified, 5);
 	std::vector<Visi::Contour> contoursQuads; 
-	Visi::Contour::ContoursVertCountFilter(&contoursMerged, &contoursQuads, 4, 5);
+	Visi::Contour::ContoursVertCountFilter(&contoursSimplified, &contoursQuads, 4, 5);
 
 	renderer.Clear(); 
 	renderer.AddContours(&contoursFiltered, true, 1, false, true); 
@@ -310,24 +311,31 @@ int main(int argc, char *argv[])
 	//Corner detector
 	grayScale.Run(&imageGPU1, &imageGPU2); 
 
+	Visi::ImageGPU imageGPU5; 
 	Visi::CornerDetector cornerDetector; 
-	cornerDetector.Run(&imageGPU2, &imageGPU3);
+	cornerDetector.Run(&imageGPU2, &imageGPU5);
 
-	demux.SetChannel(2);
-	demux.Run(&imageGPU3, &imageGPU4);
-
+	imageGPU4.Allocate(imageGPU5.GetWidth(), imageGPU5.GetHeight(), Visi::ImageType::RGBA32F); 
+	demux.SetChannel(0);
+	demux.Run(&imageGPU5, &imageGPU4);
 	image2.Copy(&imageGPU4);
-
 	Visi::Normalize normalize; 
 	normalize.Run(&image2, &image3); 
-	
 	imageGPU3.Copy(&image3);
-
 	imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Visi::ImageType::GRAYSCALE8); 
 	copyImage.Run(&imageGPU3, &imageGPU2); 
 	image2.Copy(&imageGPU2);
-
 	Visi::WriteImageFile("image14_1Test.png", &image2);
+
+	demux.SetChannel(1);
+	demux.Run(&imageGPU5, &imageGPU4);
+	image2.Copy(&imageGPU4);
+	normalize.Run(&image2, &image3); 
+	imageGPU3.Copy(&image3);
+	imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Visi::ImageType::GRAYSCALE8); 
+	copyImage.Run(&imageGPU3, &imageGPU2); 
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image14_2Test.png", &image2);
 
 	std::cout << "DONE\n";
 	return 1; 

@@ -52,6 +52,14 @@ int main(int argc, char *argv[])
 	Visi::ReadImageFile(argv[1], &image1);
 	imageGPU1.Copy(&image1);
 
+	//RGBToHSV vv HSVToRGB
+	Visi::RGBToHSV rgbtohsv; 
+	rgbtohsv.Run(&imageGPU1, &imageGPU2); 
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("MarkerTestHSV.png", &image2);
+
+	
+
 	//Median Filter
 	Visi::MedianFilter medianFilter; 
 	medianFilter.SetSize(3); 
@@ -67,9 +75,14 @@ int main(int argc, char *argv[])
 
 	//Adaptive Threshold
 	Visi::AdaptiveThreshold adaptiveThreshold; 
-	adaptiveThreshold.SetThreshold(0.03); 
-	adaptiveThreshold.SetSize(200); 
+	adaptiveThreshold.SetThreshold(0.02); 
+	adaptiveThreshold.SetSize(7); 
 	adaptiveThreshold.Run(&imageGPU2, &imageGPU3); 
+
+	//Normal threshold
+	Visi::Threshold threshold; 
+	threshold.SetThreshold(0.5); 
+	threshold.Run(&imageGPU2, &imageGPU3); 
 
 	//Invert
 	Visi::Invert invert;
@@ -89,8 +102,9 @@ int main(int argc, char *argv[])
 	Visi::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 3);
 	std::vector<Visi::Contour> contoursMerged; 
 	Visi::Contour::ContoursMergeVerticies(&contoursSimplified, &contoursMerged, 4);
+	Visi::Contour::ContoursSimplify(&contoursMerged, &contoursSimplified, 5);
 	std::vector<Visi::Contour> contoursQuads; 
-	Visi::Contour::ContoursVertCountFilter(&contoursMerged, &contoursQuads, 4, 5);
+	Visi::Contour::ContoursVertCountFilter(&contoursSimplified, &contoursQuads, 4, 5);
 
 	Visi::Renderer renderer; 
 	renderer.Clear(); 

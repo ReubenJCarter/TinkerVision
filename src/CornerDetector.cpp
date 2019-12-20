@@ -6,6 +6,7 @@
 #include "GrayScale.h"
 #include "GaussianBlur.h"
 #include "Sobel.h"
+#include "NonMaximumSuppression.h"
 
 
 #include <string>
@@ -31,12 +32,14 @@ class CornerDetector::Internal
         GrayScale grayscale; 
         GaussianBlur gaussianBlur; 
         Sobel sobel; 
+        NonMaximumSuppression nms; 
 
         ImageGPU temp[4]; 
 
         float sigmaD; 
         float sigmaI; 
-        float k; 
+        float harrisK; 
+        float shiTomasiThreshold;
 
     public:
         Internal(); 
@@ -46,6 +49,8 @@ class CornerDetector::Internal
         void SetSigmaI(float sig); 
         void SetSigmaD(float sig); 
         void SetK(float kk); 
+        void SetHarrisK(float kk);
+        void SetShiTomasiThreshold(float t);
 };
 
 std::map<ImageType, ComputeShader> CornerDetector::Internal::structureTensorShaders;
@@ -71,20 +76,38 @@ std::string CornerDetector::Internal::harrisShaderSrc = R"(
 layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
-uniform float k;
+uniform float harrisK;
+uniform float shiTomasiThreshold;
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
     vec4 d = imageLoad(inputImage, id); 
+    float IxIx = d.x;
+    float IxIy = d.y;
+    float IyIy = d.z;
     
-    float detA = d.x * d.z - d.y * d.y;
+    
+    //compute the det and trace
+    float detM = IxIx * IyIy - IxIy * IxIy;
+    float traceM = IxIx + IyIy;
+    float harrisResponse = detM - harrisK * traceM * traceM; 
 
-    float traceA = d.x + d.z;
+    //Compute eigen values from det and trace
+    //float lamd0 = (-traceM + sqrt(traceM * traceM - 4 * (-1) * (-detM) )) / (2 * -1);
+    //float lamd1 = (-traceM - sqrt(traceM * traceM - 4 * (-1) * (-detM) )) / (2 * -1);
+    //float shiTomasiResponse = min(lamd0, lamd1); 
+    //shiTomasiResponse = shiTomasiResponse > shiTomasiThreshold ? shiTomasiResponse : 0; 
+    float A = IxIx;
+    float B = IxIy;
+    float C = IyIy;
+    float AsubC = (A - C); 
+    float lamdaMin = (A + C - sqrt( AsubC*AsubC + 4 * B*B ) ) / 2;
+    float shiTomasiResponse = lamdaMin > shiTomasiThreshold ? lamdaMin : 0;
 
-    float harrisResponse = detA - k * traceA * traceA; 
-    imageStore(outputImage, id, vec4(harrisResponse, harrisResponse, harrisResponse, 1)); 
+
+    imageStore(outputImage, id, vec4(shiTomasiResponse, harrisResponse, 0, 1)); 
 }
 
 )";
@@ -93,9 +116,10 @@ bool CornerDetector::Internal::shaderCompiled = false;
 
 CornerDetector::Internal::Internal()
 {
-    sigmaI = 1; 
+    sigmaI = 2; 
     sigmaD = 1; 
-    k = 0.05;
+    harrisK = 0.05;
+    shiTomasiThreshold = 0.001;
 }
 
 
@@ -108,9 +132,9 @@ void CornerDetector::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE32F)
+    if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::RGBA32F)
     {
-        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE32F); 
+        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::RGBA32F); 
     }
 
     glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(input->GetWidth(), input->GetHeight()), glm::i32vec2(16, 16)); 
@@ -145,14 +169,14 @@ void CornerDetector::Internal::Run(ImageGPU* input, ImageGPU* output)
     gaussianBlur.Run(&temp[3], &temp[2]);
 
     //Compute Harris response
-    ImageType inputType = input->GetType();
-    ComputeShader& harrisShader = harrisShaders[inputType];
-    harrisShader.SetFloat("k", k); 
+    ComputeShader& harrisShader = harrisShaders[ImageType::RGBA32F];
+    harrisShader.SetFloat("harrisK", harrisK); 
+    harrisShader.SetFloat("shiTomasiThreshold", shiTomasiThreshold);
     harrisShader.SetImage("inputImage", &temp[2]);
     harrisShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
     harrisShader.Dispatch(groupCount.x, groupCount.y, 1); 
     harrisShader.Block();
-    
+
 }
 
 void CornerDetector::Internal::Run(Image* input, Image* output)
@@ -179,9 +203,14 @@ void CornerDetector::Internal::SetSigmaD(float sig)
     sigmaD = sig; 
 }
 
-void CornerDetector::Internal::SetK(float kk)
+void CornerDetector::Internal::SetHarrisK(float kk)
 {
-    k = kk;
+    harrisK = kk;
+}
+
+void CornerDetector::Internal::SetShiTomasiThreshold(float t)
+{
+    shiTomasiThreshold = t;
 }
 
 
