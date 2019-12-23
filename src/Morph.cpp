@@ -18,11 +18,18 @@ class Morph::Internal
         static std::map<ImageType, ComputeShader> computeShaders; 
         static std::string shaderSrc; 
         static bool shaderCompiled; 
+        
+        Shape shape; 
+        int size; 
+        Mode mode; 
 
     public:
         Internal(); 
         void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
+
+        void SetMode(Mode m);
+        void SetKernel(int si, Shape sh);  
 };
 
 std::map<ImageType, ComputeShader> Morph::Internal::computeShaders;
@@ -59,11 +66,9 @@ void Morph::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(output->GetWidth() != input->GetWidth() || 
-       output->GetHeight() != input->GetHeight() || 
-       output->GetType() != ImageType::RGBA32F)
+    if(!input->IsSameDimensions(output))
     {
-        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::RGBA32F); 
+        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     }
     
     ImageType inputType = input->GetType();
@@ -93,6 +98,19 @@ void Morph::Internal::Run(Image* input, Image* output)
     
 }
 
+void Morph::Internal::SetMode(Mode m)
+{
+    mode = m;
+}
+
+void Morph::Internal::SetKernel(int si, Shape sh)
+{
+    shape = sh;
+    size = si;
+
+
+}
+
 
 
 
@@ -114,6 +132,16 @@ void Morph::Run(ImageGPU* input, ImageGPU* output)
 void Morph::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
+}
+
+void Morph::SetMode(Mode mode)
+{
+    internal->SetMode(mode); 
+}
+
+void Morph::SetKernel(int size, Shape shape)
+{
+    internal->SetKernel(size, shape); 
 }
 
 }

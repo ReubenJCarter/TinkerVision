@@ -84,6 +84,7 @@ void CannyEdgeDetect::Internal::Run(ImageGPU* input, Image* output)
     demux.Run(&tempGPU[3], &tempGPU[1]);
 
     temp.Copy(&tempGPU[1]); 
+
     RunThresholding(&temp, output); 
     
     //output->Copy(&tempGPU[1]); 

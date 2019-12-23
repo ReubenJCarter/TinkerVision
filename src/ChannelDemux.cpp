@@ -44,19 +44,19 @@ void main()
 
     if(channel == 0)
     {   
-        d = glm::vec4(d.r, 0, 0, 1);
+        d = vec4(d.r, 0, 0, 1);
     }
     else if(channel == 1)
     {
-        d = glm::vec4(d.g, 0, 0, 1);
+        d = vec4(d.g, 0, 0, 1);
     }
     else if(channel == 2)
     {
-        d = glm::vec4(d.b, 0, 0, 1);
+        d = vec4(d.b, 0, 0, 1);
     }
     else if(channel == 3)
     {
-        d = glm::vec4(d.a, 0, 0, 1);
+        d = vec4(d.a, 0, 0, 1);
     }
     else 
     {

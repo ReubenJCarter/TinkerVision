@@ -6,26 +6,26 @@
 #include "Image.h"
 #include "ImageGPU.h"
 
+#include <glm/glm.hpp>
+
 namespace Visi
 {
 	
-class VISI_EXPORT Morph
+class VISI_EXPORT HighLowThreshold
 {
     private: 
         class Internal;
         Internal* internal;
 
 	public:
-        enum Mode{ERODE, DILATE};
-        enum Shape{SQUARE, CROSS, DIAMOND};
-
-		Morph(); 
-        ~Morph(); 
+		HighLowThreshold(); 
+        ~HighLowThreshold(); 
+        void SetLowThreshold(float t);
+        void SetHighThreshold(float t);
+        void SetLowThreshold(glm::vec3 t);
+        void SetHighThreshold(glm::vec3 t);
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
-
-        void SetMode(Mode mode);
-        void SetKernel(int size, Shape shape);  
 };
 	
 }

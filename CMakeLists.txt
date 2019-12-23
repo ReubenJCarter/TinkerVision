@@ -9,7 +9,6 @@ include (GenerateExportHeader)
 set(SoftwareVersion 0.1)
 add_definitions(-DSOFTWAREVERSION=${SoftwareVersion})
 
-set(CMAKE_AUTOMOC ON)
 
 set(CMAKE_BUILD_TYPE RELEASE)
 set(GCC_COMPILE_FLAGS "-std=c++11 -Wall -O3 -g -static")

@@ -18,24 +18,12 @@
 #include "Contour.h"
 #include "Blend.h"
 #include "ChannelDemux.h"
+#include "HighLowThreshold.h"
 
 #include <iostream>
 
-int main(int argc, char *argv[])
+void ARUCOMarkerDetection(Visi::Image& image1)
 {
-	if(argc <= 1)
-	{
-		std::cerr << "To Few Arguments \n"; 
-		return 0 ; 
-	}
-
-	Visi::Context context; 
-	context.MakeCurrent(); 
-	
-	std::cout << "Running Test\n"; 
-
-
-	Visi::Image image1; 
 	Visi::Image image2; 
 	Visi::Image image3; 
 
@@ -44,29 +32,11 @@ int main(int argc, char *argv[])
 	Visi::ImageGPU imageGPU3;
 	Visi::ImageGPU imageGPU4;
 
+	imageGPU1.Copy(&image1);
 
 	//
 	//Processes
 	//
-
-	Visi::ReadImageFile(argv[1], &image1);
-	imageGPU1.Copy(&image1);
-
-	//RGBToHSV vv HSVToRGB
-	Visi::RGBToHSV rgbtohsv; 
-	rgbtohsv.Run(&imageGPU1, &imageGPU2); 
-	image2.Copy(&imageGPU2);
-	Visi::WriteImageFile("MarkerTestHSV.png", &image2);
-
-	
-
-	//Median Filter
-	Visi::MedianFilter medianFilter; 
-	medianFilter.SetSize(3); 
-	medianFilter.Run(&imageGPU1, &imageGPU2); 
-	image2.Copy(&imageGPU2);
-	Visi::WriteImageFile("MarkerTestMedian.png", &image2);
-
 	//Greyscale
 	Visi::GrayScale grayScale;
 	grayScale.Run(&imageGPU1, &imageGPU2); 
@@ -129,9 +99,60 @@ int main(int argc, char *argv[])
 
 
 	Visi::Contour::ContoursToFile("MarkerTest.contours", &contoursQuads); 
+}
+
+void BarCodeDetect(Visi::Image& image1)
+{	
+	Visi::Image image2; 
+	Visi::Image image3; 
+
+	Visi::ImageGPU imageGPU1;
+	Visi::ImageGPU imageGPU2;
+	Visi::ImageGPU imageGPU3;
+	Visi::ImageGPU imageGPU4;
+
+
+	imageGPU1.Copy(&image1);
+
+	//
+	//Processes
+	//
+
+	//RGBToHSV vv HSVToRGB
+	Visi::RGBToHSV rgbtohsv; 
+	rgbtohsv.Run(&imageGPU1, &imageGPU2); 
+	image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("MarkerTestHSV.png", &image2);
+
+	//High Low Threshold on hsv to pull out the red color of the tape
+	Visi::HighLowThreshold hlThres; 
+	hlThres.SetLowThreshold(glm::vec3(0.0, 0.0, 0.0));
+	hlThres.SetHighThreshold(glm::vec3(0.1, 1.0, 1.0) ); 
+	hlThres.Run(&imageGPU2, &imageGPU3); 
+	image2.Copy(&imageGPU3);
+	Visi::WriteImageFile("MarkerTestHSVRedThres.png", &image2);
 
 	
+}
 
+int main(int argc, char *argv[])
+{
+	if(argc <= 1)
+	{
+		std::cerr << "To Few Arguments \n"; 
+		return 0 ; 
+	}
+
+	Visi::Context context; 
+	context.MakeCurrent(); 
+	
+	std::cout << "Running Test\n"; 
+	
+	Visi::Image image1; 
+	Visi::ReadImageFile(argv[1], &image1);
+
+	//ARUCOMarkerDetection(image1); 
+	BarCodeDetect(image1); 
 	
 	std::cout << "DONE\n";
 	return 1; 
