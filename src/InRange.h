@@ -11,15 +11,15 @@
 namespace Visi
 {
 	
-class VISI_EXPORT HighLowThreshold
+class VISI_EXPORT InRange
 {
     private: 
         class Internal;
         Internal* internal;
 
 	public:
-		HighLowThreshold(); 
-        ~HighLowThreshold(); 
+		InRange(); 
+        ~InRange(); 
         void SetLowThreshold(float t);
         void SetHighThreshold(float t);
         void SetLowThreshold(glm::vec3 t);

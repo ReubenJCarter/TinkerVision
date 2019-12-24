@@ -36,16 +36,86 @@ std::map<ImageType, ComputeShader> Morph::Internal::computeShaders;
 
 std::string Morph::Internal::shaderSrc = R"(
 
+#define SQUARE 0
+#define CROSS 1
+#define DIAMOND 2
+
+#define ERODE 0
+#define DILATE 1
+
 layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
+
+uniform int mode;
+uniform int size; 
+uniform int shape; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
 
+    int halfSize = size/2; 
+    vec4 outVec = vec4(0, 0, 0, 1); 
+
+    if(mode == ERODE)
+    {
+        ivec4 darkDetect = ivec4(0, 0, 0, 0); 
+
+        for(int i = 0; i < size; i++)
+        {
+            int Y = i - halfSize; 
+            for(int j = 0; j < size; j++)
+            {
+                int X = j - halfSize; 
+
+                ivec2 kernalId = ivec2(j, i);
+
+                ivec2 imageId = id + ivec2(X, Y); 
+                vec4 imageIn = imageLoad(inputImage, imageId);
+                if(imageIn.r < 0.5)
+                    darkDetect.r = 1;
+                if(imageIn.g < 0.5)
+                    darkDetect.g = 1;
+                if(imageIn.b < 0.5)
+                    darkDetect.b = 1;
+            }
+        }
+
+        outVec.r = darkDetect.r > 0.5 ? 0:1; 
+        outVec.g = darkDetect.g > 0.5 ? 0:1;
+        outVec.b = darkDetect.b > 0.5 ? 0:1;
+    }
+    else if(mode == DILATE)
+    {
+        ivec4 lightDetect = ivec4(0, 0, 0, 0); 
+
+        for(int i = 0; i < size; i++)
+        {
+            int Y = i - halfSize; 
+            for(int j = 0; j < size; j++)
+            {
+                int X = j - halfSize; 
+
+                ivec2 kernalId = ivec2(j, i);
+
+                ivec2 imageId = id + ivec2(X, Y); 
+                vec4 imageIn = imageLoad(inputImage, imageId);
+                if(imageIn.r >= 0.5)
+                    lightDetect.r = 1;
+                if(imageIn.g >= 0.5)
+                    lightDetect.g = 1;
+                if(imageIn.b >= 0.5)
+                    lightDetect.b = 1;
+            }
+        }
+        
+        outVec.r = lightDetect.r > 0.5 ? 1:0; 
+        outVec.g = lightDetect.g > 0.5 ? 1:0;
+        outVec.b = lightDetect.b > 0.5 ? 1:0;
+    }
     
-    vec4 outVec = vec4(dx, dy, mag, ori); 
+    
     imageStore(outputImage, id, outVec); 
 }
 
@@ -55,6 +125,9 @@ bool Morph::Internal::shaderCompiled = false;
 
 Morph::Internal::Internal()
 {
+    size =3;
+    shape = Shape::SQUARE;
+    mode = Mode::DILATE;
 }
 
 
@@ -79,6 +152,10 @@ void Morph::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
+
+    computeShader.SetInt("size", size);
+    computeShader.SetInt("shape", (int)shape);
+    computeShader.SetInt("mode", (int)mode);
 
     computeShader.Dispatch(groupCount.x, groupCount.y, 1); 
     computeShader.Block();
@@ -107,8 +184,6 @@ void Morph::Internal::SetKernel(int si, Shape sh)
 {
     shape = sh;
     size = si;
-
-
 }
 
 

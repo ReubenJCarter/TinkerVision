@@ -20,6 +20,7 @@ set(LIBRARYSRCFILES
 	HysteresisEdgeThreshold.cpp
 	Image.cpp
 	ImageGPU.cpp
+	InRange.cpp
 	Invert.cpp
 	MedianFilter.cpp
 	Morph.cpp

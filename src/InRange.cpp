@@ -1,4 +1,4 @@
-#include "HighLowThreshold.h"
+#include "InRange.h"
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
@@ -12,7 +12,7 @@
 namespace Visi
 {
 
-class HighLowThreshold::Internal
+class InRange::Internal
 {
     private:
         static std::map<ImageType, ComputeShader> computeShaders; 
@@ -32,11 +32,11 @@ class HighLowThreshold::Internal
         void SetLowThreshold(glm::vec3 tL);
 };
 
-std::map<ImageType, ComputeShader> HighLowThreshold::Internal::computeShaders;
+std::map<ImageType, ComputeShader> InRange::Internal::computeShaders;
 
-std::string HighLowThreshold::Internal::shaderSrc = R"(
+std::string InRange::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 uniform vec3 lowThreshold; 
@@ -50,25 +50,26 @@ void main()
     
     vec4 outVec ; 
 
-    outVec.r = d.r < highThreshold.r && d.r >= lowThreshold.r ? 1.0f : 0.0f;
-    outVec.g = d.g < highThreshold.g && d.g >= lowThreshold.g ? 1.0f : 0.0f;
-    outVec.b = d.b < highThreshold.b && d.b >= lowThreshold.b ? 1.0f : 0.0f;
-
+    outVec.r = d.r < highThreshold.r && d.r >= lowThreshold.r &&
+               d.g < highThreshold.g && d.g >= lowThreshold.g &&
+               d.b < highThreshold.b && d.b >= lowThreshold.b 
+               ? 1.0f : 0.0f;
+    outVec.a = 1; 
     imageStore(outputImage, id, outVec);
 }
 
 )";
 
-bool HighLowThreshold::Internal::shaderCompiled = false; 
+bool InRange::Internal::shaderCompiled = false; 
 
-HighLowThreshold::Internal::Internal()
+InRange::Internal::Internal()
 {
     lowThreshold = glm::vec3(0.5, 0.5, 0.5);
     highThreshold = glm::vec3(0.5, 0.5, 0.5); 
 }
 
 
-void HighLowThreshold::Internal::Run(ImageGPU* input, ImageGPU* output)
+void InRange::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
@@ -76,9 +77,11 @@ void HighLowThreshold::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(!output->IsSameDimensions(input)) 
+    if(output->GetWidth() != input->GetWidth() || 
+       output->GetHeight() != input->GetHeight() || 
+       output->GetType() != ImageType::GRAYSCALE8)
     {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
+        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
     }
 
     ImageType inputType = input->GetType();
@@ -96,7 +99,7 @@ void HighLowThreshold::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.Block();
 }
 
-void HighLowThreshold::Internal::Run(Image* input, Image* output)
+void InRange::Internal::Run(Image* input, Image* output)
 {
     if(!output->IsSameDimensions(input)) 
     {
@@ -116,22 +119,22 @@ void HighLowThreshold::Internal::Run(Image* input, Image* output)
     } 
 }
 
-void HighLowThreshold::Internal::SetLowThreshold(float t)
+void InRange::Internal::SetLowThreshold(float t)
 {
     lowThreshold = glm::vec3(t, t, t);
 }
 
-void HighLowThreshold::Internal::SetLowThreshold(glm::vec3 t)
+void InRange::Internal::SetLowThreshold(glm::vec3 t)
 {
     lowThreshold = t;
 }
 
-void HighLowThreshold::Internal::SetHighThreshold(float t)
+void InRange::Internal::SetHighThreshold(float t)
 {
     highThreshold = glm::vec3(t, t, t);
 }
 
-void HighLowThreshold::Internal::SetHighThreshold(glm::vec3 t)
+void InRange::Internal::SetHighThreshold(glm::vec3 t)
 {
     highThreshold = t;
 }
@@ -139,42 +142,42 @@ void HighLowThreshold::Internal::SetHighThreshold(glm::vec3 t)
 
 
 
-HighLowThreshold::HighLowThreshold()
+InRange::InRange()
 {
     internal = new Internal(); 
 }
 
-HighLowThreshold::~HighLowThreshold()
+InRange::~InRange()
 {
     delete internal; 
 }
 
-void HighLowThreshold::SetLowThreshold(float t)
+void InRange::SetLowThreshold(float t)
 {
     internal->SetLowThreshold(t);
 }
 
-void HighLowThreshold::SetLowThreshold(glm::vec3 t)
+void InRange::SetLowThreshold(glm::vec3 t)
 {
     internal->SetLowThreshold(t);
 }
 
-void HighLowThreshold::SetHighThreshold(float t)
+void InRange::SetHighThreshold(float t)
 {
     internal->SetHighThreshold(t);
 }
 
-void HighLowThreshold::SetHighThreshold(glm::vec3 t)
+void InRange::SetHighThreshold(glm::vec3 t)
 {
     internal->SetHighThreshold(t);
 }
 
-void HighLowThreshold::Run(ImageGPU* input, ImageGPU* output)
+void InRange::Run(ImageGPU* input, ImageGPU* output)
 {
     internal->Run(input, output); 
 }
 
-void HighLowThreshold::Run(Image* input, Image* output)
+void InRange::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
 }
