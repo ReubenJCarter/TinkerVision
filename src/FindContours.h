@@ -8,7 +8,6 @@
 #include "Contour.h"
 
 #include <vector>
-#include <glm/glm.hpp>
 
 namespace Visi
 {

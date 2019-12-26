@@ -7,7 +7,7 @@
 namespace Visi 
 {
 	
-void ReadImageFile(std::string fileName, Image* image)
+bool ReadImageFile(std::string fileName, Image* image)
 {
     //load the file
     int flag = 0;
@@ -23,13 +23,13 @@ void ReadImageFile(std::string fileName, Image* image)
     if((fif == FIF_UNKNOWN)) 
     {
         std::cerr << "Visi:ReadImageFile: LoadFileGeneric Unknown file type:" << fileName << "\n";
-        return ; 
+        return false; 
     }
 
     if(!FreeImage_FIFSupportsReading(fif))
     {
         std::cerr << "Visi:ReadImageFile: LoadFileGeneric Unknown file type:" << fileName << "\n";
-        return ; 
+        return false; 
     }
 
     //load the file
@@ -37,7 +37,7 @@ void ReadImageFile(std::string fileName, Image* image)
     if(dib == NULL)
     {
         std::cerr << "Visi:ReadImageFile: Failed to load image:" << fileName << "\n";
-        return ;
+        return false;
     }
 
     //image info
@@ -82,7 +82,7 @@ void ReadImageFile(std::string fileName, Image* image)
     if(!imageTypeFound)
     {
         std::cerr << "Visi:ReadImageFile: Failed to find correct type for image:Failed to load image:" << fileName << "\n";
-        return ;
+        return false;
     }
     image->Allocate(width, height, imageType); 
 
@@ -94,7 +94,7 @@ void ReadImageFile(std::string fileName, Image* image)
     }
 
     FreeImage_Unload(dib);
-    return ; 
+    return true; 
 }
 	
 }
