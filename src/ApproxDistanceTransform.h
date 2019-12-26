@@ -6,9 +6,6 @@
 #include "Image.h"
 #include "ImageGPU.h"
 
-#include <vector>
-#include <glm/glm.hpp>
-
 namespace Visi
 {
 	

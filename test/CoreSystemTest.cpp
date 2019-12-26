@@ -23,6 +23,7 @@
 #include "GaussianDerivative.h"
 #include "CornerDetector.h"
 #include "Normalize.h"
+#include "VectorMath.h"
 
 #include <iostream>
 
@@ -183,10 +184,10 @@ int main(int argc, char *argv[])
 
 	//Renderer
 	Visi::Renderer renderer; 
-	renderer.AddCircle(glm::vec2(100, 100), 20);
-	renderer.AddCircle(glm::vec2(150, 100), 10, glm::vec4(1, 0, 0, 1), false, 1); 
-	std::vector<glm::vec2> pl = {{100, 100}, {100, 140}, {300, 300}, {100, 300}};
-	renderer.AddPolyLine(&pl, glm::vec4(0, 0, 1, 1)); 
+	renderer.AddCircle(Visi::Vec2(100, 100), 20);
+	renderer.AddCircle(Visi::Vec2(150, 100), 10, Visi::Color(1, 0, 0, 1), false, 1); 
+	std::vector<Visi::Vec2> pl = {{100, 100}, {100, 140}, {300, 300}, {100, 300}};
+	renderer.AddPolyLine(&pl, Visi::Color(0, 0, 1, 1)); 
 	renderer.Run(&image1, &image2); 
 	
 	Visi::WriteImageFile("image9Test.png", &image2);

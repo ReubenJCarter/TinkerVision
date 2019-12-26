@@ -154,9 +154,9 @@ void HighLowThreshold::SetLowThreshold(float t)
     internal->SetLowThreshold(t);
 }
 
-void HighLowThreshold::SetLowThreshold(glm::vec3 t)
+void HighLowThreshold::SetLowThreshold(Color t)
 {
-    internal->SetLowThreshold(t);
+    internal->SetLowThreshold(glm::vec4(t.r, t.g, t.b, t.a));
 }
 
 void HighLowThreshold::SetHighThreshold(float t)
@@ -164,9 +164,9 @@ void HighLowThreshold::SetHighThreshold(float t)
     internal->SetHighThreshold(t);
 }
 
-void HighLowThreshold::SetHighThreshold(glm::vec3 t)
+void HighLowThreshold::SetHighThreshold(Color t)
 {
-    internal->SetHighThreshold(t);
+    internal->SetHighThreshold(glm::vec4(t.r, t.g, t.b, t.a));
 }
 
 void HighLowThreshold::Run(ImageGPU* input, ImageGPU* output)

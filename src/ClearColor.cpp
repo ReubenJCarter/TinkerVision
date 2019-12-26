@@ -105,14 +105,9 @@ ClearColor::~ClearColor()
     delete internal; 
 }
 
-void ClearColor::SetColor(glm::vec4 c)
+void ClearColor::SetColor(float r, float g, float b, float a)
 {
-    internal->SetColor(c);
-}
-
-void ClearColor::SetColor(glm::vec3 c)
-{
-    internal->SetColor(glm::vec4(c.r, c.g, c.b, 1.0));
+    internal->SetColor(glm::vec4(r, g, b, a));
 }
 
 void ClearColor::Run(ImageGPU* output)

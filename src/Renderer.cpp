@@ -51,7 +51,7 @@ class Renderer::Internal
         void Run(Image* input, Image* output);
         void Clear(); 
         void AddCircle(glm::vec2 centre, float radius, glm::vec4 color=glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), bool filled=false, float borderWidth=1); 
-        void AddPolyLine(std::vector<glm::vec2>* pl, glm::vec4 color, float lineWidth, bool closed);
+        void AddPolyLine(std::vector<Vec2>* pl, glm::vec4 color, float lineWidth, bool closed);
 };
 
 Renderer::Internal::Internal()
@@ -254,7 +254,7 @@ void Renderer::Internal::AddCircle(glm::vec2 centre, float radius, glm::vec4 col
     circlesDirty = true;
 }
 
-void Renderer::Internal::AddPolyLine(std::vector<glm::vec2>* pl, glm::vec4 color, float lineWidth, bool closed)
+void Renderer::Internal::AddPolyLine(std::vector<Vec2>* pl, glm::vec4 color, float lineWidth, bool closed)
 {
     polyLines.push_back(PolyLine());  
     PolyLine& polyLine = polyLines[polyLines.size()-1];
@@ -263,7 +263,7 @@ void Renderer::Internal::AddPolyLine(std::vector<glm::vec2>* pl, glm::vec4 color
     polyLine.closed = closed ? 1:0; 
     polyLine.verts.resize(pl->size()); 
     for(int i = 0; i < pl->size(); i++)
-        polyLine.verts[i] = (pl->at(i));
+        polyLine.verts[i] = glm::vec2(pl->at(i).x, pl->at(i).y);
     
 }
 
@@ -289,24 +289,25 @@ void Renderer::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
-void Renderer::AddPolyLine(std::vector<glm::vec2>* pl, glm::vec4 color, float lineWidth, bool closed)
+void Renderer::AddPolyLine(std::vector<Vec2>* pl, Color color, float lineWidth, bool closed)
 {
-    internal->AddPolyLine(pl, color, lineWidth, closed); 
+    internal->AddPolyLine(pl, glm::vec4(color.r, color.g, color.b, color.a), lineWidth, closed); 
 }
 
-void Renderer::AddCircle(glm::vec2 centre, float radius, glm::vec4 color, bool filled, float borderWidth)
+void Renderer::AddCircle(Vec2 centre, float radius, Color color, bool filled, float borderWidth)
 {
-    internal->AddCircle(centre, radius, color, filled, borderWidth); 
+    internal->AddCircle(glm::vec2(centre.x, centre.y), radius, glm::vec4(color.r, color.g, color.b, color.a), filled, borderWidth); 
 }
 
 void Renderer::AddContours(std::vector<Contour>* contours, bool renderVerts, float vertRad, bool renderLines, bool closed)
 {
     for(int i = 0; i < contours->size(); i++)
 	{
-		glm::vec4 color; 
+		Color color; 
 		color.r = (float)rand() / (float)RAND_MAX ; 
 		color.g = (float)rand() / (float)RAND_MAX ; 
 		color.b = (float)rand() / (float)RAND_MAX ; 
+        color.a = 1; 
         if(renderVerts)
         {
             for(int j = 0; j < (*contours)[i].verticies.size(); j++)

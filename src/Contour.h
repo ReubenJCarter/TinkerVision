@@ -3,7 +3,7 @@
 #include "Visi_export.h"
 
 #include <vector>
-#include <glm/glm.hpp>
+#include "VectorMath.h"
 
 namespace Visi
 {
@@ -12,7 +12,7 @@ class VISI_EXPORT Contour
 {
         public:
                 Contour* parent; 
-                std::vector<glm::vec2> verticies; 
+                std::vector<Vec2> verticies; 
                 
                 static void ContoursToFile(std::string fileName, std::vector<Contour>* contours); 
                 static void ContoursVertCountFilter(std::vector<Contour>* input, std::vector<Contour>* output,

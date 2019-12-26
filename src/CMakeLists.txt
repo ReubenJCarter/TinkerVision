@@ -33,7 +33,6 @@ set(LIBRARYSRCFILES
 	RGBToHSV.cpp
 	ShaderStorageBuffer.cpp
 	Sobel.cpp
-	SuzukiContour.cpp
 	Threshold.cpp
 	WriteImageFile.cpp
 )

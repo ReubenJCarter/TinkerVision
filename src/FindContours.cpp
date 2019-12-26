@@ -179,7 +179,7 @@ void FindContours::Internal::TraceBorder(Image* im, int startI, int startJ, int 
             outputData[inx] = polyID;
             if(contour != NULL)
             {
-                contour->verticies.push_back(glm::vec2(ladybirdI, ladybirdJ)); 
+                contour->verticies.push_back(Vec2(ladybirdI, ladybirdJ)); 
             }
         }
     }

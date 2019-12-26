@@ -5,7 +5,6 @@
 #include "ImageType.h"
 #include "Image.h"
 #include "ImageGPU.h"
-#include <glm/glm.hpp>
 
 namespace Visi
 {
@@ -19,8 +18,7 @@ class VISI_EXPORT ClearColor
 	public:
 		ClearColor(); 
         ~ClearColor(); 
-        void SetColor(glm::vec4 c); 
-        void SetColor(glm::vec3 c); 
+        void SetColor(float r, float g, float b, float a=1); 
 		void Run(ImageGPU* output); 
         void Run(Image* output); 
 };

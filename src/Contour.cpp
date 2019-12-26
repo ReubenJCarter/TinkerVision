@@ -6,6 +6,8 @@
 #include <fstream>
 #include <functional>
 
+#include <glm/glm.hpp>
+
 namespace Visi
 {
 
@@ -66,8 +68,8 @@ void Contour::ContoursSimplify(std::vector<Contour>* input, std::vector<Contour>
             return; 
         }
 
-        glm::vec2 startPoint = c->verticies[inxStart];
-        glm::vec2 endPoint = c->verticies[inxStart + count -1]; 
+        glm::vec2 startPoint = glm::vec2(c->verticies[inxStart].x, c->verticies[inxStart].y);
+        glm::vec2 endPoint = glm::vec2(c->verticies[inxStart + count -1].x, c->verticies[inxStart + count -1].y); 
         glm::vec2 B = glm::normalize(endPoint - startPoint); 
 
         //loop over points and find the furthest perpendicular dist from 
@@ -77,7 +79,7 @@ void Contour::ContoursSimplify(std::vector<Contour>* input, std::vector<Contour>
         for(int i = 1; i < count-1; i++)
         {
             int inx = inxStart + i;
-            glm::vec2 point = c->verticies[inx];
+            glm::vec2 point = glm::vec2(c->verticies[inx].x, c->verticies[inx].y);
 
             //compute per dist squared 
             glm::vec2 A = point - startPoint; 
@@ -123,8 +125,8 @@ void Contour::ContoursSimplify(std::vector<Contour>* input, std::vector<Contour>
             continue; 
         }
 
-        glm::vec2 startPoint = c.verticies[0];
-        glm::vec2 endPoint = c.verticies[c.verticies.size() - 1];
+        glm::vec2 startPoint = glm::vec2(c.verticies[0].x, c.verticies[0].y);
+        glm::vec2 endPoint = glm::vec2(c.verticies[c.verticies.size() - 1].x, c.verticies[c.verticies.size() - 1].y);
 
         cOut.verticies.clear();
     
@@ -134,8 +136,8 @@ void Contour::ContoursSimplify(std::vector<Contour>* input, std::vector<Contour>
         //if there is 1 or 0 points in cout, not need to simplify 
         if(cOut.verticies.size() < 2)
         {
-            cOut.verticies.push_back(endPoint); 
-            cOut.verticies.push_back(startPoint); 
+            cOut.verticies.push_back(Vec2(endPoint.x, endPoint.y)); 
+            cOut.verticies.push_back(Vec2(startPoint.x, startPoint.y)); 
             continue; 
         }
 
@@ -148,8 +150,8 @@ void Contour::ContoursSimplify(std::vector<Contour>* input, std::vector<Contour>
         Contour temp1;
         Contour temp2;
         temp1.verticies.push_back(cOut.verticies[cOut.verticies.size()-1]); 
-        temp1.verticies.push_back(endPoint); 
-        temp1.verticies.push_back(startPoint); 
+        temp1.verticies.push_back(Vec2(endPoint.x, endPoint.y)); 
+        temp1.verticies.push_back(Vec2(startPoint.x, startPoint.y)); 
         temp1.verticies.push_back(cOut.verticies[0]); 
 
         recure(&temp1, &temp2, 0, temp1.verticies.size());
@@ -171,7 +173,7 @@ void Contour::ContoursMergeVerticies(std::vector<Contour>* input, std::vector<Co
     {
         if(c->verticies.size() <= 1)
             return; 
-        glm::vec2 vPrev = c->verticies[c->verticies.size()-1];
+        glm::vec2 vPrev = glm::vec2(c->verticies[c->verticies.size()-1].x, c->verticies[c->verticies.size()-1].y);
 
         //cOut->verticies.push_back(vPrev); 
 
@@ -179,13 +181,13 @@ void Contour::ContoursMergeVerticies(std::vector<Contour>* input, std::vector<Co
         int avCount = 1; 
         for(int i = 0; i < c->verticies.size(); i++)
         {
-            glm::vec2 v = c->verticies[i];
+            glm::vec2 v = glm::vec2(c->verticies[i].x, c->verticies[i].y);
             glm::vec2 diff = v - vPrev; 
             if(!(glm::dot(diff, diff) < dist2))
             {
                 //add to new countout vert list
                 av/=avCount;
-                cOut->verticies.push_back(av); 
+                cOut->verticies.push_back(Vec2(av.x, av.y)); 
                 vPrev = v;
                 av = vPrev; 
                 avCount = 1; 

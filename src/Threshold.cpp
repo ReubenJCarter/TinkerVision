@@ -133,9 +133,9 @@ void Threshold::SetThreshold(float t)
     internal->SetThreshold(t);
 }
 
-void Threshold::SetThreshold(glm::vec3 t)
+void Threshold::SetThreshold(Color t)
 {
-    internal->SetThreshold(t);
+    internal->SetThreshold(glm::vec4(t.r, t.g, t.b, t.a));
 }
 
 void Threshold::Run(ImageGPU* input, ImageGPU* output)

@@ -6,7 +6,7 @@
 #include "Image.h"
 #include "ImageGPU.h"
 
-#include <glm/glm.hpp>
+#include "VectorMath.h"
 
 namespace Visi
 {
@@ -22,8 +22,8 @@ class VISI_EXPORT HighLowThreshold
         ~HighLowThreshold(); 
         void SetLowThreshold(float t);
         void SetHighThreshold(float t);
-        void SetLowThreshold(glm::vec3 t);
-        void SetHighThreshold(glm::vec3 t);
+        void SetLowThreshold(Color t);
+        void SetHighThreshold(Color t);
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
 };
