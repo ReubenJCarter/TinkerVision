@@ -241,7 +241,6 @@ int main(int argc, char *argv[])
 	adaptiveThreshold.SetThreshold(0.02); 
 	adaptiveThreshold.SetSize(7); 
 	adaptiveThreshold.Run(&imageGPU2, &imageGPU3); 
-	threshold.Run(&imageGPU2, &imageGPU3); 
 	Visi::Invert invert;
 	invert.Run(&imageGPU3, &imageGPU2); 
 	image2.Copy(&imageGPU2);

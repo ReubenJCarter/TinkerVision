@@ -1,5 +1,6 @@
 set(LIBRARYSRCFILES
 	AdaptiveThreshold.cpp
+	ApproxDistanceTransform.cpp
 	BilateralFilter.cpp
 	Blend.cpp
 	BrightnessContrast.cpp
