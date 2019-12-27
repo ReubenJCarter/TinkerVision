@@ -157,9 +157,9 @@ void InRange::SetLowThreshold(float t)
     internal->SetLowThreshold(t);
 }
 
-void InRange::SetLowThreshold(glm::vec3 t)
+void InRange::SetLowThreshold(Vec3 t)
 {
-    internal->SetLowThreshold(t);
+	internal->SetLowThreshold(glm::vec3(t.x, t.y, t.z));
 }
 
 void InRange::SetHighThreshold(float t)
@@ -167,9 +167,9 @@ void InRange::SetHighThreshold(float t)
     internal->SetHighThreshold(t);
 }
 
-void InRange::SetHighThreshold(glm::vec3 t)
+void InRange::SetHighThreshold(Vec3 t)
 {
-    internal->SetHighThreshold(t);
+	internal->SetHighThreshold(glm::vec3(t.x, t.y, t.z));
 }
 
 void InRange::Run(ImageGPU* input, ImageGPU* output)

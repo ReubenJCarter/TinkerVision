@@ -16,7 +16,7 @@ class VISI_EXPORT Blend
         Internal* internal;
 
 	public:
-        enum BlendMode{ADDITION, SUBTRACT, DIFFERENCE, DIVIDE, MULTIPLY};
+        enum BlendMode{BLEND_ADD, BLEND_SUBTRACT, BLEND_DIFFERENCE, BLEND_DIVIDE, BLEND_MULTIPLY};
 
 		Blend(); 
         ~Blend(); 

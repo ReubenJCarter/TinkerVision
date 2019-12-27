@@ -71,19 +71,19 @@ void main()
     vec4 d;
     d.a = 1.0f; 
 
-    if(blendMode == int(ADDITION))
+    if(blendMode == int(BLEND_ADD))
     {   
         d = dDst + dSrc; 
 
         d.rgb = ApplyMask(d.rgb, dDst.rgb, blendMask.rgb); 
     }
-    else if(blendMode == int(SUBTRACT))
+    else if(blendMode == int(BLEND_SUBTRACT))
     {
         d = dDst - dSrc; 
 
         d.rgb = ApplyMask(d.rgb, dDst.rgb, blendMask.rgb); 
     }
-    else if(blendMode == int(DIFFERENCE))
+    else if(blendMode == int(BLEND_DIFFERENCE))
     {
         d.r = length(dDst.r - dSrc.r);
         d.g = length(dDst.g - dSrc.g);
@@ -91,7 +91,7 @@ void main()
 
         d.rgb = ApplyMask(d.rgb, dDst.rgb, blendMask.rgb); 
     }
-    else if(blendMode == int(DIVIDE))
+    else if(blendMode == int(BLEND_DIVIDE))
     {
         d.r = dDst.r / dSrc.r;
         d.g = dDst.g / dSrc.g;
@@ -99,7 +99,7 @@ void main()
 
         d.rgb = ApplyMask(d.rgb, dDst.rgb, blendMask.rgb); 
     }
-    else if(blendMode == int(MULTIPLY))
+    else if(blendMode == int(BLEND_MULTIPLY))
     {
         d.r = dDst.r * dSrc.r;
         d.g = dDst.g * dSrc.g;
@@ -121,7 +121,7 @@ bool Blend::Internal::shaderCompiled = false;
 
 Blend::Internal::Internal()
 {
-    blendMode = BlendMode::ADDITION;
+    blendMode = BlendMode::BLEND_ADD;
 }
 
 
