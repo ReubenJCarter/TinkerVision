@@ -33,6 +33,7 @@ set(LIBRARYSRCFILES
 	RGBToHSV.cpp
 	ShaderStorageBuffer.cpp
 	Sobel.cpp
+	Thinning.cpp
 	Threshold.cpp
 	WriteImageFile.cpp
 )
