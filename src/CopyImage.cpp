@@ -91,19 +91,25 @@ void CopyImage::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void CopyImage::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
+    if(formatTranslate)
     {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
-    
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    for(int i = 0; i < input->GetHeight(); i++)
-    {
-        for(int j = 0; j < input->GetWidth(); j++)
+        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() )
         {
-            int inx = (i * input->GetWidth() + j);
-
+            output->Allocate(input->GetWidth(), input->GetHeight(), output->GetType()); 
+        }
+    }
+    else
+    {
+        if(!output->IsSameDimensions(input)) 
+        {
+            output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
+        }
+    }
+    for(int j = 0; j < input->GetHeight(); j++)
+    {
+        for(int i = 0; i < input->GetWidth(); i++)
+        {
+            SetPixel(output, i, j, GetPixel(input, i, j)); 
 
         } 
     } 

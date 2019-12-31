@@ -13,7 +13,10 @@ class VISI_EXPORT Contour
         public:
                 Contour* parent; 
                 std::vector<Vec2> verticies; 
-                
+                bool closed; 
+
+                Contour();
+
                 static void ContoursToFile(std::string fileName, std::vector<Contour>* contours); 
                 static void ContoursVertCountFilter(std::vector<Contour>* input, std::vector<Contour>* output,
                                         int minVertCount=20, int maxVertCount=-1); 

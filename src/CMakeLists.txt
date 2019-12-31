@@ -23,6 +23,7 @@ set(LIBRARYSRCFILES
 	ImageGPU.cpp
 	InRange.cpp
 	Invert.cpp
+	LocalMaxima.cpp
 	MedianFilter.cpp
 	Morph.cpp
 	NonMaximumSuppression.cpp

@@ -24,6 +24,10 @@
 #include "CornerDetector.h"
 #include "Normalize.h"
 #include "VectorMath.h"
+#include "Thinning.h"
+#include "ApproxDistanceTransform.h"
+#include "InRange.h"
+#include "LocalMaxima.h"
 
 #include <iostream>
 
@@ -100,12 +104,32 @@ int main(int argc, char *argv[])
 	image2.Copy(&imageGPU2);
 	Visi::WriteImageFile("image2Test.png", &image2);
 
+	//Thin
+	Visi::Thinning thinning; 
+	//thinning.Run(&image2, &image3); 
+	//Visi::WriteImageFile("image2_1Test.png", &image3);
+
 	//GrayScale
 	Visi::GrayScale grayScale; 
 	grayScale.Run(&imageGPU1, &imageGPU2); 
 
 	image2.Copy(&imageGPU2);
 	Visi::WriteImageFile("image3Test.png", &image2);
+
+	//Aprox Distance Transform
+	Visi::InRange inRange; 
+	inRange.SetLowThreshold(Visi::Vec3(0.5, 0.0, 0.0));
+	inRange.SetHighThreshold(Visi::Vec3(1.0, 1.0, 1.0) ); 
+	inRange.Run(&imageGPU2, &imageGPU3); 
+	Visi::Invert inv;
+	inv.Run(&imageGPU3, &imageGPU2); 
+    image2.Copy(&imageGPU2);
+	Visi::WriteImageFile("image3_1Test.png", &image2);
+	Visi::ApproxDistanceTransform adt;
+	adt.Run(&image2, &image3); 
+	Visi::Normalize nrm;
+	nrm.Run(&image3, &image2); 
+	Visi::WriteImageFile("image3_2Test.png", &image2);
 
 	//RGBToHSV vv HSVToRGB
 	Visi::RGBToHSV rgbtohsv; 

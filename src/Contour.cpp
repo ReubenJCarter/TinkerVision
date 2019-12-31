@@ -11,6 +11,11 @@
 namespace Visi
 {
 
+Contour::Contour()
+{
+    closed = true; 
+}
+
 void Contour::ContoursToFile(std::string fileName, std::vector<Contour>* contours)
 {
     std::ofstream ofstream; 
