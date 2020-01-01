@@ -3,6 +3,7 @@ set(LIBRARYSRCFILES
 	ApproxDistanceTransform.cpp
 	BilateralFilter.cpp
 	Blend.cpp
+	BoundingBox.cpp
 	BrightnessContrast.cpp
 	CannyEdgeDetect.cpp
 	ChannelDemux.cpp

@@ -320,4 +320,23 @@ void Renderer::AddContours(std::vector<Contour>* contours, bool renderVerts, flo
 	}
 }
 
+void Renderer::AddBoundingBox(BoundingBox* boundingBox, Color color)
+{
+    std::vector<Vec2> pl;
+
+    Mat3 tr = boundingBox->GetTransform(); 
+    glm::mat3 trG = glm::mat3(glm::vec3(tr.col[0].x, tr.col[0].y, tr.col[0].z), 
+                              glm::vec3(tr.col[1].x, tr.col[1].y, tr.col[1].z),
+                              glm::vec3(tr.col[2].x, tr.col[2].y, tr.col[2].z)); 
+    glm::vec3 a = trG * glm::vec3(-boundingBox->extends.x, -boundingBox->extends.y, 1); 
+    glm::vec3 b = trG * glm::vec3(boundingBox->extends.x, -boundingBox->extends.y, 1); 
+    glm::vec3 c = trG * glm::vec3(boundingBox->extends.x, boundingBox->extends.y, 1); 
+    glm::vec3 d = trG * glm::vec3(-boundingBox->extends.x, boundingBox->extends.y, 1); 
+    pl.push_back(Vec2(a.x, a.y)); 
+    pl.push_back(Vec2(b.x, b.y)); 
+    pl.push_back(Vec2(c.x, c.y)); 
+    pl.push_back(Vec2(d.x, d.y)); 
+    AddPolyLine(&pl, color, 1, true); 
+}
+
 }

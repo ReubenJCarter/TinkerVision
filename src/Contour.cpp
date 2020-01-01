@@ -5,6 +5,9 @@
 #include <map>
 #include <fstream>
 #include <functional>
+#include <algorithm>
+#include <stack>
+
 
 #include <glm/glm.hpp>
 
@@ -218,6 +221,201 @@ void Contour::ContoursMergeVerticies(std::vector<Contour>* input, std::vector<Co
 
         MergeVerticies(&c, &cOut, dist2);
     }
+}
+
+void Contour::FindConvexHull(Contour* contour, std::vector<int>* convexHull)
+{
+    convexHull->clear();
+
+    //find p0
+    float P0Y = 10000000;
+    int P0Inx = -1; 
+    float P0X = 0;
+    for(int i = 0; i < contour->verticies.size(); i++)
+    {
+        if(contour->verticies[i].y < P0Y)
+        {
+            P0Y = contour->verticies[i].y;
+            P0X = contour->verticies[i].x;
+            P0Inx = i; 
+        }
+        else if(contour->verticies[i].y == P0Y) //if same y choose least x
+        {
+            if(contour->verticies[i].x < P0X)
+            {
+                P0Y = contour->verticies[i].y;
+                P0X = contour->verticies[i].x;
+                P0Inx = i; 
+            }
+        }
+    }
+
+    //Find polar type coord (actually find gradient in each quadrent)
+    struct PolarInx
+    {
+        int inx;
+        float angle;
+        Vec2 v;
+    }; 
+    std::vector<PolarInx> pInxs;
+    for(int i = 0; i < contour->verticies.size(); i++)
+    {
+        if(i == P0Inx)
+            continue; //skip if inx is P0
+
+        float run = contour->verticies[i].x - P0X; 
+        float rise = contour->verticies[i].y - P0Y; 
+
+        float gradThing; 
+
+        if(run > 0 && abs(run) >= abs(rise)) //Quadrent 1
+        {
+            gradThing = rise / run; //0 to 1
+        }
+        else if(run > 0 && abs(rise) > abs(run))
+        {
+            gradThing = 1 + (1 - run / rise); // 1 + 0 to 1
+        }
+        else if(run <= 0 && abs(rise) >= abs(run))
+        {
+            gradThing = 2 + (abs(run) / rise); // 2 + 0 to 1
+        }
+        else
+        {
+            gradThing = 3 + (1 - abs(rise) / abs(run));
+        }
+        PolarInx pinx; 
+        pinx.angle = gradThing; 
+        pinx.inx = i;
+        pinx.v = contour->verticies[i];
+        pInxs.push_back(pinx); 
+    }
+
+    //Sort on polar
+    std::sort(pInxs.begin(), pInxs.end(), [](PolarInx a, PolarInx b) {return a.angle < b.angle; });
+
+   
+
+    //
+    // To find orientation of ordered triplet (p, q, r). 
+    // The function returns following values 
+    // 0 --> p, q and r are colinear 
+    // 1 --> Clockwise 
+    // 2 --> Counterclockwise 
+    auto Orientation = [](Vec2 p, Vec2 q, Vec2 r) -> int 
+    { 
+        int val = (q.y - p.y) * (r.x - q.x) - 
+                (q.x - p.x) * (r.y - q.y); 
+    
+        if (val == 0) return 0;  // colinear 
+        return (val > 0)? 1: 2; // clock or counterclock wise 
+    } ;
+
+
+     //Remove points that are the same angel with P0 
+     /*
+    int inx = 0;
+    int count = 0;
+    while(inx < pInxs.size())
+    {
+        pInxs[count] = pInxs[inx]; 
+        inx++; 
+        
+        while(inx < pInxs.size())
+        {
+            if(pInxs[inx].angle == pInxs[count].angle)
+                inx++;
+            else 
+                break;
+        }
+
+        count++;//i is the new size of the array 
+    }*/
+
+    int m = 1; // Initialize size of modified array 
+    int n = pInxs.size();
+    for (int i=1; i<n; i++) 
+    { 
+        // Keep removing i while angle of i and i+1 is same 
+        // with respect to p0 
+        while (i < n-1 && Orientation(Vec2(P0X, P0Y), pInxs[i].v,  pInxs[i+1].v) == 0) 
+            i++; 
+    
+    
+        pInxs[m] = pInxs[i]; 
+        m++;  // Update size of modified array 
+    } 
+    int count = m;
+    
+
+    // If modified array of points has less than 3 points, 
+    // convex hull is not possible 
+    if (count < 3) return; 
+    
+    // Create an empty stack and push first three points 
+    // to it. 
+    std::stack<PolarInx> S; 
+    S.push(pInxs[0]); 
+    S.push(pInxs[1]); 
+    S.push(pInxs[2]); 
+    
+
+    auto nextToTop = [](std::stack<PolarInx> &S) -> PolarInx
+    { 
+        PolarInx p = S.top(); 
+        S.pop(); 
+        PolarInx res = S.top(); 
+        S.push(p); 
+        return res; 
+    } ;
+    
+    // Process remaining n-3 points 
+    for (int i = 3; i < count; i++) 
+    { 
+        // Keep removing top while the angle formed by 
+        // points next-to-top, top, and points[i] makes 
+        // a non-left turn 
+        while (Orientation(nextToTop(S).v, S.top().v, pInxs[i].v) != 2) 
+            S.pop(); 
+        S.push(pInxs[i]); 
+    } 
+    
+    // Now stack has the output points, print contents of stack 
+    while (!S.empty()) 
+    { 
+        PolarInx p = S.top(); 
+        convexHull->push_back(p.inx); 
+        S.pop(); 
+    } 
+}
+
+BoundingBox Contour::FindBoundingBox(Contour* contour)
+{
+
+	auto FindAABBArea = [](Contour* contour, glm::mat2 rotation)
+	{
+		
+		glm::vec2 AABBmin = glm::vec2(100000000, 100000000);
+		glm::vec2 AABBmax = glm::vec2(-100000000, -100000000);
+		
+		for(int i = 0; i < contour->verticies.size(); i++)
+		{
+			glm::vec2 P = rotation * glm::vec2(contour->verticies[i].x, contour->verticies[i].y); 
+			AABBmin.x = P.x < AABBmin.x ? P.x : AABBmin.x; 
+			AABBmin.y = P.y < AABBmin.y ? P.y : AABBmin.y; 
+			AABBmax.x = P.x > AABBmax.x ? P.x : AABBmax.x; 
+			AABBmax.y = P.y > AABBmax.y ? P.y : AABBmax.y; 
+		}
+
+        return (AABBmax.x - AABBmin.x) * (AABBmax.y - AABBmin.y); 
+	};
+
+	
+	BoundingBox bb;	
+	
+	float rotation = 45;
+	
+	return bb;
 }
 
 }

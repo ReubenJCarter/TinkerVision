@@ -246,8 +246,21 @@ int main(int argc, char *argv[])
 
 	std::vector<Visi::Contour> cs;
 	std::vector<Visi::Contour> cs2;
+	std::vector<Visi::Contour> cs3;
 	cs.push_back(c);
 	Visi::Contour::ContoursSimplify(&cs, &cs2, 4);
+
+	cs3.resize(cs2.size());
+	for(int i = 0; i < cs2.size(); i++)
+	{ 
+		auto c = &(cs2[i]); 
+		std::vector<int> cInx;
+		Visi::Contour::FindConvexHull(c, &cInx);
+		for(int j = 0; j < cInx.size(); j++)
+		{
+			cs3[i].verticies.push_back(c->verticies[cInx[j]]); 
+		}
+	}
 
 
 	renderer.Clear(); 
@@ -259,6 +272,11 @@ int main(int argc, char *argv[])
 	renderer.AddContours(&cs2, true, 4, true, true); 
 	renderer.Run(&image1, &image2); 
 	Visi::WriteImageFile("image11_2Test.png", &image2);
+
+	renderer.Clear(); 
+	renderer.AddContours(&cs3, true, 4, true, true); 
+	renderer.Run(&image1, &image2); 
+	Visi::WriteImageFile("image11_3Test.png", &image2);
 
 	//Find Contours
 	Visi::FindContours findContours; 

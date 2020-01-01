@@ -4,6 +4,7 @@
 
 #include <vector>
 #include "VectorMath.h"
+#include "BoundingBox.h"
 
 namespace Visi
 {
@@ -23,6 +24,8 @@ class VISI_EXPORT Contour
                 static void ContoursSimplify(std::vector<Contour>* input, std::vector<Contour>* output,
                                         float keepDist); 
                 static void ContoursMergeVerticies(std::vector<Contour>* input, std::vector<Contour>* output, float mergeDist);
+                static void FindConvexHull(Contour* contour, std::vector<int>* convexHull); 
+                static BoundingBox FindBoundingBox(Contour* contour); 
 };
 	
 }
