@@ -313,25 +313,6 @@ void Contour::FindConvexHull(Contour* contour, std::vector<int>* convexHull)
 
 
      //Remove points that are the same angel with P0 
-     /*
-    int inx = 0;
-    int count = 0;
-    while(inx < pInxs.size())
-    {
-        pInxs[count] = pInxs[inx]; 
-        inx++; 
-        
-        while(inx < pInxs.size())
-        {
-            if(pInxs[inx].angle == pInxs[count].angle)
-                inx++;
-            else 
-                break;
-        }
-
-        count++;//i is the new size of the array 
-    }*/
-
     int m = 1; // Initialize size of modified array 
     int n = pInxs.size();
     for (int i=1; i<n; i++) 
@@ -381,6 +362,7 @@ void Contour::FindConvexHull(Contour* contour, std::vector<int>* convexHull)
     } 
     
     // Now stack has the output points, print contents of stack 
+    convexHull->push_back(P0Inx); 
     while (!S.empty()) 
     { 
         PolarInx p = S.top(); 
