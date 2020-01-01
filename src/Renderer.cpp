@@ -322,20 +322,34 @@ void Renderer::AddContours(std::vector<Contour>* contours, bool renderVerts, flo
 
 void Renderer::AddBoundingBox(BoundingBox* boundingBox, Color color)
 {
+    AddCircle(boundingBox->position, 4, color, false, 1);
+
     std::vector<Vec2> pl;
 
     Mat3 tr = boundingBox->GetTransform(); 
+    /*
+    std::cout << "bbTrans:\n" << tr.col[0].x << " " << tr.col[1].x << " " << tr.col[2].x << "\n" 
+                              << tr.col[0].y << " " << tr.col[1].y << " " << tr.col[2].y << "\n" 
+                              << tr.col[0].z << " " << tr.col[1].z << " " << tr.col[2].z << "\n" ;
+                              */
     glm::mat3 trG = glm::mat3(glm::vec3(tr.col[0].x, tr.col[0].y, tr.col[0].z), 
                               glm::vec3(tr.col[1].x, tr.col[1].y, tr.col[1].z),
                               glm::vec3(tr.col[2].x, tr.col[2].y, tr.col[2].z)); 
+
     glm::vec3 a = trG * glm::vec3(-boundingBox->extends.x, -boundingBox->extends.y, 1); 
     glm::vec3 b = trG * glm::vec3(boundingBox->extends.x, -boundingBox->extends.y, 1); 
     glm::vec3 c = trG * glm::vec3(boundingBox->extends.x, boundingBox->extends.y, 1); 
     glm::vec3 d = trG * glm::vec3(-boundingBox->extends.x, boundingBox->extends.y, 1); 
+
     pl.push_back(Vec2(a.x, a.y)); 
     pl.push_back(Vec2(b.x, b.y)); 
     pl.push_back(Vec2(c.x, c.y)); 
     pl.push_back(Vec2(d.x, d.y)); 
+
+    AddCircle(Vec2(a.x, a.y), 2, color, false, 1);
+    AddCircle(Vec2(b.x, b.y), 2, color, false, 1);
+    AddCircle(Vec2(c.x, c.y), 2, color, false, 1);
+    AddCircle(Vec2(d.x, d.y), 2, color, false, 1);
     AddPolyLine(&pl, color, 1, true); 
 }
 

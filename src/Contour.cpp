@@ -229,7 +229,7 @@ void Contour::FindConvexHull(Contour* contour, std::vector<int>* convexHull)
     convexHull->clear();
 
     //find p0
-    float P0Y = 10000000;
+    float P0Y = 100000000;
     int P0Inx = -1; 
     float P0X = 0;
     for(int i = 0; i < contour->verticies.size(); i++)
@@ -374,15 +374,18 @@ void Contour::FindConvexHull(Contour* contour, std::vector<int>* convexHull)
 
 BoundingBox Contour::FindBoundingBox(Contour* contour)
 {
-    //Find the convex hull
+    //Find the convex hull ???
     std::vector<int> convx;
     FindConvexHull(contour, &convx);
 
+    struct AABB
+    {
+        glm::vec2 min;
+        glm::vec2 max;
+    }; 
 
-
-	auto FindAABBArea = [](Contour* contour, glm::mat2 rotation)
-	{
-		
+	auto FindAABB = [](Contour* contour, glm::mat2 rotation) -> AABB
+	{	
 		glm::vec2 AABBmin = glm::vec2(100000000, 100000000);
 		glm::vec2 AABBmax = glm::vec2(-100000000, -100000000);
 		
@@ -394,16 +397,51 @@ BoundingBox Contour::FindBoundingBox(Contour* contour)
 			AABBmax.x = P.x > AABBmax.x ? P.x : AABBmax.x; 
 			AABBmax.y = P.y > AABBmax.y ? P.y : AABBmax.y; 
 		}
-
-        return (AABBmax.x - AABBmin.x) * (AABBmax.y - AABBmin.y); 
+        AABB aabb;
+        aabb.min = AABBmin;
+        aabb.max = AABBmax; 
+        return aabb; 
 	};
+	
+    float minArea = 1000000000; 
+    BoundingBox minAreaBB; 
 
-	
-	BoundingBox bb;	
-	
-	float rotation = 45;
-	
-	return bb;
+	for(int i = 0; i < convx.size(); i++)
+    {
+        int aInx = convx[i]; 
+        int bInx = convx[(i+1) % convx.size()]; 
+        Vec2 a = contour->verticies[aInx];
+        Vec2 b = contour->verticies[bInx]; 
+
+        float run = b.x - a.x; 
+        float rise = b.y - a.y; 
+        float angle = atan2(rise, run); 
+
+        const static float RADTODEG = 57.2958;
+        float sinAng = sin(angle );
+        float cosAng = cos(angle );
+
+        glm::mat2 rotMat; 
+        rotMat[0] = glm::vec2(cosAng, sinAng); 
+        rotMat[1] = glm::vec2(-sinAng, cosAng); 
+        AABB aabb = FindAABB(contour, rotMat ); 
+        glm::vec2 pos = glm::vec2((aabb.max.x + aabb.min.x) / 2, (aabb.max.y + aabb.min.y) / 2); 
+        glm::vec2 exte = glm::vec2((aabb.max.x - aabb.min.x) / 2, (aabb.max.y - aabb.min.y) / 2);
+        float area = (aabb.max.x - aabb.min.x) * (aabb.max.y - aabb.min.y);
+        if(area < minArea)
+        {
+            minArea = area; 
+            minAreaBB.position = Vec2(pos.x, pos.y); 
+            minAreaBB.rotation = angle * RADTODEG;
+            minAreaBB.extends = Vec2(exte.x, exte.y);
+        }
+    }
+	/*
+    std::cout << "Min Area BB:position:" << minAreaBB.position.x << " " << minAreaBB.position.y
+              << " extend:" << minAreaBB.extends.x << " " << minAreaBB.extends.y  
+              << " rotation:" << minAreaBB.rotation
+              << "\n";*/
+	return minAreaBB;
 }
 
 }

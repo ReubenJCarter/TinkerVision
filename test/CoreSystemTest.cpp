@@ -262,6 +262,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	Visi::BoundingBox bb = Visi::Contour::FindBoundingBox(&c); 
 
 	renderer.Clear(); 
 	renderer.AddContours(&cs, true, 4, true, true); 
@@ -277,6 +278,11 @@ int main(int argc, char *argv[])
 	renderer.AddContours(&cs3, true, 4, true, true); 
 	renderer.Run(&image1, &image2); 
 	Visi::WriteImageFile("image11_3Test.png", &image2);
+
+	renderer.Clear(); 
+	renderer.AddBoundingBox(&bb, Visi::Color(1, 0, 1, 1)); 
+	renderer.Run(&image1, &image2); 
+	Visi::WriteImageFile("image11_4Test.png", &image2);
 
 	//Find Contours
 	Visi::FindContours findContours; 
@@ -318,6 +324,13 @@ int main(int argc, char *argv[])
 	Visi::WriteImageFile("image10_5Test.png", &image2);
 
 	renderer.Clear();
+
+	for(int i = 0; i < contoursQuads.size(); i++)
+	{
+		Visi::BoundingBox bb = Visi::Contour::FindBoundingBox(&(contoursQuads[i])); 
+		renderer.AddBoundingBox(&bb, Visi::Color(1, 0, 1, 1)); 
+	}
+
 	renderer.AddContours(&contoursQuads, true, 4, true, true); 
 	renderer.Run(&image1, &image2); 
 	Visi::WriteImageFile("image10_6Test.png", &image2);

@@ -15,7 +15,7 @@ class VISI_EXPORT BoundingBox
 				Vec2 extends;
 				
                 BoundingBox();
-				Mat3& GetTransform(); 
+				Mat3 GetTransform(); 
 };
 	
 }
