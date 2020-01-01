@@ -223,8 +223,9 @@ void Contour::ContoursMergeVerticies(std::vector<Contour>* input, std::vector<Co
     }
 }
 
+//https://www.geeksforgeeks.org/convex-hull-set-2-graham-scan/
 void Contour::FindConvexHull(Contour* contour, std::vector<int>* convexHull)
-{
+{//TODO DOESNT YET USE DISTANCE FOR SORT WHEN ORIENTATIONS ARE THE SAME 
     convexHull->clear();
 
     //find p0
@@ -373,6 +374,11 @@ void Contour::FindConvexHull(Contour* contour, std::vector<int>* convexHull)
 
 BoundingBox Contour::FindBoundingBox(Contour* contour)
 {
+    //Find the convex hull
+    std::vector<int> convx;
+    FindConvexHull(contour, &convx);
+
+
 
 	auto FindAABBArea = [](Contour* contour, glm::mat2 rotation)
 	{
