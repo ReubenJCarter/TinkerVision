@@ -325,12 +325,20 @@ int main(int argc, char *argv[])
 
 	renderer.Clear();
 
+	std::vector<Visi::Contour> conxHullContours;
+	conxHullContours.resize(contoursQuads.size()); 
 	for(int i = 0; i < contoursQuads.size(); i++)
 	{
+		std::vector<int> cInx;
+		Visi::Contour::FindConvexHull(&(contoursQuads[i]), &cInx);
+		for(int j = 0; j < cInx.size(); j++)
+		{
+			conxHullContours[i].verticies.push_back(contoursQuads[i].verticies[cInx[j]]); 
+		}
+
 		Visi::BoundingBox bb = Visi::Contour::FindBoundingBox(&(contoursQuads[i])); 
 		renderer.AddBoundingBox(&bb, Visi::Color(1, 0, 1, 1)); 
 	}
-
 	renderer.AddContours(&contoursQuads, true, 4, true, true); 
 	renderer.Run(&image1, &image2); 
 	Visi::WriteImageFile("image10_6Test.png", &image2);

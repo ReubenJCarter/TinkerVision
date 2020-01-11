@@ -8,8 +8,9 @@
 #include <algorithm>
 #include <stack>
 
-
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 
 namespace Visi
 {
@@ -256,6 +257,7 @@ void Contour::FindConvexHull(Contour* contour, std::vector<int>* convexHull)
     {
         int inx;
         float angle;
+        float dist2;
         Vec2 v;
     }; 
     std::vector<PolarInx> pInxs;
@@ -289,13 +291,20 @@ void Contour::FindConvexHull(Contour* contour, std::vector<int>* convexHull)
         pinx.angle = gradThing; 
         pinx.inx = i;
         pinx.v = contour->verticies[i];
+        pinx.dist2 = glm::length2( glm::vec2(pinx.v.x, pinx.v.y) - glm::vec2(P0X, P0Y) ); 
         pInxs.push_back(pinx); 
     }
 
-    //Sort on polar
-    std::sort(pInxs.begin(), pInxs.end(), [](PolarInx a, PolarInx b) {return a.angle < b.angle; });
-
-   
+    //Sort on polar or distnace is same polar 
+    std::sort(pInxs.begin(), pInxs.end(), [](PolarInx a, PolarInx b) 
+    {
+        if(a.angle == b.angle)
+        {
+            return a.dist2 < b.dist2; 
+        }
+        
+        return a.angle < b.angle; 
+    });
 
     //
     // To find orientation of ordered triplet (p, q, r). 
@@ -418,8 +427,8 @@ BoundingBox Contour::FindBoundingBox(Contour* contour)
         float angle = atan2(rise, run); 
 
         const static float RADTODEG = 57.2958;
-        float sinAng = sin(angle );
-        float cosAng = cos(angle );
+        float sinAng = sin(-angle );
+        float cosAng = cos(-angle );
 
         glm::mat2 rotMat; 
         rotMat[0] = glm::vec2(cosAng, sinAng); 
@@ -430,6 +439,12 @@ BoundingBox Contour::FindBoundingBox(Contour* contour)
         float area = (aabb.max.x - aabb.min.x) * (aabb.max.y - aabb.min.y);
         if(area < minArea)
         {
+            //invert rotation matrix...
+            rotMat[0].y = -rotMat[0].y;
+            rotMat[1].x = -rotMat[1].x;
+            pos = rotMat * pos; 
+
+            //
             minArea = area; 
             minAreaBB.position = Vec2(pos.x, pos.y); 
             minAreaBB.rotation = angle * RADTODEG;

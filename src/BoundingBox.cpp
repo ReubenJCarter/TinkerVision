@@ -25,7 +25,8 @@ Mat3 BoundingBox::GetTransform()
 	float cosAng = cos(rotation * DEGTORAD);
 	Mat3 m;
 	m.col[0] = Vec3(cosAng, sinAng, 0); 
-	m.col[1] = Vec3(-sinAng, cosAng, 0); 
+	m.col[1] = Vec3(-sinAng, cosAng, 0);
+	
 	m.col[2] = Vec3(position.x, position.y, 1); 
 	return m;
 }
