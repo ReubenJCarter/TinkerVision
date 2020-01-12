@@ -29,6 +29,7 @@ set(LIBRARYSRCFILES
 	Morph.cpp
 	NonMaximumSuppression.cpp
 	Normalize.cpp
+	Perspective3Point.cpp
 	ProcessHelper.cpp
 	ReadImageFile.cpp
 	Renderer.cpp
