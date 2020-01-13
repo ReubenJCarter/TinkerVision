@@ -38,6 +38,7 @@ set(LIBRARYSRCFILES
 	Sobel.cpp
 	Thinning.cpp
 	Threshold.cpp
+	VideoFile.cpp
 	WriteImageFile.cpp
 )
 
@@ -48,7 +49,9 @@ target_link_libraries(${CMAKE_PROJECT_NAME} glew32)
 target_link_libraries(${CMAKE_PROJECT_NAME} opengl32)
 target_link_libraries(${CMAKE_PROJECT_NAME} glfw3dll)
 
-
+if (USE_FFMPEG)
+	target_link_libraries(${CMAKE_PROJECT_NAME} avcodec avfilter avformat avutil postproc swresample swscale)
+endif() 
 
 install(TARGETS ${CMAKE_PROJECT_NAME} 
 		ARCHIVE DESTINATION lib

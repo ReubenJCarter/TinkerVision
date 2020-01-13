@@ -16,6 +16,12 @@ set(GCC_LINK_FLAGS "")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_LINK_FLAGS}")
 
+#defs
+option(USE_FFMPEG "link against FFMPEG" ON)
+if (USE_FFMPEG)
+	add_definitions(-DUSE_FFMPEG)
+endif()
+
 
 #glm
 set(GLM_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/glm CACHE PATH "Path to GLM")
@@ -68,6 +74,16 @@ install(FILES ${GLEW_BIN_DIR}/glew32.dll
 set(RAPIDJSON_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/rapidjson-1.1.0 CACHE PATH "Path to Rapid JSON")
 set(RAPIDJSON_INC_DIR ${RAPIDJSON_DIR}/include)
 include_directories(${RAPIDJSON_INC_DIR})
+
+#FFMPEG
+if (USE_FFMPEG)
+	set(FFMPEG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/ffmpeg CACHE PATH "Path to FFMPEG")
+	set(FFMPEG_INC_DIR ${FFMPEG_DIR}/include)
+	set(FFMPEG_LIB_DIR ${FFMPEG_DIR}/lib)
+	set(FFMPEG_BIN_DIR ${FFMPEG_DIR}/bin)
+	include_directories(${FFMPEG_INC_DIR})
+	link_directories(${FFMPEG_LIB_DIR})
+endif()
 
 #cmake dirs
 include_directories(${CMAKE_BINARY_DIR})
