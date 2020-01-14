@@ -21,12 +21,14 @@ class VISI_EXPORT VideoFile
 		VideoFile(); 
         ~VideoFile(); 
         bool Open(std::string fileSrc);
+        int GetStreamCount(); 
         bool Close();
         bool LoadNextFrame(); 
         void SwapBuffers(); 
         bool GetFrame(Image* frameImage, int streamInx=0);
-
-        bool AtEnd(); 
+        int GetFrameWidth(int streamInx=0); 
+        int GetFrameHeight(int streamInx=0); 
+        bool AtEnd(int streamInx=0); 
         bool IsOpen(); 
 };
 	

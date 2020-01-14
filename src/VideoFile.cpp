@@ -24,7 +24,6 @@ class VideoFile::Internal
 {   
     private:
         bool isOpen;
-        bool atEnd; 
         
         AVFormatContext* pFormatContext; 
         float frameDuration; 
@@ -39,6 +38,9 @@ class VideoFile::Internal
             AVFrame* frameRGB; 
             int frameRGBBufferSize;
 			unsigned char* frameRGBBuffer;
+            bool atEnd;
+            int width; 
+            int height; 
         };
         std::vector<StreamData> videoStreamDatas; 
         std::vector<StreamData> audioStreamDatas; 
@@ -47,19 +49,20 @@ class VideoFile::Internal
         Internal(); 
         ~Internal(); 
         bool Open(std::string fileSrc);
+        int GetStreamCount(); 
         bool Close();
         bool LoadNextFrame(); 
         void SwapBuffers(); 
         bool GetFrame(Image* frameImage, int streamInx);
-
-        bool AtEnd(); 
+        int GetFrameWidth(int streamInx);
+        int GetFrameHeight(int streamInx);  
+        bool AtEnd(int streamInx); 
         bool IsOpen(); 
 };
 
 VideoFile::Internal::Internal()
 {
     isOpen = false; 
-    atEnd = false; 
 }
 
 VideoFile::Internal::~Internal()
@@ -80,17 +83,17 @@ bool VideoFile::Internal::Open(std::string fileSrc)
     if(ret != 0)
     {
         av_strerror(ret, errCharBuf, 10000); 
-        std::cout << "Open Input: " << ret << " " << errCharBuf <<  "\n";
+        std::cout << "Visi:VideoFile:Open Input: " << ret << " " << errCharBuf <<  "\n";
         return false;
     }
     
-    std::cout << "AVSystem:VideoAsset:OpenFile:Format is " << pFormatContext->iformat->long_name << " duration is " << pFormatContext->duration << "\n";
+    std::cout << "Visi:VideoFile:OpenFile:Format is " << pFormatContext->iformat->long_name << " duration is " << pFormatContext->duration << "\n";
     frameDuration = pFormatContext->duration; 
     
     //for each stream in the container file
     for (int i = 0; i < pFormatContext->nb_streams; i++)
     {
-        std::cout << "AVSystem:VideoAsset:OpenFile: stream found... " << "\n";
+        std::cout << "Visi:VideoFile:OpenFile: stream found... " << "\n";
 
         //get the codec parameters
         AVCodecParameters* pLocalCodecParameters = pFormatContext->streams[i]->codecpar;
@@ -131,9 +134,12 @@ bool VideoFile::Internal::Open(std::string fileSrc)
         sd.pingPongInx = 0;
 
         sd.frameRGB = av_frame_alloc();
-        sd.frameRGBBufferSize = avpicture_get_size(AV_PIX_FMT_RGB24, pCodecContext->width, pCodecContext->height);
+        sd.frameRGBBufferSize = avpicture_get_size(AV_PIX_FMT_BGR24, pCodecContext->width, pCodecContext->height);
         sd.frameRGBBuffer = (unsigned char*) av_malloc(sd.frameRGBBufferSize * sizeof(unsigned char));
-        avpicture_fill((AVPicture*)(sd.frameRGB), sd.frameRGBBuffer, AV_PIX_FMT_RGB24, pCodecContext->width, pCodecContext->height);	
+        avpicture_fill((AVPicture*)(sd.frameRGB), sd.frameRGBBuffer, AV_PIX_FMT_BGR24, pCodecContext->width, pCodecContext->height);	
+        sd.atEnd = false;
+        sd.width = pCodecContext->width; 
+        sd.height = pCodecContext->height;
 
         if (pLocalCodecParameters->codec_type == AVMEDIA_TYPE_VIDEO) 
             videoStreamDatas.push_back(sd); 
@@ -141,8 +147,13 @@ bool VideoFile::Internal::Open(std::string fileSrc)
             audioStreamDatas.push_back(sd); 
     }
     isOpen = true; 
-    atEnd = false; 
+     
     return true; 
+}
+
+int VideoFile::Internal::GetStreamCount()
+{
+    return videoStreamDatas.size();
 }
 
 bool VideoFile::Internal::Close()
@@ -158,22 +169,44 @@ bool VideoFile::Internal::Close()
         av_frame_free(&videoStreamDatas[i].frameRGB);
         av_free(&videoStreamDatas[i].frameRGBBuffer);
         avcodec_free_context(&videoStreamDatas[i].pCodecContext);
+        videoStreamDatas[i].atEnd = false;
     }
-
+    videoStreamDatas.clear();
     isOpen = false; 
-    atEnd = false; 
 
     return true;
 }
 
 bool VideoFile::Internal::LoadNextFrame()
 {
+    if(videoStreamDatas.size() == 0)
+        return false; 
+
     for(int i = 0; i < videoStreamDatas.size(); i++)
     {
+        int retcode; 
         int pingPongInx = videoStreamDatas[i].pingPongInx;
-        av_read_frame(pFormatContext, videoStreamDatas[i].pPacket[pingPongInx]);
-        avcodec_send_packet(videoStreamDatas[i].pCodecContext, videoStreamDatas[i].pPacket[pingPongInx]);
+        retcode = av_read_frame(pFormatContext, videoStreamDatas[i].pPacket[pingPongInx]);
+       
+        if(retcode < 0)
+        {
+            videoStreamDatas[i].atEnd = true; 
+            continue; 
+        }
+
+        retcode = avcodec_send_packet(videoStreamDatas[i].pCodecContext, videoStreamDatas[i].pPacket[pingPongInx]);
+
+        if(retcode != 0)
+        { 
+            return false;
+        }
+
         avcodec_receive_frame(videoStreamDatas[i].pCodecContext, videoStreamDatas[i].pFrame[pingPongInx]);
+
+        if(retcode != 0)
+        {
+            return false; 
+        }
     }
     return true; 
 }
@@ -192,13 +225,18 @@ void VideoFile::Internal::SwapBuffers()
 
 bool VideoFile::Internal::GetFrame(Image* frameImage, int streamInx)
 {
+    if(streamInx >= videoStreamDatas.size())
+    {
+        return false; 
+    }
+
     int inx = streamInx; 
 
     int pingPongInx = (videoStreamDatas[inx].pingPongInx + 1) % 2;
 
     int width = videoStreamDatas[inx].pFrame[pingPongInx]->width;
     int height = videoStreamDatas[inx].pFrame[pingPongInx]->height;
-
+/*
     int linesize[3]; 
     linesize[0] = videoStreamDatas[inx].pFrame[pingPongInx]->linesize[0];
     linesize[1] = videoStreamDatas[inx].pFrame[pingPongInx]->linesize[1];
@@ -208,34 +246,60 @@ bool VideoFile::Internal::GetFrame(Image* frameImage, int streamInx)
     fdata[0] = videoStreamDatas[inx].pFrame[pingPongInx]->data[0]; 
     fdata[1] = videoStreamDatas[inx].pFrame[pingPongInx]->data[1]; 
     fdata[2] = videoStreamDatas[inx].pFrame[pingPongInx]->data[2]; 
-
+*/
     //Convert into RGB 
     AVCodecContext* c = videoStreamDatas[inx].pCodecContext;
     AVFrame* frame = videoStreamDatas[inx].pFrame[pingPongInx]; 
     AVFrame* frameRGB = videoStreamDatas[inx].frameRGB;
-    struct SwsContext* imgConvertCtx = sws_getContext(c->width, c->height, c->pix_fmt, c->width, c->height, AV_PIX_FMT_RGB24, SWS_BICUBIC, NULL, NULL, NULL);
+    struct SwsContext* imgConvertCtx = sws_getContext(c->width, c->height, c->pix_fmt, c->width, c->height, AV_PIX_FMT_BGR24, SWS_BICUBIC, NULL, NULL, NULL);
     sws_scale(imgConvertCtx, frame->data, frame->linesize, 0, frame->height, frameRGB->data, frameRGB->linesize);
     //Output data into image
     int index = 0;
     int wrap = frameRGB->linesize[0];
+
+    if(frameImage->GetWidth() != width || frameImage->GetHeight() != height || frameImage->GetType() != ImageType::RGB8)
+    {
+        std::cout << "Allocating " << width << " " << height << "\n"; 
+        frameImage->Allocate(width, height, ImageType::RGB8); 
+    }
+    unsigned char* d = frameImage->GetData(); 
     for(int i = 0; i < height; i++) 
     {
         index = i * wrap;
         int vecIndex = width * (height - i - 1);
         for(int j = 0; j < width; j++)
         {
-            unsigned char* d = frameImage->GetData(); 
-            //d[vecIndex + j] = (float)((frameRGB->data[0])[index + 0 + j * 3]) / 256;
-            //d[vecIndex + j] = (float)((frameRGB->data[0])[index + 1 + j * 3]) / 256;
-            //d[vecIndex + j] = (float)((frameRGB->data[0])[index + 2 + j * 3]) / 256;
+            
+            d[(vecIndex + j) * 3 + 0] = (float)((frameRGB->data[0])[i * wrap + j * 3 + 0]);
+            d[(vecIndex + j) * 3 + 1] = (float)((frameRGB->data[0])[i * wrap + j * 3 + 1]);
+            d[(vecIndex + j) * 3 + 2] = (float)((frameRGB->data[0])[i * wrap + j * 3 + 2]);
         }
     }
     return true; 
 }
 
-bool VideoFile::Internal::AtEnd()
+int VideoFile::Internal::GetFrameWidth(int streamInx)
 {
-    return atEnd;
+    if(streamInx >= videoStreamDatas.size())
+        return 0; 
+
+    return videoStreamDatas[streamInx].width; 
+}
+
+int VideoFile::Internal::GetFrameHeight(int streamInx)
+{
+    if(streamInx >= videoStreamDatas.size())
+        return 0; 
+
+    return videoStreamDatas[streamInx].height; 
+}
+
+bool VideoFile::Internal::AtEnd(int streamInx)
+{
+    if(streamInx >= videoStreamDatas.size())
+        return true; 
+
+    return videoStreamDatas[streamInx].atEnd;
 }
 
 bool VideoFile::Internal::IsOpen()
@@ -250,12 +314,14 @@ class VideoFile::Internal
     public:
         Internal(); 
         bool Open(std::string fileSrc);
+        int GetStreamCount();
         bool Close();
         bool LoadNextFrame(); 
         void SwapBuffers(); 
         bool GetFrame(Image* frameImage, int streamInx);
-
-        bool AtEnd(); 
+        int GetFrameWidth(int streamInx);
+        int GetFrameHeight(int streamInx);
+        bool AtEnd(int streamInx); 
         bool IsOpen(); 
 };
 
@@ -268,6 +334,12 @@ bool VideoFile::Internal::Open(std::string fileSrc)
 {
     std::cerr << "Visi:VideoFile: Cannont use VideoFile as Visi has not been linked to Video library\n";
     return false; 
+}
+
+int VideoFile::Internal::GetStreamCount()
+{
+    std::cerr << "Visi:VideoFile: Cannont use VideoFile as Visi has not been linked to Video library\n";
+    return 0;
 }
 
 bool VideoFile::Internal::Close()
@@ -293,10 +365,20 @@ bool VideoFile::Internal::GetFrame(Image* frameImage, int streamInx)
     return false; 
 }
 
-bool VideoFile::Internal::AtEnd()
+int VideoFile::Internal::GetFrameWidth(int streamInx)
+{
+    return 0;
+}
+
+int VideoFile::Internal::GetFrameHeight(int streamInx)
+{
+    return 0; 
+}
+
+bool VideoFile::Internal::AtEnd(int streamInx)
 {
     std::cerr << "Visi:VideoFile: Cannont use VideoFile as Visi has not been linked to Video library\n";
-    return false; 
+    return true; 
 }
 
 bool VideoFile::Internal::IsOpen()
@@ -326,6 +408,11 @@ bool VideoFile::Open(std::string fileSrc)
     return internal->Open(fileSrc); 
 }
 
+int VideoFile::GetStreamCount() 
+{
+    return internal->GetStreamCount(); 
+}
+
 bool VideoFile::Close()
 {
     return internal->Close(); 
@@ -346,9 +433,19 @@ bool VideoFile::GetFrame(Image* frameImage, int streamInx)
     return internal->GetFrame(frameImage, streamInx); 
 }
 
-bool VideoFile::AtEnd()
+int VideoFile::GetFrameWidth(int streamInx)
 {
-    return internal->AtEnd(); 
+    return internal->GetFrameWidth(streamInx); 
+}
+
+int VideoFile::GetFrameHeight(int streamInx)
+{
+    return internal->GetFrameHeight(streamInx); 
+}
+
+bool VideoFile::AtEnd(int streamInx)
+{
+    return internal->AtEnd(streamInx); 
 }
 
 bool VideoFile::IsOpen()

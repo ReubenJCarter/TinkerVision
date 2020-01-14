@@ -83,6 +83,15 @@ if (USE_FFMPEG)
 	set(FFMPEG_BIN_DIR ${FFMPEG_DIR}/bin)
 	include_directories(${FFMPEG_INC_DIR})
 	link_directories(${FFMPEG_LIB_DIR})
+
+	install(FILES ${FFMPEG_BIN_DIR}/avcodec-58.dll
+				  ${FFMPEG_BIN_DIR}/avformat-58.dll
+				  ${FFMPEG_BIN_DIR}/avutil-56.dll
+				  ${FFMPEG_BIN_DIR}/swscale-5.dll
+				  ${FFMPEG_BIN_DIR}/swresample-3.dll
+		DESTINATION bin
+		COMPONENT MainLibrary
+	)
 endif()
 
 #cmake dirs
