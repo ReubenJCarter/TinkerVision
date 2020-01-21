@@ -129,6 +129,17 @@ int main(int argc, char *argv[])
 		nrm.Run(&image3, &image2); 
 		Visi::WriteImageFile("image3_2Test.png", &image2);
 
+		//LocalMaxima
+		Visi::GaussianBlur gb; 
+		gb.SetSigma(3); 
+		imageGPU2.Copy(&image2); 
+		gb.Run(&imageGPU2, &imageGPU3); 
+		image2.Copy(&imageGPU3); 
+		Visi::WriteImageFile("image3_3Test.png", &image2);
+		Visi::LocalMaxima localMax; 
+		localMax.Run(&image2, &image3);
+		Visi::WriteImageFile("image3_4Test.png", &image3);
+
 		//RGBToHSV vv HSVToRGB
 		Visi::RGBToHSV rgbtohsv; 
 		rgbtohsv.Run(&imageGPU1, &imageGPU2); 
@@ -403,6 +414,7 @@ int main(int argc, char *argv[])
 	}
 	else if(argc == 3)
 	{
+		std::cout << "Starting video test\n"; 
 		if(std::string( argv[1] ) == "-v")
 		{
 			Visi::VideoFile videoFile;

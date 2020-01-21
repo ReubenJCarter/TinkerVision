@@ -16,18 +16,24 @@ namespace Visi
 class LocalMaxima::Internal
 {
     private:
+        float threshold;
+        int size; 
 
     public:
         Internal(); 
-        void Run(Image* input, Image* output);
+        void Run(Image* input, Image* output, std::vector<Vec2>& localMaxima);
+        void SetThreshold(float t); 
+        void SetSize(int s);
 };
 
 
 LocalMaxima::Internal::Internal()
 {
+    size = 3;
+    threshold = 0.1; 
 }
 
-void LocalMaxima::Internal::Run(Image* input, Image* output)
+void LocalMaxima::Internal::Run(Image* input, Image* output, std::vector<Vec2>& localMaxima)
 {
     if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE8)
     {
@@ -38,45 +44,62 @@ void LocalMaxima::Internal::Run(Image* input, Image* output)
     {
         for(int i = 0; i < input->GetWidth(); i++)
         {
-            SetPixel(output, i, j, glm::vec4(0, 0, 0, 0) ); 
+            SetPixelUI(output, i, j, glm::ivec4(0, 0, 0, 0) ); 
         }
     }
+    
+    localMaxima.clear(); 
+    localMaxima.reserve(input->GetWidth() * input->GetHeight() * 0.2); 
 
     //Find local maximum points and zero output
-    std::vector<glm::ivec2> localMaxima; 
     for(int j = 0; j < input->GetHeight(); j++)
     {
         for(int i = 0; i < input->GetWidth(); i++)
         {
-            glm::vec4 pix0 = GetPixel(input, i-1, j-1);
-            glm::vec4 pix1 = GetPixel(input, i,   j-1); 
-            glm::vec4 pix2 = GetPixel(input, i+1, j-1); 
+            glm::vec4 midPixel = GetPixel(input, i,   j); 
 
-            glm::vec4 pix3 = GetPixel(input, i-1, j); 
-            glm::vec4 pix4 = GetPixel(input, i,   j); 
-            glm::vec4 pix5 = GetPixel(input, i+1, j); 
+            //Test greated than threshold
+            if(midPixel.r < threshold)
+                continue; 
             
-            glm::vec4 pix6 = GetPixel(input, i-1, j+1); 
-            glm::vec4 pix7 = GetPixel(input, i,   j+1); 
-            glm::vec4 pix8 = GetPixel(input, i+1, j+1);             
-
-            if(pix4.r >= pix0.r &&
-               pix4.r >= pix1.r &&
-               pix4.r >= pix2.r &&
-               pix4.r >= pix3.r &&
-               pix4.r >= pix5.r &&
-               pix4.r >= pix6.r &&
-               pix4.r >= pix7.r &&
-               pix4.r >= pix8.r )
+            //test on neighbour (greatest in neighboorhood)
+            bool isMax = true; 
+            for(int x = -size/2; x <= size/2; x++)
             {
-                localMaxima.push_back( glm::ivec2(i, j) ); 
-                SetPixel(output, i, j, glm::vec4(1, 1, 1, 1) ); 
+                for(int y = -size/2; y <= size/2; y++)
+                {
+                    if(x == 0 && y == 0)
+                        continue; 
+                    glm::vec4 pix = GetPixel(input, i + x, j + y); 
+                    if(pix.r > midPixel.r)
+                    {
+                        isMax = false;
+                        break; 
+                    }
+                }
+
+                if(!isMax)
+                    break;
             }
 
-            
+            if(isMax)
+            {
+                localMaxima.push_back( Vec2(i, j) ); 
+                SetPixel(output, i, j, glm::vec4(1, 1, 1, 1) ); 
+            }
         } 
     } 
 }
+
+void LocalMaxima::Internal::SetThreshold(float t)
+{
+    threshold = t;
+}
+
+void LocalMaxima::Internal::SetSize(int s)
+{
+    size = s;
+}  
 
 
 
@@ -90,9 +113,19 @@ LocalMaxima::~LocalMaxima()
     delete internal; 
 }
 
-void LocalMaxima::Run(Image* input, Image* output)
+void LocalMaxima::Run(Image* input, Image* output, std::vector<Vec2>& localMaxima)
 {
-    internal->Run(input, output); 
+    internal->Run(input, output, localMaxima); 
+}
+
+void LocalMaxima::SetThreshold(float t)
+{
+    internal->SetThreshold(t); 
+}
+
+void LocalMaxima::SetSize(int s)
+{
+    internal->SetSize(s); 
 }
 
 }
