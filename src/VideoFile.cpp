@@ -33,7 +33,7 @@ class VideoFile::Internal
             AVCodec* pCodec;
             AVCodecContext* pCodecContext;
             int pingPongInx;
-            AVPacket* pPacket[2];
+            AVPacket* pPacket;
             AVFrame* pFrame[2];
             AVFrame* frameRGB; 
             int frameRGBBufferSize;
@@ -41,9 +41,12 @@ class VideoFile::Internal
             bool atEnd;
             int width; 
             int height; 
+            bool isVideo; 
         };
         std::vector<StreamData> videoStreamDatas; 
         std::vector<StreamData> audioStreamDatas; 
+
+        std::vector<StreamData> allStreamDatas; 
 
     public:
         Internal(); 
@@ -75,9 +78,12 @@ VideoFile::Internal::~Internal()
 
 bool VideoFile::Internal::Open(std::string fileSrc)
 {
+    av_log_set_level(AV_LOG_FATAL );
+    std::cout << "Visi:VideoFile: Opeing: " << fileSrc << "\n"; 
     char errCharBuf[10000];
 
     //open input file
+    pFormatContext = NULL;
     int ret = avformat_open_input(&pFormatContext, fileSrc.c_str(), NULL, NULL);
     
     if(ret != 0)
@@ -108,6 +114,10 @@ bool VideoFile::Internal::Open(std::string fileSrc)
         {
             std::cout << "Audio Codec: " << pLocalCodecParameters->channels << "channels, sample rate" << pLocalCodecParameters->sample_rate << "\n";
         }
+        else 
+        {
+            continue; 
+        }
         // print general info
         std::cout << "Codec " << pLocalCodec->long_name << " ID " << pLocalCodec->id << " bit_rate " << pLocalCodecParameters->bit_rate << "\n";
 
@@ -117,9 +127,8 @@ bool VideoFile::Internal::Open(std::string fileSrc)
         avcodec_open2(pCodecContext, pLocalCodec, NULL);
 
         //allocate packet ad frame
-        AVPacket* pPacket0 = av_packet_alloc();
+        AVPacket* pPacket = av_packet_alloc();
         AVFrame* pFrame0 = av_frame_alloc();
-        AVPacket* pPacket1 = av_packet_alloc();
         AVFrame* pFrame1 = av_frame_alloc();
 
         //copy all into stream data object
@@ -127,27 +136,41 @@ bool VideoFile::Internal::Open(std::string fileSrc)
         sd.pCodec = pLocalCodec;
         sd.pCodecContext = pCodecContext;
         sd.pCodecParameters = pLocalCodecParameters; 
+        sd.pPacket = pPacket; 
         sd.pFrame[0] = pFrame0;
-        sd.pPacket[0] = pPacket0; 
         sd.pFrame[1] = pFrame1;
-        sd.pPacket[1] = pPacket1; 
         sd.pingPongInx = 0;
 
-        sd.frameRGB = av_frame_alloc();
-        sd.frameRGBBufferSize = avpicture_get_size(AV_PIX_FMT_BGR24, pCodecContext->width, pCodecContext->height);
-        sd.frameRGBBuffer = (unsigned char*) av_malloc(sd.frameRGBBufferSize * sizeof(unsigned char));
-        avpicture_fill((AVPicture*)(sd.frameRGB), sd.frameRGBBuffer, AV_PIX_FMT_BGR24, pCodecContext->width, pCodecContext->height);	
+        if (pLocalCodecParameters->codec_type == AVMEDIA_TYPE_VIDEO) 
+        {
+            sd.isVideo = true; 
+            sd.frameRGB = av_frame_alloc();
+            sd.frameRGBBufferSize = avpicture_get_size(AV_PIX_FMT_BGR24, pCodecContext->width, pCodecContext->height);
+            sd.frameRGBBuffer = (unsigned char*) av_malloc(sd.frameRGBBufferSize * sizeof(unsigned char));
+            avpicture_fill((AVPicture*)(sd.frameRGB), sd.frameRGBBuffer, AV_PIX_FMT_BGR24, pCodecContext->width, pCodecContext->height);	
+        }
+        else
+        {
+            sd.isVideo = false; 
+        }
         sd.atEnd = false;
         sd.width = pCodecContext->width; 
         sd.height = pCodecContext->height;
 
+
         if (pLocalCodecParameters->codec_type == AVMEDIA_TYPE_VIDEO) 
+        {
             videoStreamDatas.push_back(sd); 
+        }
         else if(pLocalCodecParameters->codec_type == AVMEDIA_TYPE_AUDIO)
+        {
             audioStreamDatas.push_back(sd); 
+        }
+        allStreamDatas.push_back(sd); 
     }
     isOpen = true; 
      
+    std::cout << "Visi:VideoFile:OpenFile:Done \n";
     return true; 
 }
 
@@ -158,20 +181,22 @@ int VideoFile::Internal::GetStreamCount()
 
 bool VideoFile::Internal::Close()
 {
-    for(int i = 0; i < videoStreamDatas.size(); i++)
+    for(int i = 0; i < allStreamDatas.size(); i++)
     {
         avformat_close_input(&pFormatContext);
         avformat_free_context(pFormatContext);
-        av_packet_free(&videoStreamDatas[i].pPacket[0]);
-        av_frame_free(&videoStreamDatas[i].pFrame[0]);
-        av_packet_free(&videoStreamDatas[i].pPacket[1]);
-        av_frame_free(&videoStreamDatas[i].pFrame[1]);
-        av_frame_free(&videoStreamDatas[i].frameRGB);
-        av_free(&videoStreamDatas[i].frameRGBBuffer);
-        avcodec_free_context(&videoStreamDatas[i].pCodecContext);
-        videoStreamDatas[i].atEnd = false;
+        av_packet_free(&allStreamDatas[i].pPacket);
+        av_frame_free(&allStreamDatas[i].pFrame[0]);
+        av_frame_free(&allStreamDatas[i].pFrame[1]);
+        if(allStreamDatas[i].isVideo)
+        {
+            av_frame_free(&allStreamDatas[i].frameRGB);
+            av_free(&allStreamDatas[i].frameRGBBuffer);
+        }
+        avcodec_free_context(&allStreamDatas[i].pCodecContext);
+        allStreamDatas[i].atEnd = false;
     }
-    videoStreamDatas.clear();
+    allStreamDatas.clear();
     isOpen = false; 
 
     return true;
@@ -179,33 +204,65 @@ bool VideoFile::Internal::Close()
 
 bool VideoFile::Internal::LoadNextFrame()
 {
-    if(videoStreamDatas.size() == 0)
+    if(allStreamDatas.size() == 0)
         return false; 
 
-    for(int i = 0; i < videoStreamDatas.size(); i++)
+    for(int i = 0; i < allStreamDatas.size(); i++)
     {
-        int retcode; 
-        int pingPongInx = videoStreamDatas[i].pingPongInx;
-        retcode = av_read_frame(pFormatContext, videoStreamDatas[i].pPacket[pingPongInx]);
-       
-        if(retcode < 0)
+        if(!allStreamDatas[i].isVideo)
         {
-            videoStreamDatas[i].atEnd = true; 
             continue; 
         }
 
+        int retcode; 
+        int pingPongInx = allStreamDatas[i].pingPongInx;
+        retcode = av_read_frame(pFormatContext, allStreamDatas[i].pPacket);
+        
+        if(retcode < 0)
+        {
+            allStreamDatas[i].atEnd = true; 
+            continue; 
+        }
+        
+/*
         retcode = avcodec_send_packet(videoStreamDatas[i].pCodecContext, videoStreamDatas[i].pPacket[pingPongInx]);
 
         if(retcode != 0)
         { 
             return false;
         }
-
-        avcodec_receive_frame(videoStreamDatas[i].pCodecContext, videoStreamDatas[i].pFrame[pingPongInx]);
-
-        if(retcode != 0)
+  
+        while (retcode >= 0) 
         {
-            return false; 
+            retcode = avcodec_receive_frame(videoStreamDatas[i].pCodecContext, videoStreamDatas[i].pFrame[pingPongInx]);
+            if (retcode == AVERROR(EAGAIN) || retcode == AVERROR_EOF) 
+            {
+                break;
+            } 
+            else if (retcode < 0) 
+            {
+                return false;
+            }
+            av_frame_unref(videoStreamDatas[i].pFrame[pingPongInx]);
+        }
+
+        av_packet_unref(videoStreamDatas[i].pPacket[pingPongInx]);
+*/
+        int got_picture; 
+        retcode = avcodec_decode_video2(allStreamDatas[i].pCodecContext, allStreamDatas[i].pFrame[pingPongInx], &got_picture, allStreamDatas[i].pPacket); 
+        int timeout = 0; 
+        while (retcode < 0 && timeout < 100)
+        {
+            retcode = av_read_frame(pFormatContext, allStreamDatas[i].pPacket);
+        
+            if(retcode < 0)
+            {
+                allStreamDatas[i].atEnd = true; 
+                break; 
+            }
+            
+            retcode = avcodec_decode_video2(allStreamDatas[i].pCodecContext, allStreamDatas[i].pFrame[pingPongInx], &got_picture, allStreamDatas[i].pPacket); 
+            timeout++;
         }
     }
     return true; 
@@ -213,12 +270,12 @@ bool VideoFile::Internal::LoadNextFrame()
 
 void VideoFile::Internal::SwapBuffers()
 {
-    for(int i = 0; i < videoStreamDatas.size(); i++)
+    for(int i = 0; i < allStreamDatas.size(); i++)
     {
-        videoStreamDatas[i].pingPongInx++; 
-        if(videoStreamDatas[i].pingPongInx > 1)
+        allStreamDatas[i].pingPongInx++; 
+        if(allStreamDatas[i].pingPongInx > 1)
         {
-            videoStreamDatas[i].pingPongInx = 0; 
+            allStreamDatas[i].pingPongInx = 0; 
         }
     }
 }
@@ -232,21 +289,11 @@ bool VideoFile::Internal::GetFrame(Image* frameImage, int streamInx)
 
     int inx = streamInx; 
 
-    int pingPongInx = (videoStreamDatas[inx].pingPongInx + 1) % 2;
+    int pingPongInx = (videoStreamDatas[inx].pingPongInx  + 1) % 2;
 
     int width = videoStreamDatas[inx].pFrame[pingPongInx]->width;
     int height = videoStreamDatas[inx].pFrame[pingPongInx]->height;
-/*
-    int linesize[3]; 
-    linesize[0] = videoStreamDatas[inx].pFrame[pingPongInx]->linesize[0];
-    linesize[1] = videoStreamDatas[inx].pFrame[pingPongInx]->linesize[1];
-    linesize[2] = videoStreamDatas[inx].pFrame[pingPongInx]->linesize[2];
 
-    unsigned char* fdata[3]; 
-    fdata[0] = videoStreamDatas[inx].pFrame[pingPongInx]->data[0]; 
-    fdata[1] = videoStreamDatas[inx].pFrame[pingPongInx]->data[1]; 
-    fdata[2] = videoStreamDatas[inx].pFrame[pingPongInx]->data[2]; 
-*/
     //Convert into RGB 
     AVCodecContext* c = videoStreamDatas[inx].pCodecContext;
     AVFrame* frame = videoStreamDatas[inx].pFrame[pingPongInx]; 
