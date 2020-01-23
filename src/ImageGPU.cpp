@@ -31,17 +31,19 @@ void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
 
     Deallocate();
 
+    
+    width = w;
+	height = h;
+	type = t;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
     if(w == 0 || h == 0)
     {
         std::cerr << "Visi:ImageGPU:Allocate:w=0||h=0\n"; 
         return; 
     }
 
-    width = w;
-	height = h;
-	type = t;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
 	if(type == GRAYSCALE8)
     {
         glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, width, height);

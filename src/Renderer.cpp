@@ -7,6 +7,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <random>
 
 namespace Visi
 {
@@ -68,17 +69,15 @@ void Renderer::Internal::Run(Image* input, Image* output)
     }
     
     //copy input image to output
-    for(int i = 0; i < input->GetHeight(); i++)
-    {
-        for(int j = 0; j < input->GetWidth(); j++)
-        {
-            glm::vec4 p = GetPixel(input, j, i);
-            SetPixel(output, j, i, p);
-        } 
-    } 
+    output->Copy(input); 
 
+    unsigned char* data = output->GetData(); 
+    ImageType imageType = output->GetType();
+    int width = output->GetWidth();
+    int height = output->GetHeight();
+    
     //Draw Lines
-    auto DrawLine = [output](int startX, int startY, int endX, int endY, glm::vec4 color)
+    auto DrawLine = [data, imageType, width, height](int startX, int startY, int endX, int endY, glm::vec4 color)
     {
             int x2, y2, x1, y1; 
             if(startX <= endX)
@@ -120,7 +119,7 @@ void Renderer::Internal::Run(Image* input, Image* output)
                 for (int x = x1; x <= x2; x++) 
                 {    
                     y += m;
-                    SetPixel(output, x, y, color); 
+                    SetPixel(data, imageType, width, height, x, y, color); 
                 }
             }
             else 
@@ -131,7 +130,7 @@ void Renderer::Internal::Run(Image* input, Image* output)
                     for (int y = y1; y <= y2; y++) 
                     {    
                         x += m;
-                        SetPixel(output, x, y, color); 
+                        SetPixel(data, imageType, width, height, x, y, color); 
                     }
                 }
                 else
@@ -139,7 +138,7 @@ void Renderer::Internal::Run(Image* input, Image* output)
                     for (int y = y1; y >= y2; y--) 
                     {    
                         x += m;
-                        SetPixel(output, x, y, color); 
+                        SetPixel(data, imageType, width, height, x, y, color); 
                     }
                 }
             }
@@ -177,7 +176,8 @@ void Renderer::Internal::Run(Image* input, Image* output)
 
         if(radius < 1)
         {
-            SetPixel(output, centre.x, centre.y, c.color);
+            //SetPixel(output, centre.x, centre.y, c.color);
+            SetPixel(data, imageType, width, height, centre.x, centre.y, c.color); 
             continue;
         }
 
@@ -195,7 +195,7 @@ void Renderer::Internal::Run(Image* input, Image* output)
                     {
                         int x = j + centre.x; 
                         int y = i + centre.y;
-                        SetPixel(output, x, y, c.color);
+                        SetPixel(data, imageType, width, height, x, y, c.color); 
                     }
                 }
                 else 
@@ -204,7 +204,7 @@ void Renderer::Internal::Run(Image* input, Image* output)
                     {
                         int x = j + centre.x; 
                         int y = i + centre.y;
-                        SetPixel(output, x, y, c.color);
+                        SetPixel(data, imageType, width, height, x, y, c.color); 
                     }
                 }
             }
@@ -301,12 +301,15 @@ void Renderer::AddCircle(Vec2 centre, float radius, Color color, bool filled, fl
 
 void Renderer::AddContours(std::vector<Contour>* contours, bool renderVerts, float vertRad, bool renderLines, bool closed)
 {
+    std::default_random_engine randgenerator;
+    randgenerator.seed(0);
+    std::uniform_real_distribution<float> randdistribution(0.0f, 1.0f);
     for(int i = 0; i < contours->size(); i++)
 	{
 		Color color; 
-		color.r = (float)rand() / (float)RAND_MAX ; 
-		color.g = (float)rand() / (float)RAND_MAX ; 
-		color.b = (float)rand() / (float)RAND_MAX ; 
+		color.r = randdistribution(randgenerator); 
+		color.g = randdistribution(randgenerator);
+		color.b = randdistribution(randgenerator);
         color.a = 1; 
         if(renderVerts)
         {

@@ -29,9 +29,8 @@ Context::ContextInternal::ContextInternal()
 
 void Context::ContextInternal::Create() 
 {
-    glfwSetErrorCallback(&Context::ContextInternal::GLFWErrorMessageCallback); 
-    
     glfwInit();
+    glfwSetErrorCallback(&Context::ContextInternal::GLFWErrorMessageCallback); 
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

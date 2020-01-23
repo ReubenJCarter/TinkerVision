@@ -31,16 +31,17 @@ std::map<ImageType, ComputeShader> Blend::Internal::computeShaders;
 
 std::string Blend::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputSrcImage;
 layout(FORMAT_QUALIFIER, binding=2) uniform image2D inputDstImage;
 layout(FORMAT_QUALIFIER, binding=3) uniform image2D inputMaskImage;
 
-const uint ADDITION = 0; 
-const uint SUBTRACT = 1;
-const uint DIFFERENCE = 2;
-const uint DIVIDE = 3;
-const uint MULTIPLY = 4;
+const uint BLEND_ADD = 0; 
+const uint BLEND_SUBTRACT = 1;
+const uint BLEND_DIFFERENCE = 2;
+const uint BLEND_DIVIDE = 3;
+const uint BLEND_MULTIPLY = 4;
+const uint BLEND_OVERLAY = 5;
 
 uniform int blendMode;
 
@@ -73,13 +74,13 @@ void main()
 
     if(blendMode == int(BLEND_ADD))
     {   
-        d = dDst + dSrc; 
+        d.rgb = dDst.rgb + dSrc.rgb; 
 
         d.rgb = ApplyMask(d.rgb, dDst.rgb, blendMask.rgb); 
     }
     else if(blendMode == int(BLEND_SUBTRACT))
     {
-        d = dDst - dSrc; 
+        d.rgb = dDst.rgb - dSrc.rgb; 
 
         d.rgb = ApplyMask(d.rgb, dDst.rgb, blendMask.rgb); 
     }
@@ -106,6 +107,10 @@ void main()
         d.b = dDst.b * dSrc.b;
 
         d.rgb = ApplyMask(d.rgb, dDst.rgb, blendMask.rgb); 
+    }
+    else if(blendMode == int(BLEND_OVERLAY))
+    {
+        d.rgb = ApplyMask(dSrc.rgb, dDst.rgb, blendMask.rgb); 
     }
     else 
     {
@@ -227,12 +232,12 @@ void Blend::SetMode(BlendMode bm)
 
 void Blend::Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* output, ImageGPU* blendMask)
 {
-    internal->Run(inputSrc, inputDst, blendMask, output); 
+    internal->Run(inputSrc, inputDst, output, blendMask); 
 }
 
 void Blend::Run(Image* inputSrc, Image* inputDst, Image* output, Image* blendMask)
 {
-    internal->Run(inputSrc, inputDst, blendMask, output); 
+    internal->Run(inputSrc, inputDst, output, blendMask); 
 }
 
 void Blend::Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* output)

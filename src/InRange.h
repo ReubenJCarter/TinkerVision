@@ -23,6 +23,7 @@ class VISI_EXPORT InRange
         void SetHighThreshold(float t);
         void SetLowThreshold(Vec3 t);
         void SetHighThreshold(Vec3 t);
+        void SetInvertRange(bool invCh0, bool invCh1, bool invCh2); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
 };

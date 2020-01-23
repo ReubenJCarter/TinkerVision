@@ -32,12 +32,13 @@ void Image::Allocate(unsigned int w, unsigned int h, ImageType t)
 
     Deallocate();
 
-    if(w == 0 || h == 0)
-        return; 
-
     width = w;
 	height = h;
 	type = t;
+
+    if(w == 0 || h == 0)
+        return; 
+
 	if(type == GRAYSCALE8)
     {
         data = new unsigned char[width * height];
@@ -80,26 +81,6 @@ void Image::Deallocate()
     }
 }
 
-unsigned int Image::GetWidth()
-{
-    return width;
-}
-
-unsigned int Image::GetHeight()
-{
-    return height;
-}
-
-ImageType Image::GetType()
-{
-    return type; 
-}
-
-unsigned char* Image::GetData()
-{
-    return data; 
-}
-
 void Image::Copy(ImageGPU* image)
 {
     if(!(image->GetWidth() > 0 && image->GetHeight() > 0))
@@ -115,22 +96,8 @@ void Image::Copy(ImageGPU* image)
 
     if(type == GRAYSCALE8)
     {
-        /*
-        int W, H, intFor; 
-        glGetTextureLevelParameteriv(texture, 0, GL_TEXTURE_WIDTH, &W); 
-        glGetTextureLevelParameteriv(texture, 0, GL_TEXTURE_HEIGHT, &H); 
-        glGetTextureLevelParameteriv(texture, 0, GL_TEXTURE_INTERNAL_FORMAT, &intFor); 
-        int pack, unpack; 
-        glGetIntegerv(GL_PACK_ALIGNMENT, &pack); 
-        glGetIntegerv(GL_UNPACK_ALIGNMENT, &unpack); 
-        
-        std::cout  << "Image::Copy:GRAYSCALE8:w, h:" << W << " " << H << " pack/unpack align:"<< pack << " " << unpack << " intform " << intFor <<  "\n"; 
-        std::cout  << "Image::Copy:GRAYSCALE8:bufSize:" << width * height << " imageSize:" << W*H <<  "\n"; 
-        std::cout << "Image::Copy:GRAYSCALE8  Done\n"; 
-        */
         //This seems to fail with some non standard image sizes. 
         glGetTextureImage(texture, 0, GL_RED, GL_UNSIGNED_BYTE, width * height, data);
-        
     }
     else if(type == GRAYSCALE16)
     {
@@ -156,6 +123,69 @@ void Image::Copy(ImageGPU* image)
     {
         glGetTextureImage(texture, 0, GL_BGRA, GL_FLOAT, width * height * 16, data);
     }
+}
+
+void Image::Copy(Image* image)
+{
+    if(!(image->GetWidth() > 0 && image->GetHeight() > 0))
+    {
+        return; 
+    }
+    if(!IsSameDimensions(image))
+    {
+        Allocate(image->GetWidth(), image->GetHeight(), image->GetType()); 
+    }
+
+    if(type == GRAYSCALE8)
+    {
+        for(unsigned int i = 0; i < image->GetWidth() * image->GetHeight(); i++)
+        {
+            data[i] = image->data[i]; 
+        }
+    }
+    else if(type == GRAYSCALE16)
+    {
+        for(unsigned int i = 0; i < image->GetWidth() * image->GetHeight() * 2; i++)
+        {
+            data[i] = image->data[i]; 
+        }
+    }
+    else if(type == GRAYSCALE32F)
+    {
+        for(unsigned int i = 0; i < image->GetWidth() * image->GetHeight() * 4; i++)
+        {
+            data[i] = image->data[i]; 
+        }
+    }
+    else if(type == RGB8)
+    {
+        for(unsigned int i = 0; i < image->GetWidth() * image->GetHeight() * 3; i++)
+        {
+            data[i] = image->data[i]; 
+        }
+    }
+    else if(type == RGB32F)
+    {
+        for(unsigned int i = 0; i < image->GetWidth() * image->GetHeight() * 12; i++)
+        {
+            data[i] = image->data[i]; 
+        }
+    }
+	else if(type == RGBA8)
+    {
+        for(unsigned int i = 0; i < image->GetWidth() * image->GetHeight() * 4; i++)
+        {
+            data[i] = image->data[i]; 
+        }
+    }
+    else if(type == RGBA32F)
+    {
+        for(unsigned int i = 0; i < image->GetWidth() * image->GetHeight() * 16; i++)
+        {
+            data[i] = image->data[i]; 
+        }
+    }
+    
 }
 
 bool Image::IsSameDimensions(ImageGPU* image)

@@ -193,21 +193,28 @@ void FindContours::Internal::Run(Image* input, Image* output, std::vector<Contou
         output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE16); 
     }
     uint16_t* outputData = (uint16_t*)output->GetData(); 
-
-    //copy threshold to output image
-    for(int j = 0; j < input->GetHeight(); j++)
     {
-        for(int i = 0; i < input->GetWidth(); i++)
+        unsigned char* data = input->GetData(); 
+        ImageType imageType = input->GetType();
+        int width = input->GetWidth();
+        int height = input->GetHeight();
+
+        //copy threshold to output image
+        for(int j = 0; j < height; j++)
         {
-            int inx = j * input->GetWidth() + i; 
-            glm::vec4 pix = GetPixel(input, i, j); 
-            if(pix.r > 0.5f)
+            int inxJ = j * width;
+            for(int i = 0; i < width; i++)
             {
-                outputData[inx] = 1; 
-            }
-            else
-            {
-                outputData[inx] = 0; 
+                int inx = inxJ + i; 
+                glm::vec4 pix = GetPixel(data, imageType, width, height, i, j); 
+                if(pix.r > 0.5f)
+                {
+                    outputData[inx] = 1; 
+                }
+                else
+                {
+                    outputData[inx] = 0; 
+                }
             }
         }
     }

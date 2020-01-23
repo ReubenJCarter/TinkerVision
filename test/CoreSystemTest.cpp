@@ -474,7 +474,8 @@ int main(int argc, char *argv[])
 			std::atomic<bool> gpuCopyRunning = false; 
 			std::thread gpuCopyThread([&]()
 			{
-				context.MakeCurrent(); 
+				Visi::Context localcontext;
+				localcontext.MakeCurrent(); 
 				while(running)
 				{
 					while(!gpuCopyRunning){}
@@ -496,13 +497,7 @@ int main(int argc, char *argv[])
 				
 				getFrameDataRunning = true; 
 
-				//gpuCopyRunning = true; 
-				
-
-				//videoFile.LoadNextFrame(); 
-				//videoFile.GetFrame(&image[pingpong]);
 				imageGPU[pingpong].Copy(&image[ (pingpong+1)%2 ]);
-				
 
 				visiWindow.DrawImage(&imageGPU[(pingpong+1)%2]); 
 				visiWindow.Refresh();

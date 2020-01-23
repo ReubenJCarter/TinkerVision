@@ -21,6 +21,7 @@ class InRange::Internal
 
         glm::vec3 highThreshold; 
         glm::vec3 lowThreshold; 
+        int invertRange[3]; 
        
     public:
         Internal(); 
@@ -30,6 +31,7 @@ class InRange::Internal
         void SetLowThreshold(float tL); 
         void SetHighThreshold(glm::vec3 tH);
         void SetLowThreshold(glm::vec3 tL);
+        void SetInvertRange(bool invCh0, bool invCh1, bool invCh2); 
 };
 
 std::map<ImageType, ComputeShader> InRange::Internal::computeShaders;
@@ -41,6 +43,7 @@ layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 uniform vec3 lowThreshold; 
 uniform vec3 highThreshold;
+uniform ivec3 invertRange; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
@@ -49,11 +52,12 @@ void main()
     vec4 d = imageLoad(inputImage, id);
     
     vec4 outVec ; 
+    bvec3 inRange; 
+    inRange.r = invertRange.r != 0 ? !(d.r < highThreshold.r && d.r >= lowThreshold.r) : (d.r < highThreshold.r && d.r >= lowThreshold.r);
+    inRange.g = invertRange.g != 0 ? !(d.g < highThreshold.g && d.g >= lowThreshold.g) : (d.g < highThreshold.g && d.g >= lowThreshold.g);
+    inRange.b = invertRange.b != 0 ? !(d.b < highThreshold.b && d.b >= lowThreshold.b) : (d.b < highThreshold.b && d.b >= lowThreshold.b);
 
-    outVec.r = d.r < highThreshold.r && d.r >= lowThreshold.r &&
-               d.g < highThreshold.g && d.g >= lowThreshold.g &&
-               d.b < highThreshold.b && d.b >= lowThreshold.b 
-               ? 1.0f : 0.0f;
+    outVec.r = (inRange.r && inRange.g && inRange.b) ? 1.0f : 0.0f;
     outVec.a = 1; 
     imageStore(outputImage, id, outVec);
 }
@@ -66,6 +70,9 @@ InRange::Internal::Internal()
 {
     lowThreshold = glm::vec3(0.5, 0.5, 0.5);
     highThreshold = glm::vec3(0.5, 0.5, 0.5); 
+    invertRange[0] = 0;
+    invertRange[1] = 0;
+    invertRange[2] = 0; 
 }
 
 
@@ -90,6 +97,8 @@ void InRange::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     computeShader.SetFloat3("lowThreshold", glm::value_ptr(lowThreshold)); 
     computeShader.SetFloat3("highThreshold", glm::value_ptr(highThreshold)); 
+
+    computeShader.SetInt3("invertRange", invertRange); 
 
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
@@ -139,6 +148,12 @@ void InRange::Internal::SetHighThreshold(glm::vec3 t)
     highThreshold = t;
 }
 
+void InRange::Internal::SetInvertRange(bool invCh0, bool invCh1, bool invCh2)
+{
+    invertRange[0] = invCh0 ? 1 : 0; 
+    invertRange[1] = invCh1 ? 1 : 0; 
+    invertRange[2] = invCh2 ? 1 : 0; 
+}
 
 
 
@@ -170,6 +185,11 @@ void InRange::SetHighThreshold(float t)
 void InRange::SetHighThreshold(Vec3 t)
 {
 	internal->SetHighThreshold(glm::vec3(t.x, t.y, t.z));
+}
+
+void InRange::SetInvertRange(bool invCh0, bool invCh1, bool invCh2)
+{
+    internal->SetInvertRange(invCh0, invCh1, invCh2);
 }
 
 void InRange::Run(ImageGPU* input, ImageGPU* output)
