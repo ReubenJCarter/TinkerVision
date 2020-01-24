@@ -30,12 +30,11 @@
 #include "LocalMaxima.h"
 #include "VideoFile.h"
 #include "Window.h"
+#include "VideoHelper.h"
 
 #include <iostream>
 #include <thread>
 #include <atomic>
-#include <condition_variable>
-#include <mutex>
 
 int main(int argc, char *argv[])
 {
@@ -421,93 +420,19 @@ int main(int argc, char *argv[])
 		std::cout << "Starting video test\n"; 
 		if(std::string( argv[1] ) == "-v")
 		{
-			Visi::VideoFile videoFile;
-			videoFile.Open(argv[2]);
 			
-			
-		
-			std::cout << "opening window "<< videoFile.GetFrameWidth() << " x " << videoFile.GetFrameHeight() << "\n"; 
-
-			Visi::Window visiWindow(videoFile.GetFrameWidth() , videoFile.GetFrameHeight());
-
-			Visi::Image image[2]; 
-			Visi::ImageGPU imageGPU[2];
-			int pingpong = 0; 
-			std::atomic<bool> running = true; 
-
-
-			videoFile.LoadNextFrame(); 
-			videoFile.SwapBuffers(); 
-
-			std::atomic<bool> videoDecodeRunning = false; 
-			std::thread videoDecodeThread([&]()
+			Visi::VideoHelper videoHelper; 
+			videoHelper.Open(argv[2]); 
+			Visi::Window visiWindow(videoHelper.GetFrameWidth(), videoHelper.GetFrameHeight());
+			while(!visiWindow.ShouldClose())
 			{
-				while(running)
+				videoHelper.NextFrame([&](Visi::ImageGPU* image)
 				{
-					while(!videoDecodeRunning){}
-					if(!running)
-					{
-						videoDecodeRunning = false;
-						break; 
-					}
-					videoFile.LoadNextFrame(); 
-					videoDecodeRunning = false;
-				}
-			});
-
-			std::atomic<bool> getFrameDataRunning = false; 
-			std::thread getFrameDataThread([&]()
-			{
-				while(running)
-				{
-					while(!getFrameDataRunning){}
-					if(!running)
-					{
-						getFrameDataRunning = false;
-						break; 
-					}
-					videoFile.GetFrame(&image[pingpong]);
-					getFrameDataRunning = false;
-				}
-			});
-
-			std::atomic<bool> gpuCopyRunning = false; 
-			std::thread gpuCopyThread([&]()
-			{
-				Visi::Context localcontext;
-				localcontext.MakeCurrent(); 
-				while(running)
-				{
-					while(!gpuCopyRunning){}
-					if(!running)
-					{
-						gpuCopyRunning = false; 
-						break; 
-					}
-					imageGPU[pingpong].Copy(&image[ (pingpong+1)%2 ]);
-					gpuCopyRunning = false; 
-				}
-			});
-
-			while(running)
-			{
-				running = !visiWindow.ShouldClose(); 
-
-				videoDecodeRunning = true; 
-				
-				getFrameDataRunning = true; 
-
-				imageGPU[pingpong].Copy(&image[ (pingpong+1)%2 ]);
-
-				visiWindow.DrawImage(&imageGPU[(pingpong+1)%2]); 
-				visiWindow.Refresh();
-
-				//wait for all to finish before continue
-				while(videoDecodeRunning || getFrameDataRunning || gpuCopyRunning){}
-
-				videoFile.SwapBuffers(); 
-				pingpong = (pingpong + 1) % 2;
+					visiWindow.DrawImage(image); 
+					visiWindow.Refresh();
+				}); 
 			}
+			videoHelper.Close(); 
 		}
 	}
 

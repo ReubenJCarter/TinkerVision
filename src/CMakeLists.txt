@@ -39,6 +39,7 @@ set(LIBRARYSRCFILES
 	Thinning.cpp
 	Threshold.cpp
 	VideoFile.cpp
+	VideoHelper.cpp
 	Window.cpp
 	WriteImageFile.cpp
 )
