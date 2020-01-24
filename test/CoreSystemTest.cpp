@@ -426,9 +426,9 @@ int main(int argc, char *argv[])
 			Visi::Window visiWindow(videoHelper.GetFrameWidth(), videoHelper.GetFrameHeight());
 			while(!visiWindow.ShouldClose())
 			{
-				videoHelper.NextFrame([&](Visi::ImageGPU* image)
+				videoHelper.NextFrame([&](Visi::ImageGPU* imageGPU, Visi::Image* image)
 				{
-					visiWindow.DrawImage(image); 
+					visiWindow.DrawImage(imageGPU); 
 					visiWindow.Refresh();
 				}); 
 			}

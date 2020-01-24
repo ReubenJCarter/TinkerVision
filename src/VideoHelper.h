@@ -3,6 +3,7 @@
 #include "Visi_export.h"
 
 #include "ImageGPU.h"
+#include "Image.h"
 
 #include <string>
 #include <functional> 
@@ -23,7 +24,8 @@ class VISI_EXPORT VideoHelper
         int GetFrameWidth();
         int GetFrameHeight(); 
         bool Close(); 
-        bool NextFrame(std::function<void(Visi::ImageGPU*)> useFrame); 
+        bool NextFrame(std::function<void(Visi::ImageGPU*, Visi::Image*)> useFrame); 
+        bool IsOpen(); 
 };
 	
 }

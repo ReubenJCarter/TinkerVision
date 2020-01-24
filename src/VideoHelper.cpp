@@ -28,7 +28,8 @@ class VideoHelper::Internal
         int GetFrameWidth();
         int GetFrameHeight(); 
         bool Close(); 
-        bool NextFrame(std::function<void(Visi::ImageGPU*)> useFrame);
+        bool NextFrame(std::function<void(Visi::ImageGPU*, Visi::Image*)> useFrame);
+        bool IsOpen(); 
 };
 
 VideoHelper::Internal::Internal()
@@ -132,7 +133,7 @@ bool VideoHelper::Internal::Close()
     return false; 
 }
 
-bool VideoHelper::Internal::NextFrame(std::function<void(Visi::ImageGPU*)> useFrame)
+bool VideoHelper::Internal::NextFrame(std::function<void(Visi::ImageGPU*, Visi::Image*)> useFrame)
 {
     if(!running)
     {
@@ -146,7 +147,7 @@ bool VideoHelper::Internal::NextFrame(std::function<void(Visi::ImageGPU*)> useFr
     imageGPU[pingpong].Copy(&image[ (pingpong+1)%2 ]);
 
 
-    useFrame( &(imageGPU[(pingpong+1)%2]) ); 
+    useFrame( &(imageGPU[(pingpong+1)%2]), &(image[ (pingpong+1)%2 ]) ); 
 
     //wait for all to finish before continue
     while(videoDecodeRunning || getFrameDataRunning || gpuCopyRunning){}
@@ -155,6 +156,11 @@ bool VideoHelper::Internal::NextFrame(std::function<void(Visi::ImageGPU*)> useFr
     pingpong = (pingpong + 1) % 2;
 
     return true; 
+}
+
+bool VideoHelper::Internal::IsOpen()
+{
+    return videoFile.IsOpen(); 
 }
 
 
@@ -189,9 +195,14 @@ bool VideoHelper::Close()
     return internal->Close(); 
 }
 
-bool VideoHelper::NextFrame(std::function<void(Visi::ImageGPU*)> useFrame)
+bool VideoHelper::NextFrame(std::function<void(Visi::ImageGPU*, Visi::Image*)> useFrame)
 {
     return internal->NextFrame(useFrame); 
+}
+
+bool VideoHelper::IsOpen()
+{
+    return internal->IsOpen();
 }
 
 }
