@@ -27,6 +27,10 @@ endif()
 set(GLM_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/glm CACHE PATH "Path to GLM")
 include_directories(${GLM_INC_DIR})
 
+#Eigen
+set(EIGEN_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/eigen-3.3.7 CACHE PATH "Path to Eigen")
+include_directories(${EIGEN_INC_DIR})
+
 #ctpl
 set(CTPL_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/ctpl CACHE PATH "Path to CTPL")
 include_directories(${CTPL_INC_DIR})

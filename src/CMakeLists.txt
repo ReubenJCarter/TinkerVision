@@ -5,6 +5,7 @@ set(LIBRARYSRCFILES
 	Blend.cpp
 	BoundingBox.cpp
 	BrightnessContrast.cpp
+	CameraDistortion.cpp
 	CannyEdgeDetect.cpp
 	ChannelDemux.cpp
 	ClearColor.cpp

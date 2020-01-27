@@ -226,7 +226,7 @@ void Contour::ContoursMergeVerticies(std::vector<Contour>* input, std::vector<Co
 
 //https://www.geeksforgeeks.org/convex-hull-set-2-graham-scan/
 void Contour::FindConvexHull(Contour* contour, std::vector<int>* convexHull)
-{//TODO DOESNT YET USE DISTANCE FOR SORT WHEN ORIENTATIONS ARE THE SAME 
+{
     convexHull->clear();
 
     //find p0

@@ -31,6 +31,7 @@
 #include "VideoFile.h"
 #include "Window.h"
 #include "VideoHelper.h"
+#include "CameraDistortion.h"
 
 #include <iostream>
 #include <thread>
@@ -411,6 +412,15 @@ int main(int argc, char *argv[])
 		copyImage.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
 		Visi::WriteImageFile("image14_2Test.png", &image2);
+
+		//Camera Distortion
+		Visi::CameraDistortion camDistort;
+		camDistort.SetRadialCoefs(-0.1f, 0, 0);
+		camDistort.SetTangentialCoefs(0, 0); 
+		camDistort.SetFocalLength(1); 
+		camDistort.Run(&imageGPU1, &imageGPU2); 
+		image2.Copy(&imageGPU2);
+		Visi::WriteImageFile("image15_1Test.png", &image2);
 
 		std::cout << "DONE\n";
 		

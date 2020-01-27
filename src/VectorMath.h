@@ -48,4 +48,10 @@ class Mat3
 		Mat3(){}; 
 };
 
+class CameraPose 
+{
+        Mat3 rotation;
+        Vec3 translation;
+};
+
 }

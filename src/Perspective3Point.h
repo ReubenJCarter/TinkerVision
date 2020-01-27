@@ -5,6 +5,9 @@
 #include "ImageType.h"
 #include "Image.h"
 #include "ImageGPU.h"
+#include "VectorMath.h"
+
+#include <vector>
 
 namespace Visi
 {
@@ -17,7 +20,8 @@ class VISI_EXPORT Perspective3Point
 
 	public:
 		Perspective3Point(); 
-        ~Perspective3Point(); 
+        ~Perspective3Point();
+        void Run(std::vector<Vec2>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses);  
 };
 	
 }
