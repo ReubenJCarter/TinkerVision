@@ -355,14 +355,14 @@ class Perspective3Point::Internal
 {   
     public:
         Internal(); 
-        bool Run(std::vector<Vec2>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses); 
+        bool Run(std::vector<Vec3>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses); 
 };
 
 Perspective3Point::Internal::Internal()
 {
 }
 
-bool Perspective3Point::Internal::Run(std::vector<Vec2>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses)
+bool Perspective3Point::Internal::Run(std::vector<Vec3>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses)
 {
     if(normalizedImageCoords->size() != 3)
     {
@@ -381,7 +381,7 @@ bool Perspective3Point::Internal::Run(std::vector<Vec2>* normalizedImageCoords, 
 
     for(int i = 0; i < normalizedImageCoords->size(); i++)
     {
-        Eigen::Vector3d xNew( (*normalizedImageCoords)[i].x, (*normalizedImageCoords)[i].y, 1); 
+        Eigen::Vector3d xNew( (*normalizedImageCoords)[i].x, (*normalizedImageCoords)[i].y, (*normalizedImageCoords)[i].z); 
         x.push_back(xNew); 
 
         Eigen::Vector3d XNew( (*worldCoords)[i].x, (*worldCoords)[i].y, (*worldCoords)[i].z); 
@@ -420,7 +420,7 @@ Perspective3Point::~Perspective3Point()
     delete internal; 
 }
 
-bool Perspective3Point::Run(std::vector<Vec2>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses)
+bool Perspective3Point::Run(std::vector<Vec3>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses)
 {
     return internal->Run(normalizedImageCoords, worldCoords, cameraPoses); 
 }
