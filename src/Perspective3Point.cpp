@@ -12,7 +12,7 @@
 #include <iostream>
 
 
-namespace external
+namespace FromGithub
 {
 
     
@@ -355,16 +355,57 @@ class Perspective3Point::Internal
 {   
     public:
         Internal(); 
-        void Run(std::vector<Vec2>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses); 
+        bool Run(std::vector<Vec2>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses); 
 };
 
 Perspective3Point::Internal::Internal()
 {
 }
 
-void Perspective3Point::Internal::Run(std::vector<Vec2>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses)
+bool Perspective3Point::Internal::Run(std::vector<Vec2>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses)
 {
+    if(normalizedImageCoords->size() != 3)
+    {
+        std::cout << "Visi:Perspective3Point:Run: Needs to be three points from image\n"; 
+        return false; 
+    }
+    if(worldCoords->size() != 3)
+    {
+        std::cout << "Visi:Perspective3Point:Run: Needs to be three points from world\n"; 
+        return false; 
+    }
 
+    std::vector<Eigen::Vector3d> x;
+    std::vector<Eigen::Vector3d> X;
+    std::vector<FromGithub::lambdatwist::CameraPose> internalcameraPose; 
+
+    for(int i = 0; i < normalizedImageCoords->size(); i++)
+    {
+        Eigen::Vector3d xNew( (*normalizedImageCoords)[i].x, (*normalizedImageCoords)[i].y, 1); 
+        x.push_back(xNew); 
+
+        Eigen::Vector3d XNew( (*worldCoords)[i].x, (*worldCoords)[i].y, (*worldCoords)[i].z); 
+        X.push_back(XNew); 
+    }
+
+    int count = FromGithub::lambdatwist::p3p(x, X, &internalcameraPose); 
+
+    cameraPoses->clear(); 
+    cameraPoses->reserve(count); 
+
+    for(int i = 0; i < internalcameraPose.size(); i++)
+    {
+        Eigen::Matrix3d R = internalcameraPose[i].R;
+        Eigen::Vector3d t = internalcameraPose[i].t;
+
+        CameraPose cp;
+        cp.rotation = Mat3(Vec3(R(0, 0), R(1, 0), R(2, 0)), 
+                           Vec3(R(0, 1), R(1, 1), R(2, 1)), 
+                           Vec3(R(0, 2), R(1, 2), R(2, 2))); 
+        cp.translation = Vec3(t(0), t(1), t(2));
+        cameraPoses->push_back(cp); 
+    }
+    return true; 
 }
 
 
@@ -379,9 +420,9 @@ Perspective3Point::~Perspective3Point()
     delete internal; 
 }
 
-void Perspective3Point::Run(std::vector<Vec2>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses)
+bool Perspective3Point::Run(std::vector<Vec2>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses)
 {
-    internal->Run(normalizedImageCoords, worldCoords, cameraPoses); 
+    return internal->Run(normalizedImageCoords, worldCoords, cameraPoses); 
 }
 
 
