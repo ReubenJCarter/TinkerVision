@@ -356,4 +356,19 @@ void Renderer::AddBoundingBox(BoundingBox* boundingBox, Color color)
     AddPolyLine(&pl, color, 1, true); 
 }
 
+void Renderer::Add3DAxis(float fovy, Vec3 pos)
+{
+    Vec3 orig = pos;
+    Vec2 origTransformed; 
+
+    std::vector<Vec2> xaxis;
+    std::vector<Vec2> yaxis;
+    std::vector<Vec2> zaxis;
+    xaxis.push_back(origTransformed); 
+    yaxis.push_back(origTransformed); 
+    zaxis.push_back(origTransformed); 
+
+    //AddPolyLine(); 
+}
+
 }

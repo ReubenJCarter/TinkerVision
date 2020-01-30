@@ -27,6 +27,7 @@ class VISI_EXPORT Renderer
         void AddCircle(Vec2 centre, float radius, Color color=Color(1.0f, 0.0f, 0.0f, 1.0f), bool filled=false, float borderWidth=1); 
         void AddContours(std::vector<Contour>* contours, bool renderVerts=true, float vertRad=2, bool renderLines=true, bool closed=true); 
         void AddBoundingBox(BoundingBox* boundingBox, Color color); 
+        void Add3DAxis(float fovy, Vec3 pos);
 };
 	
 }
