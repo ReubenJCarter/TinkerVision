@@ -30,6 +30,7 @@ set(LIBRARYSRCFILES
 	Morph.cpp
 	NonMaximumSuppression.cpp
 	Normalize.cpp
+	ParallelFor.cpp
 	Perspective3Point.cpp
 	ProcessHelper.cpp
 	ReadImageFile.cpp
