@@ -169,6 +169,9 @@ int main(int argc, char *argv[])
 		image3.Copy(&imageGPU3);
 		Visi::WriteImageFile("image5_2Test.png", &image3);
 
+		adaptiveThreshold.Run(&image2, &image3);
+		Visi::WriteImageFile("image5_3Test.png", &image3);
+
 		//Median Filter
 		Visi::MedianFilter medianFilter; 
 		medianFilter.SetSize(3); 

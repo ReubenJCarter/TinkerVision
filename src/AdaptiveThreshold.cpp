@@ -2,6 +2,7 @@
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
+#include "ParallelFor.h"
 
 #include <string>
 #include <iostream>
@@ -112,17 +113,40 @@ void AdaptiveThreshold::Internal::Run(Image* input, Image* output)
         output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     }
     
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    for(int i = 0; i < input->GetHeight(); i++)
+    ParallelFor& pf = ParallelFor::GetInstance(); 
+
+    auto kernel = [this, input, output](int x, int y)
     {
-        for(int j = 0; j < input->GetWidth(); j++)
+        glm::vec4 pix = GetPixel(input, x, y); 
+        glm::vec4 d (0, 0, 0, 1);
+        for(int j = 0; j < size; j++ )
+        for(int i = 0; i < size; i++ )
         {
-            int inx = (i * input->GetWidth() + j);
 
+            glm::vec4 px = GetPixel(input, x + i - size/2, y + j - size/2);
+            d.r += px.r; 
+            d.g += px.g; 
+            d.b += px.b; 
+        }
 
-        } 
-    } 
+        d.r /= size*size; 
+        d.g /= size*size; 
+        d.b /= size*size; 
+
+        d.r -= pix.r;
+        d.g -= pix.g;
+        d.b -= pix.b;
+
+        d.r = d.r < threshold ? 1.0f : 0.0f; 
+        d.g = d.g < threshold ? 1.0f : 0.0f; 
+        d.b = d.b < threshold ? 1.0f : 0.0f; 
+
+        SetPixel(output, x, y, d); 
+
+    };
+
+    pf.Run(input->GetWidth(), input->GetHeight(), kernel);
+    
 }
 
 void AdaptiveThreshold::Internal::SetThreshold(float t)
