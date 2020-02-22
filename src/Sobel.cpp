@@ -2,6 +2,7 @@
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
+#include "ParallelFor.h"
 
 #include <string>
 #include <iostream>
@@ -117,9 +118,45 @@ void Sobel::Internal::Run(Image* input, Image* output)
         output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::RGBA32F); 
     }
     
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    
+    ParallelFor& pf = ParallelFor::GetInstance(); 
+
+    auto kernel = [this, input, output](int x, int y)
+    {
+        //GRAD X
+        float dx = 0;
+
+        dx += GetPixel(input, x-1, y-1).r * 1.0f;
+        dx += GetPixel(input, x-1, y+0).r * 2.0f;
+        dx += GetPixel(input, x-1, y+1).r * 1.0f;
+
+        dx += GetPixel(input, x+1, y-1).r * -1.0f;
+        dx += GetPixel(input, x+1, y+0).r * -2.0f;
+        dx += GetPixel(input, x+1, y+1).r * -1.0f;
+
+        //GRAD Y
+        float dy = 0;
+
+        dy += GetPixel(input, x-1, y-1).r * 1.0f;
+        dy += GetPixel(input, x+0, y-1).r * 2.0f;
+        dy += GetPixel(input, x+1, y-1).r * 1.0f;
+
+        dy += GetPixel(input, x-1, y+1).r * -1.0f;
+        dy += GetPixel(input, x+0, y+1).r * -2.0f;
+        dy += GetPixel(input, x+1, y+1).r * -1.0f;
+
+        //Normalization Neeeded??
+        dx /= 8.0f;
+        dy /= 8.0f;
+
+        //mag ori calc
+        float mag = glm::length(glm::vec2(dx, dy)); 
+        float ori = atan2(dy, dx); 
+
+        glm::vec4 outVec = glm::vec4(dx, dy, mag, ori); 
+        SetPixel(output, x, y, outVec); 
+    };
+
+    pf.Run(input->GetWidth(), input->GetHeight(), kernel);
 }
 
 

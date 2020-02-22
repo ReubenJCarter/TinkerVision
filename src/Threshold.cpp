@@ -2,6 +2,7 @@
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
+#include "ParallelFor.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -93,17 +94,18 @@ void Threshold::Internal::Run(Image* input, Image* output)
         output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     }
     
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    for(int i = 0; i < input->GetHeight(); i++)
+    ParallelFor& pf = ParallelFor::GetInstance(); 
+
+    auto kernel = [this, input, output](int x, int y)
     {
-        for(int j = 0; j < input->GetWidth(); j++)
-        {
-            int inx = (i * input->GetWidth() + j);
+        glm::vec4 pix = GetPixel(input, x, y); 
+        pix.r = pix.r <= threshold.r ? 0.0f : 1.0f; 
+        pix.g = pix.g <= threshold.g ? 0.0f : 1.0f; 
+        pix.b = pix.b <= threshold.b ? 0.0f : 1.0f; 
+        SetPixel(output, x, y, pix); 
+    };
 
-
-        } 
-    } 
+    pf.Run(input->GetWidth(), input->GetHeight(), kernel);
 }
 
 void Threshold::Internal::SetThreshold(float t)

@@ -3,6 +3,8 @@
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
 
+#include "ParallelFor.h"
+
 #include <string>
 #include <iostream>
 #include <map>
@@ -33,7 +35,6 @@ std::map<ImageType, ComputeShader> ClearColor::Internal::computeShaders;
 std::string ClearColor::Internal::shaderSrc = R"(
 
 layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
-layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 vec4 color; 
 
@@ -41,8 +42,7 @@ layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-    vec4 d = imageLoad(inputImage, id) * contrast + vec4(brightness, brightness, brightness, 0.0f); 
-    imageStore(outputImage, id, d); 
+    imageStore(outputImage, id, color); 
 }
 
 )";
@@ -83,7 +83,20 @@ void ClearColor::Internal::Run(ImageGPU* output)
 
 void ClearColor::Internal::Run(Image* output)
 {
-    unsigned char* outputData = output->GetData(); 
+    if(output->GetWidth() == 0 || output->GetHeight() == 0)
+    {
+
+        return; 
+    }
+
+    ParallelFor& pf = ParallelFor::GetInstance(); 
+
+    auto kernel = [this, output](int x, int y)
+    {
+        SetPixel(output, x, y, color); 
+    };
+
+    pf.Run(output->GetWidth(), output->GetHeight(), kernel);
     
 }
 

@@ -3,6 +3,8 @@
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
 
+#include "ParallelFor.h"
+
 #include <string>
 #include <iostream>
 #include <map>
@@ -186,7 +188,7 @@ void Blend::Internal::Run(Image* inputSrc, Image* inputDst, Image* output, Image
 
     if(!inputSrc->IsSameDimensions(inputDst))
     {
-        std::cout << "inputSrc is not the same dimentions as inputDst\n";
+        std::cout << "Visi:Blend:inputSrc is not the same dimentions as inputDst\n";
         return; 
     }
 
@@ -194,17 +196,64 @@ void Blend::Internal::Run(Image* inputSrc, Image* inputDst, Image* output, Image
     {
         output->Allocate(inputSrc->GetWidth(), inputSrc->GetHeight(), inputSrc->GetType()); 
     }
-    
-    unsigned char* inputSrcData = inputSrc->GetData(); 
-    unsigned char* inputDstData = inputDst->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    for(int i = 0; i < inputSrc->GetHeight(); i++)
+
+    bool useMask = false; 
+    if(blendMask != NULL)
     {
-        for(int j = 0; j < inputSrc->GetWidth(); j++)
+        if(blendMask->GetWidth() == inputSrc->GetWidth() && blendMask->GetHeight() == inputSrc->GetHeight())
         {
-            int inx = (i * inputSrc->GetWidth() + j);
-        } 
-    } 
+            useMask = true; 
+        }
+        else
+        {
+            std::cout << "Visi:Blend:Run:blendMask is not the same dimentions as input\n";
+            return; 
+        }
+    }
+    
+   
+        ParallelFor& pf = ParallelFor::GetInstance(); 
+
+        auto kernel = [this, inputSrc, inputDst, blendMask, useMask, output](int x, int y)
+        {
+            glm::vec3 pixSrc = GetPixel(inputSrc, x, y); 
+            glm::vec3 pixDst = GetPixel(inputDst, x, y); 
+            glm::vec3 d ; 
+
+            if(blendMode == BlendMode::BLEND_ADD)
+            {
+                d = pixDst + pixSrc;    
+            }
+            else if(blendMode == BlendMode::BLEND_SUBTRACT)
+            {
+                d =  pixDst - pixSrc;  
+            }
+            else if(blendMode == BlendMode::BLEND_DIFFERENCE)
+            {
+                d =  glm::abs(pixDst - pixSrc);  
+            }
+            else if(blendMode == BlendMode::BLEND_DIVIDE)
+            {
+                d = pixDst / pixSrc;
+            }
+            else if(blendMode == BlendMode::BLEND_MULTIPLY)
+            {
+                d = pixDst * pixSrc;
+            }
+            else if(blendMode == BlendMode::BLEND_OVERLAY)
+            {
+                d = pixSrc; 
+            }
+
+            if(useMask)
+            {
+                glm::vec3 pixMask = GetPixel(blendMask, x, y); 
+                d = glm::mix(pixDst, d, pixMask.r); 
+            }
+            SetPixel(output, x, y, glm::vec4(d, 1)); 
+        };
+
+        pf.Run(inputSrc->GetWidth(), inputSrc->GetHeight(), kernel);
 }
 
 void Blend::Internal::SetMode(BlendMode bm)

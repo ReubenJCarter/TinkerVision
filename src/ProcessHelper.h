@@ -90,6 +90,32 @@ inline glm::vec4 GetPixel(Image* image, int x, int y)
     return GetPixel(data, imageType, image->GetWidth(), image->GetHeight(), x, y); 
 }
 
+inline glm::vec4 GetPixelBilinear(unsigned char* data, ImageType imageType, int width, int height, float x, float y)
+{
+    glm::vec2 pos = glm::vec2(x, y); 
+    glm::vec2 posFloor = glm::floor(pos);
+    glm::vec2 posFract = pos - posFloor; 
+    glm::ivec2 pfI = glm::ivec2(posFloor); 
+
+    glm::vec4 A0 =  GetPixel(data, imageType, width, height, pfI.x,     pfI.y);
+    glm::vec4 A1 =  GetPixel(data, imageType, width, height, pfI.x + 1, pfI.y);
+
+    glm::vec4 B0 =  GetPixel(data, imageType, width, height, pfI.x,     pfI.y + 1);
+    glm::vec4 B1 =  GetPixel(data, imageType, width, height, pfI.x + 1, pfI.y + 1);
+
+    glm::vec4 A = glm::mix( A0, A1, posFract.x );
+    glm::vec4 B = glm::mix( B0, B1, posFract.x );
+
+    return glm::mix(A, B, posFract.y); 
+}
+
+inline glm::vec4 GetPixelBilinear(Image* image, float x, float y)
+{
+    unsigned char* data = image->GetData(); 
+    ImageType imageType = image->GetType();
+    return GetPixelBilinear(data, imageType, image->GetWidth(), image->GetHeight(), x, y); 
+}
+
 inline glm::ivec4 GetPixelUI(Image* image, int x, int y)
 {
     if(x < 0 || y < 0 || x >= image->GetWidth() || y >= image->GetHeight())

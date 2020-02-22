@@ -3,6 +3,8 @@
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
 
+#include "ParallelFor.h"
+
 #include <string>
 #include <iostream>
 #include <map>
@@ -132,17 +134,33 @@ void CameraDistortion::Internal::Run(Image* input, Image* output)
         output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     }
     
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    for(int i = 0; i < input->GetHeight(); i++)
-    {
-        for(int j = 0; j < input->GetWidth(); j++)
-        {
-            int inx = (i * input->GetWidth() + j);
+    ParallelFor& pf = ParallelFor::GetInstance(); 
 
+    glm::vec2 imCenter = glm::vec2(input->GetWidth()/2, input->GetHeight()/2);
 
-        } 
-    } 
+    auto kernel = [this, input, output, imCenter](int x, int y)
+    {        
+        glm::vec2 basePos = glm::vec2(x, y); 
+
+        //convert to normalized image plane coordinates (plane is at z = 1)
+        basePos = ((basePos) / (input->GetHeight() * 0.5f)) * focalLength; 
+        glm::vec2 centeroffset = basePos - ((imCenter) / (input->GetHeight() * 0.5f)) * focalLength; 
+
+        float r2 = centeroffset.x * centeroffset.x + centeroffset.y * centeroffset.y;  
+        float r4 = r2 * r2;
+        float r6 = r4 * r2; 
+        glm::vec2 radialDistTerm = centeroffset * (k[0] * r2 + k[1] * r4 + k[2] * r6);
+        float tangDistTermX = p[0] * (r2+2.0f*centeroffset.x*centeroffset.x) + p[1] * 2.0f * centeroffset.x * centeroffset.y; 
+        float tangDistTermY = p[1] * (r2+2.0f*centeroffset.y*centeroffset.y) + p[0] * 2.0f * centeroffset.x * centeroffset.y; 
+        glm::vec2 correctedPos = basePos + radialDistTerm + glm::vec2(tangDistTermX, tangDistTermY); 
+
+        glm::vec2 imCoords = (correctedPos / focalLength) * (input->GetHeight() * 0.5f);
+        glm::vec4 pix = GetPixelBilinear(input, imCoords.x, imCoords.y);
+
+        SetPixel(output, x, y, pix); 
+    };
+
+    pf.Run(input->GetWidth(), input->GetHeight(), kernel);
 }
 
 void CameraDistortion::Internal::SetRadialCoefs(float k0, float k1, float k2)
