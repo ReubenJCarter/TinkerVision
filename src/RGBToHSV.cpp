@@ -2,6 +2,7 @@
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
+#include "ParallelFor.h"
 
 #include <string>
 #include <iostream>
@@ -100,15 +101,34 @@ void RGBToHSV::Internal::Run(Image* input, Image* output)
         output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     }
     
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    for(int i = 0; i < input->GetHeight(); i++)
+    if(output->GetWidth() != input->GetWidth() || 
+       output->GetHeight() != input->GetHeight() || 
+       output->GetType() != ImageType::RGBA32F)
     {
-        for(int j = 0; j < input->GetWidth(); j++)
-        {
-            int inx = (i * input->GetWidth() + j);
-        } 
-    } 
+        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::RGBA32F); 
+    }
+    
+    ParallelFor& pf = ParallelFor::GetInstance(); 
+    float Epsilon = 1e-10;
+
+    auto kernel = [this, input, output, Epsilon](int x, int y)
+    {
+        glm::vec4 RGBA = GetPixel(input, x, y);
+        glm::vec3 RGB = RGBA;
+
+        glm::vec4 P = (RGB.g < RGB.b) ? glm::vec4(RGB.b, RGB.g, -1.0f, 2.0f/3.0f) : glm::vec4(RGB.g, RGB.b, 0.0f, -1.0f/3.0f);
+        glm::vec4 Q = (RGB.r < P.x) ? glm::vec4(P.x, P.y, P.w, RGB.r) : glm::vec4(RGB.r, P.y, P.z, P.x);
+        float C = Q.x - (std::min)(Q.w, Q.y);
+        float H = abs((Q.w - Q.y) / (6 * C + Epsilon) + Q.z);
+        glm::vec3 HCV =  glm::vec3(H, C, Q.x);
+
+        float S = HCV.y / (HCV.z + Epsilon);
+        glm::vec4 outVec = glm::vec4(HCV.x, S, HCV.z, RGBA.a);
+
+        SetPixel(output, x, y, outVec); 
+    };
+
+    pf.Run(input->GetWidth(), input->GetHeight(), kernel);
 }
 
 
