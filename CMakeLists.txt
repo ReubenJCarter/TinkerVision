@@ -105,7 +105,7 @@ add_subdirectory(src)
 add_subdirectory(test)
 
 install(FILES ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}_export.h
-		DESTINATION include/${CMAKE_PROJECT_NAME}
+		DESTINATION include
 )
 
 
