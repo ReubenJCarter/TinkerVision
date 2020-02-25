@@ -6,7 +6,7 @@
 #include "GrayScale.h"
 #include "GaussianBlur.h"
 #include "Sobel.h"
-#include "NonMaximumSuppression.h"
+#include "NonMaximumEdgeSuppression.h"
 
 
 #include <string>
@@ -32,7 +32,7 @@ class CornerDetector::Internal
         GrayScale grayscale; 
         GaussianBlur gaussianBlur; 
         Sobel sobel; 
-        NonMaximumSuppression nms; 
+        NonMaximumEdgeSuppression nms; 
 
         ImageGPU temp[4]; 
 

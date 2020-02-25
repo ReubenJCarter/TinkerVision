@@ -28,7 +28,7 @@ set(LIBRARYSRCFILES
 	LocalMaxima.cpp
 	MedianFilter.cpp
 	Morph.cpp
-	NonMaximumSuppression.cpp
+	NonMaximumEdgeSuppression.cpp
 	Normalize.cpp
 	ParallelFor.cpp
 	Perspective3Point.cpp

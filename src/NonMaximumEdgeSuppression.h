@@ -9,15 +9,15 @@
 namespace Visi
 {
 	
-class VISI_EXPORT NonMaximumSuppression
+class VISI_EXPORT NonMaximumEdgeSuppression
 {
     private: 
         class Internal;
         Internal* internal;
 
 	public:
-		NonMaximumSuppression(); 
-        ~NonMaximumSuppression(); 
+		NonMaximumEdgeSuppression(); 
+        ~NonMaximumEdgeSuppression(); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
 };

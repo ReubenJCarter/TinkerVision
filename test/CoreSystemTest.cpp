@@ -17,7 +17,7 @@
 #include "Invert.h"
 #include "Contour.h"
 #include "ChannelDemux.h"
-#include "NonMaximumSuppression.h"
+#include "NonMaximumEdgeSuppression.h"
 #include "CopyImage.h"
 #include "CannyEdgeDetect.h"
 #include "GaussianDerivative.h"
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
 		Visi::WriteImageFile("image8_1Test.png", &image2);
 
 		//NMS
-		Visi::NonMaximumSuppression nms; 
+		Visi::NonMaximumEdgeSuppression nms; 
 		nms.Run(&imageGPU2, &imageGPU3); 
 
 		demux.SetChannel(2);

@@ -2,6 +2,7 @@
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
+#include "ParallelFor.h"
 
 #include <string>
 #include <iostream>
@@ -80,15 +81,16 @@ void Invert::Internal::Run(Image* input, Image* output)
         output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     }
     
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    for(int i = 0; i < input->GetHeight(); i++)
+    ParallelFor& pf = ParallelFor::GetInstance(); 
+
+    auto kernel = [this, input, output](int x, int y)
     {
-        for(int j = 0; j < input->GetWidth(); j++)
-        {
-            int inx = (i * input->GetWidth() + j);
-        } 
-    } 
+        glm::vec4 pix = GetPixel(input, x, y); 
+        glm::vec4 d = glm::vec4(1.0f - pix.r, 1.0f - pix.g, 1.0f - pix.b, pix.a);
+        SetPixel(output, x, y, d); 
+    };
+
+    pf.Run(input->GetWidth(), input->GetHeight(), kernel);
 }
 
 

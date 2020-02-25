@@ -5,7 +5,7 @@
 
 #include "GaussianBlur.h"
 #include "Sobel.h"
-#include "NonMaximumSuppression.h"
+#include "NonMaximumEdgeSuppression.h"
 #include "HysteresisEdgeThreshold.h"
 #include "GrayScale.h"
 #include "ChannelDemux.h"
@@ -25,7 +25,7 @@ class CannyEdgeDetect::Internal
         GrayScale gray; 
         GaussianBlur blur; 
         Sobel sobel; 
-        NonMaximumSuppression nms;
+        NonMaximumEdgeSuppression nms;
         HysteresisEdgeThreshold threshold; 
 
         float sigma;

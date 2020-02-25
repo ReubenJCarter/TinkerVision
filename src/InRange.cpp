@@ -2,6 +2,8 @@
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
+#include "ParallelFor.h"
+
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -110,22 +112,32 @@ void InRange::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void InRange::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
+    if(output->GetWidth() != input->GetWidth() || 
+       output->GetHeight() != input->GetHeight() || 
+       output->GetType() != ImageType::GRAYSCALE8)
     {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
+        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
     }
     
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    for(int i = 0; i < input->GetHeight(); i++)
+    ParallelFor& pf = ParallelFor::GetInstance(); 
+
+    auto kernel = [this, input, output](int x, int y)
     {
-        for(int j = 0; j < input->GetWidth(); j++)
-        {
-            int inx = (i * input->GetWidth() + j);
+        glm::vec4 d = GetPixel(input, x, y); 
+        
+        glm::vec4 outVec ; 
+        bool inRange[3]; 
+        inRange[0] = invertRange[0] != 0 ? !(d.r < highThreshold.r && d.r >= lowThreshold.r) : (d.r < highThreshold.r && d.r >= lowThreshold.r);
+        inRange[1] = invertRange[0] != 0 ? !(d.g < highThreshold.g && d.g >= lowThreshold.g) : (d.g < highThreshold.g && d.g >= lowThreshold.g);
+        inRange[2] = invertRange[0] != 0 ? !(d.b < highThreshold.b && d.b >= lowThreshold.b) : (d.b < highThreshold.b && d.b >= lowThreshold.b);
 
+        outVec.r = (inRange[0] && inRange[1] && inRange[2]) ? 1.0f : 0.0f;
+        outVec.a = 1; 
+        
+        SetPixel(output, x, y, d); 
+    };
 
-        } 
-    } 
+    pf.Run(input->GetWidth(), input->GetHeight(), kernel);
 }
 
 void InRange::Internal::SetLowThreshold(float t)

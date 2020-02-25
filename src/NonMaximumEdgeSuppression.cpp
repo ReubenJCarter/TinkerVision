@@ -1,4 +1,4 @@
-#include "NonMaximumSuppression.h"
+#include "NonMaximumEdgeSuppression.h"
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
@@ -12,7 +12,7 @@
 namespace Visi
 {
 
-class NonMaximumSuppression::Internal
+class NonMaximumEdgeSuppression::Internal
 {
     private:
         static std::map<ImageType, ComputeShader> computeShaders; 
@@ -24,9 +24,9 @@ class NonMaximumSuppression::Internal
         void Run(Image* input, Image* output);
 };
 
-std::map<ImageType, ComputeShader> NonMaximumSuppression::Internal::computeShaders;
+std::map<ImageType, ComputeShader> NonMaximumEdgeSuppression::Internal::computeShaders;
 
-std::string NonMaximumSuppression::Internal::shaderSrc = R"(
+std::string NonMaximumEdgeSuppression::Internal::shaderSrc = R"(
 
 layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
@@ -74,14 +74,14 @@ void main()
 
 )";
 
-bool NonMaximumSuppression::Internal::shaderCompiled = false; 
+bool NonMaximumEdgeSuppression::Internal::shaderCompiled = false; 
 
-NonMaximumSuppression::Internal::Internal()
+NonMaximumEdgeSuppression::Internal::Internal()
 {
 }
 
 
-void NonMaximumSuppression::Internal::Run(ImageGPU* input, ImageGPU* output)
+void NonMaximumEdgeSuppression::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
@@ -111,7 +111,7 @@ void NonMaximumSuppression::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.Block();
 }
 
-void NonMaximumSuppression::Internal::Run(Image* input, Image* output)
+void NonMaximumEdgeSuppression::Internal::Run(Image* input, Image* output)
 {
     if(!output->IsSameDimensions(input)) 
     {
@@ -133,22 +133,22 @@ void NonMaximumSuppression::Internal::Run(Image* input, Image* output)
 
 
 
-NonMaximumSuppression::NonMaximumSuppression()
+NonMaximumEdgeSuppression::NonMaximumEdgeSuppression()
 {
     internal = new Internal(); 
 }
 
-NonMaximumSuppression::~NonMaximumSuppression()
+NonMaximumEdgeSuppression::~NonMaximumEdgeSuppression()
 {
     delete internal; 
 }
 
-void NonMaximumSuppression::Run(ImageGPU* input, ImageGPU* output)
+void NonMaximumEdgeSuppression::Run(ImageGPU* input, ImageGPU* output)
 {
     internal->Run(input, output); 
 }
 
-void NonMaximumSuppression::Run(Image* input, Image* output)
+void NonMaximumEdgeSuppression::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
 }
