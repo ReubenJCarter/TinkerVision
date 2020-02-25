@@ -2,6 +2,7 @@
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
+#include "ParallelFor.h"
 
 #include <string>
 #include <iostream>
@@ -31,7 +32,6 @@ std::string HSVToRGB::Internal::shaderSrc = R"(
 layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
-float Epsilon = 1e-10;
 
 vec3 HUEtoRGB(in float H)
 {
@@ -97,15 +97,27 @@ void HSVToRGB::Internal::Run(Image* input, Image* output)
         output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     }
     
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    for(int i = 0; i < input->GetHeight(); i++)
+    ParallelFor& pf = ParallelFor::GetInstance(); 
+
+    auto kernel = [this, input, output](int x, int y)
     {
-        for(int j = 0; j < input->GetWidth(); j++)
-        {
-            int inx = (i * input->GetWidth() + j);
-        } 
-    } 
+        glm::vec4 d = GetPixel(input, x, y); 
+        
+        glm::vec3 HSV = d;
+        float H = d.x; 
+
+        float R = abs(H * 6 - 3) - 1;
+        float G = 2 - abs(H * 6 - 2);
+        float B = 2 - abs(H * 6 - 4);
+
+        glm::vec3 RGB = glm::clamp(glm::vec3(R,G,B), 0.0f, 1.0f);
+
+        glm::vec3 rgb = ((RGB - glm::vec3(1, 1, 1) ) * HSV.y + glm::vec3(1, 1, 1)) * HSV.z;
+
+        SetPixel(output, x, y, glm::vec4(rgb, d.a)); 
+    };
+
+    pf.Run(input->GetWidth(), input->GetHeight(), kernel); 
 }
 
 

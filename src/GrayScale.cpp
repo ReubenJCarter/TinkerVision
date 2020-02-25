@@ -2,6 +2,7 @@
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
+#include "ParallelFor.h"
 
 #include <string>
 #include <iostream>
@@ -84,20 +85,39 @@ void GrayScale::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void GrayScale::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
+    if(input->GetType() == ImageType::RGB32F || input->GetType() == ImageType::RGBA32F)
     {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
+        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE32F)
+        {
+            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE32F); 
+        }
+    }
+    else
+    {
+        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE8)
+        {
+            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
+        }
     }
     
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    for(int i = 0; i < input->GetHeight(); i++)
+    ParallelFor& pf = ParallelFor::GetInstance(); 
+
+    auto kernel = [this, input, output](int x, int y)
     {
-        for(int j = 0; j < input->GetWidth(); j++)
-        {
-            int inx = (i * input->GetWidth() + j);
-        } 
-    } 
+        glm::vec4 d = GetPixel(input, x, y); 
+        
+        glm::vec4 outVec ; 
+
+        float av = (d.r + d.g + d.b ) / 3.0f; 
+        outVec.r = av;
+        outVec.g = av;
+        outVec.b = av;
+        outVec.a = d.a;
+
+        SetPixel(output, x, y, outVec); 
+    };
+
+    pf.Run(input->GetWidth(), input->GetHeight(), kernel); 
 }
 
 

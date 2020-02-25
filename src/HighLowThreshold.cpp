@@ -2,6 +2,7 @@
 
 #include "ComputeShader.h"
 #include "ProcessHelper.h"
+#include "ParallelFor.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -54,6 +55,8 @@ void main()
     outVec.g = d.g < highThreshold.g && d.g >= lowThreshold.g ? 1.0f : 0.0f;
     outVec.b = d.b < highThreshold.b && d.b >= lowThreshold.b ? 1.0f : 0.0f;
 
+    outVec.a = d.a;
+
     imageStore(outputImage, id, outVec);
 }
 
@@ -103,17 +106,24 @@ void HighLowThreshold::Internal::Run(Image* input, Image* output)
         output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
     }
     
-    unsigned char* inputData = input->GetData(); 
-    unsigned char* outputData = output->GetData(); 
-    for(int i = 0; i < input->GetHeight(); i++)
+    ParallelFor& pf = ParallelFor::GetInstance(); 
+
+    auto kernel = [this, input, output](int x, int y)
     {
-        for(int j = 0; j < input->GetWidth(); j++)
-        {
-            int inx = (i * input->GetWidth() + j);
+        glm::vec4 d = GetPixel(input, x, y); 
+        
+        glm::vec4 outVec ; 
 
+        outVec.r = d.r < highThreshold.r && d.r >= lowThreshold.r ? 1.0f : 0.0f;
+        outVec.g = d.g < highThreshold.g && d.g >= lowThreshold.g ? 1.0f : 0.0f;
+        outVec.b = d.b < highThreshold.b && d.b >= lowThreshold.b ? 1.0f : 0.0f;
 
-        } 
-    } 
+        outVec.a = d.a;
+
+        SetPixel(output, x, y, outVec); 
+    };
+
+    pf.Run(input->GetWidth(), input->GetHeight(), kernel); 
 }
 
 void HighLowThreshold::Internal::SetLowThreshold(float t)
