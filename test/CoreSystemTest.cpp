@@ -36,6 +36,7 @@
 #include "Process/CameraDistortion.h"
 #include "Process/AverageFilter.h"
 #include "Process/ChannelMapper.h"
+#include "Process/DownSample.h"
 
 #include <iostream>
 #include <thread>
@@ -443,6 +444,23 @@ int main(int argc, char *argv[])
 		chMapr.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);
 		Visi::WriteImageFile("image17_1Test.png", &image2);
+
+		//DownSample
+		Visi::DownSample dwnSmpl;
+		float dsScale = 0.5f;
+		imageGPU2.Allocate(imageGPU1.GetWidth() * dsScale, imageGPU1.GetHeight() * dsScale, imageGPU1.GetType()); 
+		dwnSmpl.SetMode(Visi::DownSample::Mode::NEAREST); 
+		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
+		image2.Copy(&imageGPU2);
+		Visi::WriteImageFile("image18_1Test.png", &image2);
+		dwnSmpl.SetMode(Visi::DownSample::Mode::BOX); 
+		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
+		image2.Copy(&imageGPU2);
+		Visi::WriteImageFile("image18_2Test.png", &image2);
+		dwnSmpl.SetMode(Visi::DownSample::Mode::BILINEAR); 
+		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
+		image2.Copy(&imageGPU2);
+		Visi::WriteImageFile("image18_3Test.png", &image2);
 
 		std::cout << "DONE\n";
 		

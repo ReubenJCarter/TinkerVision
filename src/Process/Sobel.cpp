@@ -149,6 +149,8 @@ void Sobel::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     ComputeShader& computeShader = computeShaders[inputType];
 
+    computeShader.SetInt("mode", (int)mode); 
+
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
 

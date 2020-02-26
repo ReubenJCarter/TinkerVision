@@ -28,6 +28,7 @@ set(LIBRARYSRCFILES
 	Process/ClearColor.cpp
 	Process/CopyImage.cpp
 	Process/CornerDetector.cpp
+	Process/DownSample.cpp
 	Process/FindContours.cpp
 	Process/GaussianBlur.cpp
 	Process/GaussianDerivative.cpp
