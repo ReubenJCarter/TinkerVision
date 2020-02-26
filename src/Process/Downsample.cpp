@@ -1,4 +1,4 @@
-#include "DownSample.h"
+#include "Downsample.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -14,7 +14,7 @@
 namespace Visi
 {
 
-class DownSample::Internal
+class Downsample::Internal
 {
     private:
         static std::map<ImageType, ComputeShader> computeShaders; 
@@ -30,9 +30,9 @@ class DownSample::Internal
         void SetMode(Mode m);
 };
 
-std::map<ImageType, ComputeShader> DownSample::Internal::computeShaders;
+std::map<ImageType, ComputeShader> Downsample::Internal::computeShaders;
 
-std::string DownSample::Internal::shaderSrc = R"(
+std::string Downsample::Internal::shaderSrc = R"(
 
 layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
@@ -91,15 +91,15 @@ void main()
 
 )";
 
-bool DownSample::Internal::shaderCompiled = false; 
+bool Downsample::Internal::shaderCompiled = false; 
 
-DownSample::Internal::Internal()
+Downsample::Internal::Internal()
 {
     mode = Mode::BOX;
 }
 
 
-void DownSample::Internal::Run(ImageGPU* input, ImageGPU* output)
+void Downsample::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
@@ -146,7 +146,7 @@ void DownSample::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.Block();
 }
 
-void DownSample::Internal::Run(Image* input, Image* output)
+void Downsample::Internal::Run(Image* input, Image* output)
 {
 
     glm::vec2 scale; 
@@ -177,34 +177,34 @@ void DownSample::Internal::Run(Image* input, Image* output)
     pf.Run(input->GetWidth(), input->GetHeight(), kernel);
 }
 
-void DownSample::Internal::SetMode(Mode m)
+void Downsample::Internal::SetMode(Mode m)
 {
     mode = m;
 }
 
 
 
-DownSample::DownSample()
+Downsample::Downsample()
 {
     internal = new Internal(); 
 }
 
-DownSample::~DownSample()
+Downsample::~Downsample()
 {
     delete internal; 
 }
 
-void DownSample::Run(ImageGPU* input, ImageGPU* output)
+void Downsample::Run(ImageGPU* input, ImageGPU* output)
 {
     internal->Run(input, output); 
 }
 
-void DownSample::Run(Image* input, Image* output)
+void Downsample::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
 }
 
-void DownSample::SetMode(Mode m)
+void Downsample::SetMode(Mode m)
 {
     internal->SetMode(m); 
 }

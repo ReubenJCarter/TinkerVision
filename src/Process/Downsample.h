@@ -9,7 +9,7 @@
 namespace Visi
 {
 
-class VISI_EXPORT DownSample
+class VISI_EXPORT Downsample
 {
     private: 
         class Internal;
@@ -18,8 +18,8 @@ class VISI_EXPORT DownSample
 	public:
         enum Mode {NEAREST, BOX, BILINEAR};
 
-		DownSample(); 
-        ~DownSample(); 
+		Downsample(); 
+        ~Downsample(); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
         void SetMode(Mode m); 

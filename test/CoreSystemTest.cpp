@@ -36,8 +36,8 @@
 #include "Process/CameraDistortion.h"
 #include "Process/AverageFilter.h"
 #include "Process/ChannelMapper.h"
-#include "Process/DownSample.h"
-#include "Process/UpSample.h"
+#include "Process/Downsample.h"
+#include "Process/Upsample.h"
 
 #include <iostream>
 #include <thread>
@@ -447,31 +447,31 @@ int main(int argc, char *argv[])
 		Visi::WriteImageFile("image17_1Test.png", &image2);
 
 		//DownSample
-		Visi::DownSample dwnSmpl;
+		Visi::Downsample dwnSmpl;
 		float dsScale = 0.5f;
 		imageGPU2.Allocate(imageGPU1.GetWidth() * dsScale, imageGPU1.GetHeight() * dsScale, imageGPU1.GetType()); 
-		dwnSmpl.SetMode(Visi::DownSample::Mode::NEAREST); 
+		dwnSmpl.SetMode(Visi::Downsample::Mode::NEAREST); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
 		Visi::WriteImageFile("image18_1Test.png", &image2);
-		dwnSmpl.SetMode(Visi::DownSample::Mode::BOX); 
+		dwnSmpl.SetMode(Visi::Downsample::Mode::BOX); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
 		Visi::WriteImageFile("image18_2Test.png", &image2);
-		dwnSmpl.SetMode(Visi::DownSample::Mode::BILINEAR); 
+		dwnSmpl.SetMode(Visi::Downsample::Mode::BILINEAR); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
 		Visi::WriteImageFile("image18_3Test.png", &image2);
 
 		//UpSample
-		Visi::UpSample upSmpl;
+		Visi::Upsample upSmpl;
 		float usScale = 4.0f;
 		imageGPU2.Allocate(imageGPU1.GetWidth() * usScale, imageGPU1.GetHeight() * usScale, imageGPU1.GetType()); 
-		upSmpl.SetMode(Visi::UpSample::Mode::BILINEAR); 
+		upSmpl.SetMode(Visi::Upsample::Mode::BILINEAR); 
 		upSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
 		Visi::WriteImageFile("image19_1Test.png", &image2);
-		upSmpl.SetMode(Visi::UpSample::Mode::NEAREST); 
+		upSmpl.SetMode(Visi::Upsample::Mode::NEAREST); 
 		upSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
 		Visi::WriteImageFile("image19_2Test.png", &image2);

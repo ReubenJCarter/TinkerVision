@@ -1,4 +1,4 @@
-#include "UpSample.h"
+#include "Upsample.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -14,7 +14,7 @@
 namespace Visi
 {
 
-class UpSample::Internal
+class Upsample::Internal
 {
     private:
         static std::map<ImageType, ComputeShader> computeShaders; 
@@ -30,9 +30,9 @@ class UpSample::Internal
         void SetMode(Mode m);
 };
 
-std::map<ImageType, ComputeShader> UpSample::Internal::computeShaders;
+std::map<ImageType, ComputeShader> Upsample::Internal::computeShaders;
 
-std::string UpSample::Internal::shaderSrc = R"(
+std::string Upsample::Internal::shaderSrc = R"(
 
 layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
@@ -78,15 +78,15 @@ void main()
 
 )";
 
-bool UpSample::Internal::shaderCompiled = false; 
+bool Upsample::Internal::shaderCompiled = false; 
 
-UpSample::Internal::Internal()
+Upsample::Internal::Internal()
 {
     mode = Mode::BILINEAR;
 }
 
 
-void UpSample::Internal::Run(ImageGPU* input, ImageGPU* output)
+void Upsample::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
@@ -133,7 +133,7 @@ void UpSample::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.Block();
 }
 
-void UpSample::Internal::Run(Image* input, Image* output)
+void Upsample::Internal::Run(Image* input, Image* output)
 {
 
     glm::vec2 scale; 
@@ -164,34 +164,34 @@ void UpSample::Internal::Run(Image* input, Image* output)
     pf.Run(input->GetWidth(), input->GetHeight(), kernel);
 }
 
-void UpSample::Internal::SetMode(Mode m)
+void Upsample::Internal::SetMode(Mode m)
 {
     mode = m;
 }
 
 
 
-UpSample::UpSample()
+Upsample::Upsample()
 {
     internal = new Internal(); 
 }
 
-UpSample::~UpSample()
+Upsample::~Upsample()
 {
     delete internal; 
 }
 
-void UpSample::Run(ImageGPU* input, ImageGPU* output)
+void Upsample::Run(ImageGPU* input, ImageGPU* output)
 {
     internal->Run(input, output); 
 }
 
-void UpSample::Run(Image* input, Image* output)
+void Upsample::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
 }
 
-void UpSample::SetMode(Mode m)
+void Upsample::SetMode(Mode m)
 {
     internal->SetMode(m); 
 }

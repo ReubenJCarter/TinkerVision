@@ -28,7 +28,7 @@ set(LIBRARYSRCFILES
 	Process/ClearColor.cpp
 	Process/CopyImage.cpp
 	Process/CornerDetector.cpp
-	Process/DownSample.cpp
+	Process/Downsample.cpp
 	Process/FindContours.cpp
 	Process/GaussianBlur.cpp
 	Process/GaussianDerivative.cpp
@@ -45,11 +45,12 @@ set(LIBRARYSRCFILES
 	Process/Normalize.cpp
 	Process/Perspective3Point.cpp
 	Process/Renderer.cpp
+	Process/Resize.cpp
 	Process/RGBToHSV.cpp
 	Process/Sobel.cpp
 	Process/Thinning.cpp
 	Process/Threshold.cpp
-	Process/UpSample.cpp
+	Process/Upsample.cpp
 )
 
 add_library(${CMAKE_PROJECT_NAME} SHARED ${LIBRARYSRCFILES})
