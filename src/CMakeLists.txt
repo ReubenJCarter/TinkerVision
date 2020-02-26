@@ -17,6 +17,7 @@ set(LIBRARYSRCFILES
 
 	Process/AdaptiveThreshold.cpp
 	Process/ApproxDistanceTransform.cpp
+	Process/AverageFilter.cpp
 	Process/BilateralFilter.cpp
 	Process/Blend.cpp
 	Process/BrightnessContrast.cpp
