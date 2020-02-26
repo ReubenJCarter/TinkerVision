@@ -64,12 +64,12 @@ void main()
     
     if(mode == MODE_NEAREST)
     {
-        ivec2 coord = ivec2(id.x * boxSize.x, id.y * boxSize.y);
+        ivec2 coord = ivec2(floor(id.x * boxSize.x), floor(id.y * boxSize.y));
         outPix = imageLoad(inputImage, coord );  
     }
     else if(mode == MODE_BILINEAR)
     {     
-        vec2 coord = vec2(id.x * boxSize.x, id.y * boxSize.y);
+        vec2 coord = vec2(id.x * boxSize.x + 0.5f*boxSize.x - 0.5f, id.y * boxSize.y + 0.5f*boxSize.y - 0.5f);
         outPix = image2DBilinear(inputImage, coord );        
     }
 

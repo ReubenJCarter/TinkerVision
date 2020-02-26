@@ -465,7 +465,7 @@ int main(int argc, char *argv[])
 
 		//UpSample
 		Visi::UpSample upSmpl;
-		float usScale = 2.0f;
+		float usScale = 4.0f;
 		imageGPU2.Allocate(imageGPU1.GetWidth() * usScale, imageGPU1.GetHeight() * usScale, imageGPU1.GetType()); 
 		upSmpl.SetMode(Visi::UpSample::Mode::BILINEAR); 
 		upSmpl.Run(&imageGPU1, &imageGPU2); 
