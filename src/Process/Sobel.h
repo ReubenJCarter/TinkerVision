@@ -16,10 +16,13 @@ class VISI_EXPORT Sobel
         Internal* internal;
 
 	public:
+        enum Mode{FULL, GRAD_ONLY, MAG_ONLY};
+
 		Sobel(); 
         ~Sobel(); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
+        void SetMode(Mode m); 
 };
 	
 }

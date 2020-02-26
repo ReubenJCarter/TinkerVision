@@ -64,6 +64,11 @@ void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
     vec4 d = imageLoad(inputImage, id); 
+    
+    //offset gradients
+    d.x -= 0.5f;
+    d.y -= 0.5f;
+
     vec4 outD = vec4(  d.x * d.x,   d.x * d.y,   d.y * d.y,   1);
     imageStore(outputImage, id, outD); 
 }

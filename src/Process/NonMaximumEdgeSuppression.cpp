@@ -61,6 +61,10 @@ void main()
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
     vec4 d = imageLoad(inputImage, id);
 
+    //offset gradient
+    d.x -= 0.5f; 
+    d.y -= 0.5f; 
+
     vec2 gradNorm = vec2(d.x, d.y) / d.z; 
 
     vec4 v0 = BilinearPixelQuad(id, d, gradNorm); 
