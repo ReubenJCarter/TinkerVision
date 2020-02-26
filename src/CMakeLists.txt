@@ -24,6 +24,7 @@ set(LIBRARYSRCFILES
 	Process/CameraDistortion.cpp
 	Process/CannyEdgeDetect.cpp
 	Process/ChannelDemux.cpp
+	Process/ChannelMapper.cpp
 	Process/ClearColor.cpp
 	Process/CopyImage.cpp
 	Process/CornerDetector.cpp

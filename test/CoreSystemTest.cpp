@@ -35,6 +35,7 @@
 #include "Process/LocalMaxima.h"
 #include "Process/CameraDistortion.h"
 #include "Process/AverageFilter.h"
+#include "Process/ChannelMapper.h"
 
 #include <iostream>
 #include <thread>
@@ -434,6 +435,10 @@ int main(int argc, char *argv[])
 		avFilter.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
 		Visi::WriteImageFile("image16_1Test.png", &image2);
+
+		//ChannelMapper
+		Visi::ChannelMapper chMapr;
+		
 
 		std::cout << "DONE\n";
 		
