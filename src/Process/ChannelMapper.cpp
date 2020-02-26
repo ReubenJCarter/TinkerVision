@@ -49,9 +49,17 @@ layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);    
-    d = imageLoad(inputImage0, id); 
-    vec4 outPix = vec4(d[channelMap.r], d[channelMap.g], d[channelMap.b], d[channelMap.a]);
-    imageStore(outputImage, id, d); 
+    vec4 outPix;
+
+
+    vec4 d = imageLoad(inputImage0, id); 
+    outPix.r = channelMap.r >= 0 ? d[channelMap.r] : defaultChannelValues.r; 
+    outPix.g = channelMap.g >= 0 ? d[channelMap.g] : defaultChannelValues.g; 
+    outPix.b = channelMap.b >= 0 ? d[channelMap.b] : defaultChannelValues.b; 
+    outPix.a = channelMap.a >= 0 ? d[channelMap.a] : defaultChannelValues.a; 
+
+
+    imageStore(outputImage, id, outPix); 
 }
 
 )";
@@ -103,8 +111,14 @@ void ChannelMapper::Internal::Run(Image* input, Image* output)
     ParallelFor& pf = ParallelFor::GetInstance(); 
     auto kernel = [this, input, output](int x, int y)
     {
+        glm::vec4 outPix;
+
         glm::vec4 d = glm::vec4(0, 0, 0, 0); 
-        glm::vec4 outPix = glm::vec4(d[channelMap.r], d[channelMap.g], d[channelMap.b], d[channelMap.a]);
+        outPix.r = channelMap.r >= 0 ? d[channelMap.r] : defaultChannelValues.r; 
+        outPix.g = channelMap.g >= 0 ? d[channelMap.g] : defaultChannelValues.g; 
+        outPix.b = channelMap.b >= 0 ? d[channelMap.b] : defaultChannelValues.b; 
+        outPix.a = channelMap.a >= 0 ? d[channelMap.a] : defaultChannelValues.a; 
+
         SetPixel(output, x, y, outPix); 
     };
 

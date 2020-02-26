@@ -438,7 +438,11 @@ int main(int argc, char *argv[])
 
 		//ChannelMapper
 		Visi::ChannelMapper chMapr;
-		
+		chMapr.SetChannelMap(2, -1, -1, 3); 
+		imageGPU2.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Visi::ImageType::GRAYSCALE8); 
+		chMapr.Run(&imageGPU1, &imageGPU2);
+		image2.Copy(&imageGPU2);
+		Visi::WriteImageFile("image17_1Test.png", &image2);
 
 		std::cout << "DONE\n";
 		
