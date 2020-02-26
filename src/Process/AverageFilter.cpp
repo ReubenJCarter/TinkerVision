@@ -37,7 +37,6 @@ layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 uniform int size; 
 uniform int size2; 
-uniform float brightness;
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
@@ -48,10 +47,10 @@ void main()
     {
         for(int y = -size/2; y <= size/2; y++)
         {
-            d += imageLoad(inputImage, id + ivec2(x, y)); 
+            d += imageLoad(inputImage, id + ivec2(x, y) ); 
         }
     }
-    d /= size2
+    d /= float(size2);
     imageStore(outputImage, id, d); 
 }
 
@@ -82,8 +81,8 @@ void AverageFilter::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     ComputeShader& computeShader = computeShaders[inputType];
 
-    computeShader.SetFloat("size", size); 
-    computeShader.SetFloat("size2", size * size); 
+    computeShader.SetInt("size", size); 
+    computeShader.SetInt("size2", size * size); 
 
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);

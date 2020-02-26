@@ -34,6 +34,7 @@
 #include "Process/InRange.h"
 #include "Process/LocalMaxima.h"
 #include "Process/CameraDistortion.h"
+#include "Process/AverageFilter.h"
 
 #include <iostream>
 #include <thread>
@@ -426,6 +427,13 @@ int main(int argc, char *argv[])
 		camDistort.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
 		Visi::WriteImageFile("image15_1Test.png", &image2);
+
+		//AverageFilter
+		Visi::AverageFilter avFilter;
+		avFilter.SetSize(5); 
+		avFilter.Run(&imageGPU1, &imageGPU2); 
+		image2.Copy(&imageGPU2);
+		Visi::WriteImageFile("image16_1Test.png", &image2);
 
 		std::cout << "DONE\n";
 		
