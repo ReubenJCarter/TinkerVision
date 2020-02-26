@@ -49,6 +49,7 @@ set(LIBRARYSRCFILES
 	Process/Sobel.cpp
 	Process/Thinning.cpp
 	Process/Threshold.cpp
+	Process/UpSample.cpp
 )
 
 add_library(${CMAKE_PROJECT_NAME} SHARED ${LIBRARYSRCFILES})

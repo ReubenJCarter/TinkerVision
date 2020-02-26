@@ -1,4 +1,4 @@
-#include "DownSample.h"
+#include "UpSample.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -14,7 +14,7 @@
 namespace Visi
 {
 
-class DownSample::Internal
+class UpSample::Internal
 {
     private:
         static std::map<ImageType, ComputeShader> computeShaders; 
@@ -30,9 +30,9 @@ class DownSample::Internal
         void SetMode(Mode m);
 };
 
-std::map<ImageType, ComputeShader> DownSample::Internal::computeShaders;
+std::map<ImageType, ComputeShader> UpSample::Internal::computeShaders;
 
-std::string DownSample::Internal::shaderSrc = R"(
+std::string UpSample::Internal::shaderSrc = R"(
 
 layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
@@ -43,8 +43,7 @@ uniform ivec2 boxSizeI;
 uniform int mode; 
 
 const int MODE_NEAREST = 0; 
-const int MODE_BOX = 1;
-const int MODE_BILINEAR = 2;
+const int MODE_BILINEAR = 1;
 
 vec4 image2DBilinear(in layout(FORMAT_QUALIFIER) image2D t, in vec2 pos)
 {
@@ -68,18 +67,6 @@ void main()
         ivec2 coord = ivec2(id.x * boxSize.x, id.y * boxSize.y);
         outPix = imageLoad(inputImage, coord );  
     }
-    else if(mode == MODE_BOX)
-    {     
-        for(int j = 0; j < boxSizeI.y; j++)
-        {
-            for(int i = 0; i < boxSizeI.x; i++)
-            {
-                ivec2 coord = ivec2(id.x * boxSize.x + i, id.y * boxSize.y + j);
-                outPix += imageLoad(inputImage, coord ); 
-            }
-        }
-        outPix /= float(boxSizeI.y * boxSizeI.x); 
-    }
     else if(mode == MODE_BILINEAR)
     {     
         vec2 coord = vec2(id.x * boxSize.x, id.y * boxSize.y);
@@ -91,15 +78,15 @@ void main()
 
 )";
 
-bool DownSample::Internal::shaderCompiled = false; 
+bool UpSample::Internal::shaderCompiled = false; 
 
-DownSample::Internal::Internal()
+UpSample::Internal::Internal()
 {
-    mode = Mode::BOX;
+    mode = Mode::BILINEAR;
 }
 
 
-void DownSample::Internal::Run(ImageGPU* input, ImageGPU* output)
+void UpSample::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
@@ -110,11 +97,11 @@ void DownSample::Internal::Run(ImageGPU* input, ImageGPU* output)
     glm::vec2 scale; 
     scale.x = (float)output->GetWidth() / input->GetWidth(); 
     scale.y = (float)output->GetHeight() / input->GetHeight(); 
-    if(scale.x > 1)
+    if(scale.x < 1)
     {
         return;
     }
-    if(scale.y > 1)
+    if(scale.y < 1)
     {
         return;
     }
@@ -146,7 +133,7 @@ void DownSample::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.Block();
 }
 
-void DownSample::Internal::Run(Image* input, Image* output)
+void UpSample::Internal::Run(Image* input, Image* output)
 {
 
     glm::vec2 scale; 
@@ -177,34 +164,34 @@ void DownSample::Internal::Run(Image* input, Image* output)
     pf.Run(input->GetWidth(), input->GetHeight(), kernel);
 }
 
-void DownSample::Internal::SetMode(Mode m)
+void UpSample::Internal::SetMode(Mode m)
 {
     mode = m;
 }
 
 
 
-DownSample::DownSample()
+UpSample::UpSample()
 {
     internal = new Internal(); 
 }
 
-DownSample::~DownSample()
+UpSample::~UpSample()
 {
     delete internal; 
 }
 
-void DownSample::Run(ImageGPU* input, ImageGPU* output)
+void UpSample::Run(ImageGPU* input, ImageGPU* output)
 {
     internal->Run(input, output); 
 }
 
-void DownSample::Run(Image* input, Image* output)
+void UpSample::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
 }
 
-void DownSample::SetMode(Mode m)
+void UpSample::SetMode(Mode m)
 {
     internal->SetMode(m); 
 }

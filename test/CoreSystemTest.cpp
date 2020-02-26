@@ -37,6 +37,7 @@
 #include "Process/AverageFilter.h"
 #include "Process/ChannelMapper.h"
 #include "Process/DownSample.h"
+#include "Process/UpSample.h"
 
 #include <iostream>
 #include <thread>
@@ -461,6 +462,19 @@ int main(int argc, char *argv[])
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
 		Visi::WriteImageFile("image18_3Test.png", &image2);
+
+		//UpSample
+		Visi::UpSample upSmpl;
+		float usScale = 2.0f;
+		imageGPU2.Allocate(imageGPU1.GetWidth() * usScale, imageGPU1.GetHeight() * usScale, imageGPU1.GetType()); 
+		upSmpl.SetMode(Visi::UpSample::Mode::BILINEAR); 
+		upSmpl.Run(&imageGPU1, &imageGPU2); 
+		image2.Copy(&imageGPU2);
+		Visi::WriteImageFile("image19_1Test.png", &image2);
+		upSmpl.SetMode(Visi::UpSample::Mode::NEAREST); 
+		upSmpl.Run(&imageGPU1, &imageGPU2); 
+		image2.Copy(&imageGPU2);
+		Visi::WriteImageFile("image19_2Test.png", &image2);
 
 		std::cout << "DONE\n";
 		
