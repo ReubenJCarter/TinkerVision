@@ -38,17 +38,6 @@ layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 uniform ivec2 offset;
 
-vec4 image2DBilinear(in layout(FORMAT_QUALIFIER) image2D t, in vec2 pos)
-{
-    vec2 posFloor = floor(pos);
-    vec2 posFract = pos - posFloor; 
-    ivec2 pfI = ivec2(posFloor); 
-    vec4 A = mix( imageLoad(t, pfI),               imageLoad(t, pfI + ivec2(1, 0)), posFract.x );
-    vec4 B = mix( imageLoad(t, pfI + ivec2(0, 1)), imageLoad(t, pfI + ivec2(1, 1)), posFract.x );
-    return mix(A, B, posFract.y); 
-}
-
-
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
