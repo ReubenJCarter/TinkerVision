@@ -1,4 +1,7 @@
 set(LIBRARYSRCFILES
+	CompositeProcess/CannyEdgeDetect.cpp
+	CompositeProcess/CornerDetector.cpp
+
 	Core/BoundingBox.cpp
 	Core/ComputeShader.cpp
 	Core/Context.cpp
@@ -22,18 +25,17 @@ set(LIBRARYSRCFILES
 	Process/Blend.cpp
 	Process/BrightnessContrast.cpp
 	Process/CameraDistortion.cpp
-	Process/CannyEdgeDetect.cpp
 	Process/ChannelDemux.cpp
 	Process/ChannelMapper.cpp
 	Process/ClearColor.cpp
 	Process/CopyImage.cpp
-	Process/CornerDetector.cpp
 	Process/Crop.cpp
 	Process/Downsample.cpp
 	Process/FindContours.cpp
 	Process/GaussianBlur.cpp
 	Process/GaussianDerivative.cpp
 	Process/GrayScale.cpp
+	Process/HarrisShiTomasiResponse.cpp
 	Process/HighLowThreshold.cpp
 	Process/HSVToRGB.cpp
 	Process/HysteresisEdgeThreshold.cpp
@@ -49,6 +51,7 @@ set(LIBRARYSRCFILES
 	Process/Resize.cpp
 	Process/RGBToHSV.cpp
 	Process/Sobel.cpp
+	Process/StructureTensor.cpp
 	Process/Thinning.cpp
 	Process/Threshold.cpp
 	Process/Upsample.cpp

@@ -25,9 +25,7 @@
 #include "Process/ChannelDemux.h"
 #include "Process/NonMaximumEdgeSuppression.h"
 #include "Process/CopyImage.h"
-#include "Process/CannyEdgeDetect.h"
 #include "Process/GaussianDerivative.h"
-#include "Process/CornerDetector.h"
 #include "Process/Normalize.h"
 #include "Process/Thinning.h"
 #include "Process/ApproxDistanceTransform.h"
@@ -38,6 +36,9 @@
 #include "Process/ChannelMapper.h"
 #include "Process/Downsample.h"
 #include "Process/Upsample.h"
+
+#include "CompositeProcess/CannyEdgeDetect.h"
+#include "CompositeProcess/CornerDetector.h"
 
 #include <iostream>
 #include <thread>

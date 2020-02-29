@@ -3,12 +3,12 @@
 #include "../Core/ComputeShader.h"
 #include "../Core/ProcessHelper.h"
 
-#include "GaussianBlur.h"
-#include "Sobel.h"
-#include "NonMaximumEdgeSuppression.h"
-#include "HysteresisEdgeThreshold.h"
-#include "GrayScale.h"
-#include "ChannelDemux.h"
+#include "../Process/GaussianBlur.h"
+#include "../Process/Sobel.h"
+#include "../Process/NonMaximumEdgeSuppression.h"
+#include "../Process/HysteresisEdgeThreshold.h"
+#include "../Process/GrayScale.h"
+#include "../Process/ChannelDemux.h"
 
 #include <string>
 #include <iostream>
