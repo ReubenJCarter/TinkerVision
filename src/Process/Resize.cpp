@@ -16,6 +16,7 @@ class Resize::Internal
     private:
         Upsample::Mode upsampleMode; 
         Downsample::Mode downsampleMode; 
+
        
     public:
         Internal(); 
@@ -30,6 +31,7 @@ Resize::Internal::Internal()
 {
     upsampleMode = Upsample::Mode::BILINEAR; 
     downsampleMode = Downsample::Mode::BOX; 
+
 }
 
 void Resize::Internal::Run(ImageGPU* input, ImageGPU* output)

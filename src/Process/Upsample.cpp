@@ -106,11 +106,6 @@ void Upsample::Internal::Run(ImageGPU* input, ImageGPU* output)
         return;
     }
 
-    if(output->GetType() != input->GetType()) 
-    {
-        output->Allocate(output->GetWidth(), output->GetHeight(), input->GetType()); 
-    }
-
     ImageType inputType = input->GetType();
 
     ComputeShader& computeShader = computeShaders[inputType];
