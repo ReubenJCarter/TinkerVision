@@ -86,22 +86,22 @@ void GrayScale::Internal::Run(ImageGPU* input, ImageGPU* output)
 }
 
 void GrayScale::Internal::Run(Image* input, Image* output)
-{
+{/*
     if(input->GetType() == ImageType::RGB32F || input->GetType() == ImageType::RGBA32F)
     {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE32F)
+        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() )
         {
             output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE32F); 
         }
     }
     else
     {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE8)
+        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight())
         {
             output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
         }
     }
-    
+    */
     ParallelFor& pf = ParallelFor::GetInstance(); 
 
     auto kernel = [this, input, output](int x, int y)

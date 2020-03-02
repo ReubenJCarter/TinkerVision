@@ -11,15 +11,15 @@ namespace Visi
 namespace Process
 {
 	
-class VISI_EXPORT StereoPairDepth
+class VISI_EXPORT StereoMatchSAD
 {
     private: 
         class Internal;
         Internal* internal;
 
 	public:
-		StereoPairDepth(); 
-        ~StereoPairDepth(); 
+		StereoMatchSAD(); 
+        ~StereoMatchSAD(); 
 		void Run(ImageGPU* inputL, ImageGPU* inputR, ImageGPU* output); 
         void Run(Image* inputL, Image* inputR, Image* output); 
 };

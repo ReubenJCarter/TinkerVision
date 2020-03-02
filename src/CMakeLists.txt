@@ -51,6 +51,7 @@ set(LIBRARYSRCFILES
 	Process/Resize.cpp
 	Process/RGBToHSV.cpp
 	Process/Sobel.cpp
+	Process/StereoMatchSAD.cpp
 	Process/StructureTensor.cpp
 	Process/Thinning.cpp
 	Process/Threshold.cpp

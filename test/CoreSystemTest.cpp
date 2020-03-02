@@ -36,6 +36,7 @@
 #include "Process/ChannelMapper.h"
 #include "Process/Downsample.h"
 #include "Process/Upsample.h"
+#include "Process/StereoMatchSAD.h"
 
 #include "CompositeProcess/CannyEdgeDetect.h"
 #include "CompositeProcess/CornerDetector.h"
@@ -104,7 +105,11 @@ int main(int argc, char *argv[])
 		
 		
 		image2.Copy(&imageGPU2);
-		Visi::IO::WriteImageFile("image1Test.png", &image2);
+		Visi::IO::WriteImageFile("image1_1Test.png", &image2);
+
+		brightnessContrast.Run(&image1, &image2); 
+
+		Visi::IO::WriteImageFile("image1_2Test.png", &image2);
 
 		//Threshold
 		Visi::Process::Threshold threshold; 
@@ -483,10 +488,9 @@ int main(int argc, char *argv[])
 	}
 	else if(argc == 3)
 	{
-		std::cout << "Starting video test\n"; 
 		if(std::string( argv[1] ) == "-v")
 		{
-			
+			std::cout << "Starting video test\n"; 
 			Visi::IO::VideoHelper videoHelper; 
 			videoHelper.Open(argv[2]); 
 			Visi::Window visiWindow(videoHelper.GetFrameWidth(), videoHelper.GetFrameHeight());
@@ -499,6 +503,42 @@ int main(int argc, char *argv[])
 				}); 
 			}
 			videoHelper.Close(); 
+		}
+		
+	}
+	else if(argc == 4)
+	{
+		if(std::string(argv[1]) == "-d")
+		{
+			//Try out data: http://vision.middlebury.edu/stereo/data/scenes2003/    
+			//Dataset created by created by Daniel Scharstein, Alexander Vandenberg-Rodes, and Rick Szeliski.
+			std::cout << "Starting depth from stereo test\n"; 
+			Visi::Image left;
+			Visi::Image right;
+			Visi::Image leftGrey;
+			Visi::Image rightGrey;
+			Visi::Image output; 
+			Visi::IO::ReadImageFile(argv[2], &left);
+			Visi::IO::ReadImageFile(argv[3], &right);
+			Visi::Process::GrayScale gs;
+			leftGrey.Allocate(left.GetWidth(), left.GetHeight(), Visi::ImageType::GRAYSCALE16); 
+			rightGrey.Allocate(right.GetWidth(), right.GetHeight(), Visi::ImageType::GRAYSCALE16); 
+			gs.Run(&left, &leftGrey);
+			/*gs.Run(&right, &rightGrey);
+
+
+			Visi::ImageGPU leftGPU;
+			Visi::ImageGPU rightGPU; 
+			Visi::ImageGPU outputGPU; 
+
+			leftGPU.Copy(&leftGrey); 
+			rightGPU.Copy(&rightGrey); 
+
+			Visi::Process::StereoMatchSAD smsad;
+			smsad.Run(&leftGPU, &rightGPU, &outputGPU);	
+
+			output.Copy(&outputGPU);*/
+			Visi::IO::WriteImageFile("imageDepth1Test.png", &leftGrey);
 		}
 	}
 
