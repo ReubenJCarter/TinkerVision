@@ -102,6 +102,7 @@ void BrightnessContrast::Internal::Run(Image* input, Image* output)
     {
         glm::vec4 pix = GetPixel(input, x, y); 
         glm::vec4 d = pix * contrast + glm::vec4(brightness, brightness, brightness, 0.0f); 
+        d = glm::clamp(d, glm::vec4(0, 0, 0, 0), glm::vec4(1, 1, 1, 1));
         SetPixel(output, x, y, d); 
     };
 

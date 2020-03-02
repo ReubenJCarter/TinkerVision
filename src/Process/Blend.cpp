@@ -252,6 +252,7 @@ void Blend::Internal::Run(Image* inputSrc, Image* inputDst, Image* output, Image
                 glm::vec3 pixMask = GetPixel(blendMask, x, y); 
                 d = glm::mix(pixDst, d, pixMask.r); 
             }
+            d = glm::clamp(d, glm::vec3( 0, 0, 0), glm::vec3( 1, 1, 1));
             SetPixel(output, x, y, glm::vec4(d, 1)); 
         };
 

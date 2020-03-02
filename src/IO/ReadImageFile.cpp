@@ -87,12 +87,25 @@ bool ReadImageFile(std::string fileName, Image* image)
         return false;
     }
     image->Allocate(width, height, imageType); 
-
+/*
     unsigned char* pixelData = (unsigned char*)FreeImage_GetBits(dib);
     unsigned char* imageData = image->GetData(); 
     for(unsigned int i = 0; i < width * height * bypp; i++)
     {
         imageData[i] = pixelData[i]; 
+    }
+*/
+
+    unsigned char* imageData = image->GetData();
+    int counter = 0;  
+    for(int j = 0; j < height; j++ )
+    {
+        unsigned char* pixelData = (unsigned char*)FreeImage_GetScanLine(dib, j); 
+        for(int i = 0; i < width * bypp; i++)
+        {
+            imageData[counter] = pixelData[i]; 
+            counter++;
+        } 
     }
 
     FreeImage_Unload(dib);
