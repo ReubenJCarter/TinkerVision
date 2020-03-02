@@ -100,6 +100,12 @@ class Mat3
 		Mat3(){}
         Mat3(float v){col[0] = Vec3(v, 0, 0); col[1] = Vec3(0, v, 0); col[2] = Vec3(0, 0, v);}
 
+        friend Mat3 operator*(Mat3& a, Mat3& b)
+        {
+            Mat3 ret; 
+            return ret; 
+        }
+
         friend Vec3 operator*(Mat3& a, Vec3& b)
         {
             Vec3 ret;
