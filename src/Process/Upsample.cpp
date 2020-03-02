@@ -13,6 +13,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Upsample::Internal
 {
@@ -191,4 +193,5 @@ void Upsample::SetMode(Mode m)
     internal->SetMode(m); 
 }
 
+}
 }

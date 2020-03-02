@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Normalize::Internal
 {
@@ -95,4 +97,5 @@ void Normalize::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

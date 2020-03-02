@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class FindContours::Internal
 {
@@ -285,4 +287,5 @@ void FindContours::Run(Image* input, Image* output, std::vector<Contour>* contou
 }
 
 
+}
 }

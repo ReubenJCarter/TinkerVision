@@ -13,6 +13,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class HysteresisEdgeThreshold::Internal
 {
@@ -330,4 +332,5 @@ void HysteresisEdgeThreshold::SetLowThreshold(float lowThr)
     internal->SetLowThreshold(lowThr); 
 }   
 
+}
 }

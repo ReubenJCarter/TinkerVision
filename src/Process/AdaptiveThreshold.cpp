@@ -10,6 +10,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class AdaptiveThreshold::Internal
 {
@@ -191,4 +193,5 @@ void AdaptiveThreshold::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT ChannelMapper
 {
@@ -26,4 +28,5 @@ class VISI_EXPORT ChannelMapper
         void SetChannelMap(int r=0, int g=1, int b=2, int a=3); //maps to output.r = input[r], ...etc
 };
 	
+}
 }

@@ -10,6 +10,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Resize::Internal
 {
@@ -94,4 +96,5 @@ void Resize::SetDownsampleMode(Downsample::Mode m)
     internal->SetDownsampleMode(m); 
 }
 
+}
 }

@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class VISI_EXPORT Upsample
 {
@@ -25,4 +27,5 @@ class VISI_EXPORT Upsample
         void SetMode(Mode m); 
 };
 	
+}
 }

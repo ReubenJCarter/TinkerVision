@@ -10,6 +10,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Invert::Internal
 {
@@ -116,4 +118,5 @@ void Invert::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

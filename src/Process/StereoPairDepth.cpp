@@ -14,6 +14,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class StereoPairDepth::Internal
 {
@@ -159,4 +161,5 @@ void StereoPairDepth::Run(Image* inputL, Image* inputR, Image* output)
     internal->Run(inputL, inputR, output); 
 }
 
+}
 }

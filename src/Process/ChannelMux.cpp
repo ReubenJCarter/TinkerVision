@@ -9,6 +9,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class ChannelMux::Internal
 {
@@ -145,4 +147,5 @@ void ChannelMux::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

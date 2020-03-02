@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class VISI_EXPORT Crop
 {
@@ -23,4 +25,5 @@ class VISI_EXPORT Crop
         void SetOffset(int x, int y); 
 };
 	
+}
 }

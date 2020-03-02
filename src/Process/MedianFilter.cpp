@@ -9,6 +9,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class MedianFilter::Internal
 {
@@ -224,4 +226,5 @@ void MedianFilter::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

@@ -13,6 +13,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class ClearColor::Internal
 {
@@ -133,4 +135,5 @@ void ClearColor::Run(Image* output)
     internal->Run(output); 
 }
 
+}
 }

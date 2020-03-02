@@ -16,6 +16,10 @@
 
 namespace Visi
 {
+namespace CompositeProcess
+{
+
+using namespace Process;
 
 class CannyEdgeDetect::Internal
 {
@@ -79,7 +83,7 @@ void CannyEdgeDetect::Internal::Run(ImageGPU* input, Image* output)
 
     RunNMS(&tempGPU[2], &tempGPU[3]); 
 
-    Visi::ChannelDemux demux; 
+    Visi::Process::ChannelDemux demux; 
     demux.SetChannel(2);
     demux.Run(&tempGPU[3], &tempGPU[1]);
 
@@ -197,4 +201,5 @@ void CannyEdgeDetect::RunThresholding(Image* input, Image* output)
     internal->RunThresholding(input, output); 
 }
 
+}
 }

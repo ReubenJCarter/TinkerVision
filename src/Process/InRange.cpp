@@ -13,6 +13,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class InRange::Internal
 {
@@ -214,4 +216,5 @@ void InRange::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

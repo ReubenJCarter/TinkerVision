@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class BrightnessContrast::Internal
 {
@@ -151,4 +153,5 @@ void BrightnessContrast::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

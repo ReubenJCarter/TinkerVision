@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class VISI_EXPORT ClearColor
 {
@@ -23,4 +25,5 @@ class VISI_EXPORT ClearColor
         void Run(Image* output); 
 };
 	
+}
 }

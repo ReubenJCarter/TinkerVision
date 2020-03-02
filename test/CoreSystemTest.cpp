@@ -44,6 +44,7 @@
 #include <thread>
 #include <atomic>
 
+
 int main(int argc, char *argv[])
 {
 	std::string testFileName = "aruco.png"; 
@@ -85,139 +86,139 @@ int main(int argc, char *argv[])
 		Visi::ImageGPU imageGPU;
 		imageGPU.Copy(&image1); 
 		image1.Copy(&imageGPU); 
-		Visi::WriteImageFile("image0Test.png", &image1);
+		Visi::IO::WriteImageFile("image0Test.png", &image1);
 
 
 		//
 		//Processes
 		//
 
-		Visi::ReadImageFile(testFileName, &image1);
+		Visi::IO::ReadImageFile(testFileName, &image1);
 		imageGPU1.Copy(&image1);
 
 		//Birghtness Contrast
-		Visi::BrightnessContrast brightnessContrast; 
+		Visi::Process::BrightnessContrast brightnessContrast; 
 		brightnessContrast.SetBrightness(-1); 
 		brightnessContrast.SetContrast(3); 
 		brightnessContrast.Run(&imageGPU1, &imageGPU2);
 		
 		
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image1Test.png", &image2);
+		Visi::IO::WriteImageFile("image1Test.png", &image2);
 
 		//Threshold
-		Visi::Threshold threshold; 
+		Visi::Process::Threshold threshold; 
 		threshold.SetThreshold(0.5); 
 		threshold.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image2Test.png", &image2);
+		Visi::IO::WriteImageFile("image2Test.png", &image2);
 
 		//Thin
-		Visi::Thinning thinning; 
+		Visi::Process::Thinning thinning; 
 		//thinning.Run(&image2, &image3); 
 		//Visi::WriteImageFile("image2_1Test.png", &image3);
 
 		//GrayScale
-		Visi::GrayScale grayScale; 
+		Visi::Process::GrayScale grayScale; 
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image3Test.png", &image2);
+		Visi::IO::WriteImageFile("image3Test.png", &image2);
 
 		//Aprox Distance Transform
-		Visi::InRange inRange; 
+		Visi::Process::InRange inRange; 
 		inRange.SetLowThreshold(Visi::Vec3(0.5, 0.0, 0.0));
 		inRange.SetHighThreshold(Visi::Vec3(1.0, 1.0, 1.0) ); 
 		inRange.Run(&imageGPU2, &imageGPU3); 
-		Visi::Invert inv;
+		Visi::Process::Invert inv;
 		inv.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image3_1Test.png", &image2);
-		Visi::ApproxDistanceTransform adt;
+		Visi::IO::WriteImageFile("image3_1Test.png", &image2);
+		Visi::Process::ApproxDistanceTransform adt;
 		adt.Run(&image2, &image3); 
-		Visi::Normalize nrm;
+		Visi::Process::Normalize nrm;
 		nrm.Run(&image3, &image2); 
-		Visi::WriteImageFile("image3_2Test.png", &image2);
+		Visi::IO::WriteImageFile("image3_2Test.png", &image2);
 
 		//LocalMaxima
-		Visi::GaussianBlur gb; 
+		Visi::Process::GaussianBlur gb; 
 		gb.SetSigma(3); 
 		imageGPU2.Copy(&image2); 
 		gb.Run(&imageGPU2, &imageGPU3); 
 		image2.Copy(&imageGPU3); 
-		Visi::WriteImageFile("image3_3Test.png", &image2);
-		Visi::LocalMaxima localMax; 
+		Visi::IO::WriteImageFile("image3_3Test.png", &image2);
+		Visi::Process::LocalMaxima localMax; 
 		localMax.Run(&image2, &image3);
-		Visi::WriteImageFile("image3_4Test.png", &image3);
+		Visi::IO::WriteImageFile("image3_4Test.png", &image3);
 
 		//RGBToHSV vv HSVToRGB
-		Visi::RGBToHSV rgbtohsv; 
+		Visi::Process::RGBToHSV rgbtohsv; 
 		rgbtohsv.Run(&imageGPU1, &imageGPU2); 
-		Visi::HSVToRGB hsvtorgb; 
+		Visi::Process::HSVToRGB hsvtorgb; 
 		hsvtorgb.Run(&imageGPU2, &imageGPU3); 
 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image4_0Test.png", &image2);
+		Visi::IO::WriteImageFile("image4_0Test.png", &image2);
 		image3.Copy(&imageGPU3);
-		Visi::WriteImageFile("image4_1Test.png", &image3);
+		Visi::IO::WriteImageFile("image4_1Test.png", &image3);
 
 		//Adaptive Threshold
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 		
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image5_1Test.png", &image2);
+		Visi::IO::WriteImageFile("image5_1Test.png", &image2);
 		
-		Visi::AdaptiveThreshold adaptiveThreshold; 
+		Visi::Process::AdaptiveThreshold adaptiveThreshold; 
 		adaptiveThreshold.SetThreshold(0.02); 
 		adaptiveThreshold.SetSize(7); 
 		adaptiveThreshold.Run(&imageGPU2, &imageGPU3); 
 
 		image3.Copy(&imageGPU3);
-		Visi::WriteImageFile("image5_2Test.png", &image3);
+		Visi::IO::WriteImageFile("image5_2Test.png", &image3);
 
 		adaptiveThreshold.Run(&image2, &image3);
-		Visi::WriteImageFile("image5_3Test.png", &image3);
+		Visi::IO::WriteImageFile("image5_3Test.png", &image3);
 
 		//Median Filter
-		Visi::MedianFilter medianFilter; 
+		Visi::Process::MedianFilter medianFilter; 
 		medianFilter.SetSize(3); 
 		medianFilter.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image6_1Test.png", &image2);
+		Visi::IO::WriteImageFile("image6_1Test.png", &image2);
 
 		medianFilter.SetSize(5); 
 		medianFilter.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image6_2Test.png", &image2);
+		Visi::IO::WriteImageFile("image6_2Test.png", &image2);
 
 		//Gaussian Blur
-		Visi::GaussianBlur gaussianBlur; 
+		Visi::Process::GaussianBlur gaussianBlur; 
 		gaussianBlur.SetSigma(10); 
 		gaussianBlur.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image7Test.png", &image2);
+		Visi::IO::WriteImageFile("image7Test.png", &image2);
 
 		//Sobel
-		Visi::Sobel sobel; 
+		Visi::Process::Sobel sobel; 
 		sobel.Run(&imageGPU1, &imageGPU2); 
 
-		Visi::ChannelDemux demux; 
+		Visi::Process::ChannelDemux demux; 
 		demux.SetChannel(2);
 		demux.Run(&imageGPU2, &imageGPU3);
 
-		Visi::CopyImage copyImage; 
+		Visi::Process::CopyImage copyImage; 
 		imageGPU4.Allocate(imageGPU3.GetWidth(), imageGPU3.GetWidth(), Visi::ImageType::GRAYSCALE8);
 		copyImage.Run(&imageGPU3, &imageGPU4); 	
 
 		image2.Copy(&imageGPU4);
-		Visi::WriteImageFile("image8_1Test.png", &image2);
+		Visi::IO::WriteImageFile("image8_1Test.png", &image2);
 
 		//NMS
-		Visi::NonMaximumEdgeSuppression nms; 
+		Visi::Process::NonMaximumEdgeSuppression nms; 
 		nms.Run(&imageGPU2, &imageGPU3); 
 
 		demux.SetChannel(2);
@@ -227,17 +228,17 @@ int main(int argc, char *argv[])
 		copyImage.Run(&imageGPU2, &imageGPU4); 	
 
 		image2.Copy(&imageGPU4);
-		Visi::WriteImageFile("image8_2Test.png", &image2);
+		Visi::IO::WriteImageFile("image8_2Test.png", &image2);
 
 		//Renderer
-		Visi::Renderer renderer; 
+		Visi::Process::Renderer renderer; 
 		renderer.AddCircle(Visi::Vec2(100, 100), 20);
 		renderer.AddCircle(Visi::Vec2(150, 100), 10, Visi::Color(1, 0, 0, 1), false, 1); 
 		std::vector<Visi::Vec2> pl = {{100, 100}, {100, 140}, {300, 300}, {100, 300}};
 		renderer.AddPolyLine(&pl, Visi::Color(0, 0, 1, 1)); 
 		renderer.Run(&image1, &image2); 
 		
-		Visi::WriteImageFile("image9Test.png", &image2);
+		Visi::IO::WriteImageFile("image9Test.png", &image2);
 
 		//Contour Simplify Test
 		Visi::Contour c;
@@ -290,36 +291,36 @@ int main(int argc, char *argv[])
 		renderer.Clear(); 
 		renderer.AddContours(&cs, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::WriteImageFile("image11_1Test.png", &image2);
+		Visi::IO::WriteImageFile("image11_1Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&cs2, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::WriteImageFile("image11_2Test.png", &image2);
+		Visi::IO::WriteImageFile("image11_2Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&cs3, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::WriteImageFile("image11_3Test.png", &image2);
+		Visi::IO::WriteImageFile("image11_3Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddBoundingBox(&bb, Visi::Color(1, 0, 1, 1)); 
 		renderer.Run(&image1, &image2); 
-		Visi::WriteImageFile("image11_4Test.png", &image2);
+		Visi::IO::WriteImageFile("image11_4Test.png", &image2);
 
 		//Find Contours
-		Visi::FindContours findContours; 
+		Visi::Process::FindContours findContours; 
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 		adaptiveThreshold.SetThreshold(0.02); 
 		adaptiveThreshold.SetSize(7); 
 		adaptiveThreshold.Run(&imageGPU2, &imageGPU3); 
-		Visi::Invert invert;
+		Visi::Process::Invert invert;
 		invert.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image10_1Test.png", &image2);
+		Visi::IO::WriteImageFile("image10_1Test.png", &image2);
 		std::vector<Visi::Contour> contours; 
 		findContours.Run(&image2, &image3, &contours); 
-		Visi::WriteImageFile("image10_2Test.png", &image3);
+		Visi::IO::WriteImageFile("image10_2Test.png", &image3);
 		
 		std::vector<Visi::Contour> contoursFiltered; 
 		Visi::Contour::ContoursVertCountFilter(&contours, &contoursFiltered, 100);
@@ -334,17 +335,17 @@ int main(int argc, char *argv[])
 		renderer.Clear(); 
 		renderer.AddContours(&contoursFiltered, true, 1, false, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::WriteImageFile("image10_3Test.png", &image2);
+		Visi::IO::WriteImageFile("image10_3Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&contoursSimplified, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::WriteImageFile("image10_4Test.png", &image2);
+		Visi::IO::WriteImageFile("image10_4Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&contoursMerged, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::WriteImageFile("image10_5Test.png", &image2);
+		Visi::IO::WriteImageFile("image10_5Test.png", &image2);
 
 		renderer.Clear();
 
@@ -364,54 +365,54 @@ int main(int argc, char *argv[])
 		}
 		renderer.AddContours(&contoursQuads, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::WriteImageFile("image10_6Test.png", &image2);
+		Visi::IO::WriteImageFile("image10_6Test.png", &image2);
 
 
 		Visi::Contour::ContoursToFile("image10_3Test.contours", &contoursFiltered); 
 
 		//Canny Edges
-		Visi::CannyEdgeDetect canny; 
+		Visi::CompositeProcess::CannyEdgeDetect canny; 
 		canny.SetBlurSigma(0.5); 
 		canny.SetLowEdgeThreshold(0.1);
 		canny.SetHighEdgeThreshold(0.2);
 
 		canny.Run(&imageGPU1, &image2); 
-		Visi::WriteImageFile("image12_1Test.png", &image2);
+		Visi::IO::WriteImageFile("image12_1Test.png", &image2);
 
 		//GaussianDerivative
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 
-		Visi::GaussianDerivative guassDeriv; 
-		guassDeriv.SetDirection(Visi::GaussianDerivative::Direction::HORIZONTAL); 
+		Visi::Process::GaussianDerivative guassDeriv; 
+		guassDeriv.SetDirection(Visi::Process::GaussianDerivative::Direction::HORIZONTAL); 
 		guassDeriv.Run(&imageGPU2, &imageGPU3); 
 
 		image2.Copy(&imageGPU3);
-		Visi::WriteImageFile("image13_1Test.png", &image2);
+		Visi::IO::WriteImageFile("image13_1Test.png", &image2);
 
-		guassDeriv.SetDirection(Visi::GaussianDerivative::Direction::VERTICAL); 
+		guassDeriv.SetDirection(Visi::Process::GaussianDerivative::Direction::VERTICAL); 
 		guassDeriv.Run(&imageGPU2, &imageGPU3); 
 
 		image2.Copy(&imageGPU3);
-		Visi::WriteImageFile("image13_2Test.png", &image2);
+		Visi::IO::WriteImageFile("image13_2Test.png", &image2);
 		
 		//Corner detector
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 
 		Visi::ImageGPU imageGPU5; 
-		Visi::CornerDetector cornerDetector; 
+		Visi::CompositeProcess::CornerDetector cornerDetector; 
 		cornerDetector.Run(&imageGPU2, &imageGPU5);
 
 		imageGPU4.Allocate(imageGPU5.GetWidth(), imageGPU5.GetHeight(), Visi::ImageType::RGBA32F); 
 		demux.SetChannel(0);
 		demux.Run(&imageGPU5, &imageGPU4);
 		image2.Copy(&imageGPU4);
-		Visi::Normalize normalize; 
+		Visi::Process::Normalize normalize; 
 		normalize.Run(&image2, &image3); 
 		imageGPU3.Copy(&image3);
 		imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Visi::ImageType::GRAYSCALE8); 
 		copyImage.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image14_1Test.png", &image2);
+		Visi::IO::WriteImageFile("image14_1Test.png", &image2);
 
 		demux.SetChannel(1);
 		demux.Run(&imageGPU5, &imageGPU4);
@@ -421,61 +422,61 @@ int main(int argc, char *argv[])
 		imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Visi::ImageType::GRAYSCALE8); 
 		copyImage.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image14_2Test.png", &image2);
+		Visi::IO::WriteImageFile("image14_2Test.png", &image2);
 
 		//Camera Distortion
-		Visi::CameraDistortion camDistort;
+		Visi::Process::CameraDistortion camDistort;
 		camDistort.SetRadialCoefs(-0.1f, 0, 0);
 		camDistort.SetTangentialCoefs(0, 0); 
 		camDistort.SetFocalLength(1); 
 		camDistort.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image15_1Test.png", &image2);
+		Visi::IO::WriteImageFile("image15_1Test.png", &image2);
 
 		//AverageFilter
-		Visi::AverageFilter avFilter;
+		Visi::Process::AverageFilter avFilter;
 		avFilter.SetSize(5); 
 		avFilter.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image16_1Test.png", &image2);
+		Visi::IO::WriteImageFile("image16_1Test.png", &image2);
 
 		//ChannelMapper
-		Visi::ChannelMapper chMapr;
+		Visi::Process::ChannelMapper chMapr;
 		chMapr.SetChannelMap(2, -1, -1, 3); 
 		imageGPU2.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Visi::ImageType::GRAYSCALE8); 
 		chMapr.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image17_1Test.png", &image2);
+		Visi::IO::WriteImageFile("image17_1Test.png", &image2);
 
 		//DownSample
-		Visi::Downsample dwnSmpl;
+		Visi::Process::Downsample dwnSmpl;
 		float dsScale = 0.5f;
 		imageGPU2.Allocate(imageGPU1.GetWidth() * dsScale, imageGPU1.GetHeight() * dsScale, imageGPU1.GetType()); 
-		dwnSmpl.SetMode(Visi::Downsample::Mode::NEAREST); 
+		dwnSmpl.SetMode(Visi::Process::Downsample::Mode::NEAREST); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image18_1Test.png", &image2);
-		dwnSmpl.SetMode(Visi::Downsample::Mode::BOX); 
+		Visi::IO::WriteImageFile("image18_1Test.png", &image2);
+		dwnSmpl.SetMode(Visi::Process::Downsample::Mode::BOX); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image18_2Test.png", &image2);
-		dwnSmpl.SetMode(Visi::Downsample::Mode::BILINEAR); 
+		Visi::IO::WriteImageFile("image18_2Test.png", &image2);
+		dwnSmpl.SetMode(Visi::Process::Downsample::Mode::BILINEAR); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image18_3Test.png", &image2);
+		Visi::IO::WriteImageFile("image18_3Test.png", &image2);
 
 		//UpSample
-		Visi::Upsample upSmpl;
+		Visi::Process::Upsample upSmpl;
 		float usScale = 4.0f;
 		imageGPU2.Allocate(imageGPU1.GetWidth() * usScale, imageGPU1.GetHeight() * usScale, imageGPU1.GetType()); 
-		upSmpl.SetMode(Visi::Upsample::Mode::BILINEAR); 
+		upSmpl.SetMode(Visi::Process::Upsample::Mode::BILINEAR); 
 		upSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image19_1Test.png", &image2);
-		upSmpl.SetMode(Visi::Upsample::Mode::NEAREST); 
+		Visi::IO::WriteImageFile("image19_1Test.png", &image2);
+		upSmpl.SetMode(Visi::Process::Upsample::Mode::NEAREST); 
 		upSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::WriteImageFile("image19_2Test.png", &image2);
+		Visi::IO::WriteImageFile("image19_2Test.png", &image2);
 
 		std::cout << "DONE\n";
 		
@@ -486,7 +487,7 @@ int main(int argc, char *argv[])
 		if(std::string( argv[1] ) == "-v")
 		{
 			
-			Visi::VideoHelper videoHelper; 
+			Visi::IO::VideoHelper videoHelper; 
 			videoHelper.Open(argv[2]); 
 			Visi::Window visiWindow(videoHelper.GetFrameWidth(), videoHelper.GetFrameHeight());
 			while(!visiWindow.ShouldClose())

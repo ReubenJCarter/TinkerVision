@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 //https://slideplayer.com/slide/13588937/
 class GaussianDerivative::Internal
@@ -317,4 +319,5 @@ void GaussianDerivative::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

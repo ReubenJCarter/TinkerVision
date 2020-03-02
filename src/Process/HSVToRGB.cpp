@@ -10,6 +10,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class HSVToRGB::Internal
 {
@@ -143,4 +145,5 @@ void HSVToRGB::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

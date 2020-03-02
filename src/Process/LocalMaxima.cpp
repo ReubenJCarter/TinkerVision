@@ -12,6 +12,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class LocalMaxima::Internal
 {
@@ -128,4 +130,5 @@ void LocalMaxima::SetSize(int s)
     internal->SetSize(s); 
 }
 
+}
 }

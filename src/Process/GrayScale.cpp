@@ -10,6 +10,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class GrayScale::Internal
 {
@@ -143,4 +145,5 @@ void GrayScale::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

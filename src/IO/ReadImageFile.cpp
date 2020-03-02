@@ -6,6 +6,8 @@
 
 namespace Visi 
 {
+namespace IO
+{
 	
 bool ReadImageFile(std::string fileName, Image* image)
 {
@@ -97,4 +99,5 @@ bool ReadImageFile(std::string fileName, Image* image)
     return true; 
 }
 	
+}
 }

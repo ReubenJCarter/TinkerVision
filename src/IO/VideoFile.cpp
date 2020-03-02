@@ -10,6 +10,8 @@
 
 namespace Visi
 {
+namespace IO
+{
 
 #ifdef USE_FFMPEG
 
@@ -500,4 +502,5 @@ bool VideoFile::IsOpen()
     return internal->IsOpen(); 
 }
 
+}
 }

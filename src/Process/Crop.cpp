@@ -12,6 +12,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Crop::Internal
 {
@@ -127,4 +129,5 @@ void Crop::SetOffset(int x, int y)
     internal->SetOffset(x, y); 
 }
 	
+}
 }

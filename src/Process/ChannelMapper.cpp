@@ -14,6 +14,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class ChannelMapper::Internal
 {
@@ -160,4 +162,5 @@ void ChannelMapper::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

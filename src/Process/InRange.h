@@ -9,6 +9,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT InRange
 {
@@ -28,4 +30,5 @@ class VISI_EXPORT InRange
         void Run(Image* input, Image* output); 
 };
 	
+}
 }

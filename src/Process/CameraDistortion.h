@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT CameraDistortion
 {
@@ -25,4 +27,5 @@ class VISI_EXPORT CameraDistortion
         void Run(Image* input, Image* output); 
 };
 	
+}
 }

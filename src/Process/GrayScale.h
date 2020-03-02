@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class VISI_EXPORT GrayScale
 {
@@ -22,4 +24,5 @@ class VISI_EXPORT GrayScale
         void Run(Image* input, Image* output); 
 };
 	
+}
 }

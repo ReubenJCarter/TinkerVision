@@ -9,6 +9,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class ChannelDemux::Internal
 {
@@ -149,4 +151,5 @@ void ChannelDemux::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

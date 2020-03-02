@@ -13,6 +13,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Downsample::Internal
 {
@@ -204,4 +206,5 @@ void Downsample::SetMode(Mode m)
     internal->SetMode(m); 
 }
 
+}
 }

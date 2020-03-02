@@ -10,6 +10,8 @@
 
 namespace Visi
 {
+namespace IO
+{
 
 class VISI_EXPORT VideoHelper
 {
@@ -28,4 +30,5 @@ class VISI_EXPORT VideoHelper
         bool IsOpen(); 
 };
 	
+}
 }

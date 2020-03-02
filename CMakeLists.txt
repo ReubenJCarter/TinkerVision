@@ -22,6 +22,10 @@ if (USE_FFMPEG)
 	add_definitions(-DUSE_FFMPEG)
 endif()
 
+#doxygen custom target 
+add_custom_target(doc doxygen ${CMAKE_SOURCE_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} 
+COMMENT "Generating documentation with Doxygen" VERBATIM
+)
 
 #glm
 set(GLM_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/glm CACHE PATH "Path to GLM")

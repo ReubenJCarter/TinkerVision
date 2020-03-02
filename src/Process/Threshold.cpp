@@ -12,6 +12,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Threshold::Internal
 {
@@ -150,4 +152,5 @@ void Threshold::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

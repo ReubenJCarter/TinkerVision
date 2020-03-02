@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT Morph
 {
@@ -28,4 +30,5 @@ class VISI_EXPORT Morph
         void SetKernel(int size, Shape shape);  
 };
 	
+}
 }

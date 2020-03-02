@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT ApproxDistanceTransform
 {
@@ -21,4 +23,5 @@ class VISI_EXPORT ApproxDistanceTransform
         void Run(Image* input, Image* output); 
 };
 	
+}
 }

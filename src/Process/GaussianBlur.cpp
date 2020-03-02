@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class GaussianBlur::Internal
 {
@@ -265,4 +267,5 @@ void GaussianBlur::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

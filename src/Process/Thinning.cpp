@@ -13,6 +13,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Thinning::Internal
 {
@@ -168,4 +170,5 @@ void Thinning::Run(Image* input, Image* output)
 }
 
 
+}
 }

@@ -7,6 +7,8 @@
 
 namespace Visi
 {
+namespace IO
+{
 
 class VideoHelper::Internal
 {
@@ -205,4 +207,5 @@ bool VideoHelper::IsOpen()
     return internal->IsOpen();
 }
 
+}
 }

@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Blend::Internal
 {
@@ -299,4 +301,5 @@ void Blend::Run(Image* inputSrc, Image* inputDst, Image* output)
     internal->Run(inputSrc, inputDst, output); 
 }
 
+}
 }

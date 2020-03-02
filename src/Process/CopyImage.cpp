@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class CopyImage::Internal
 {
@@ -147,4 +149,5 @@ void CopyImage::SetFormatTranslate(bool ftr)
     internal->SetFormatTranslate(ftr);
 }
 
+}
 }

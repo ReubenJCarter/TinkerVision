@@ -17,6 +17,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 //http://www.ipol.im/pub/art/2018/229/article_lr.pdf
 
@@ -163,4 +165,5 @@ void HarrisShiTomasiResponse::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

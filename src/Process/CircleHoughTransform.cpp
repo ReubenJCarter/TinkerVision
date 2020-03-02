@@ -10,6 +10,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class CircleHoughTransform::Internal
 {
@@ -123,4 +125,5 @@ void CircleHoughTransform::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

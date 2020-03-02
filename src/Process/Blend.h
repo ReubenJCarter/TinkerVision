@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT Blend
 {
@@ -30,4 +32,5 @@ class VISI_EXPORT Blend
         void Run(Image* inputSrc, Image* inputDst, Image* output); 
 };
 	
+}
 }

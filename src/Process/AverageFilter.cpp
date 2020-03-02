@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class AverageFilter::Internal
 {
@@ -153,4 +155,5 @@ void AverageFilter::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

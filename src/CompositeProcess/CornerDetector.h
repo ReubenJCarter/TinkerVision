@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace CompositeProcess
+{
 	
 class VISI_EXPORT CornerDetector
 {
@@ -23,4 +25,5 @@ class VISI_EXPORT CornerDetector
         void Run(Image* input, Image* output); 
 };
 	
+}
 }

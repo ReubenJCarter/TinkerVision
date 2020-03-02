@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace CompositeProcess
+{
 	
 class VISI_EXPORT CannyEdgeDetect
 {
@@ -30,4 +32,5 @@ class VISI_EXPORT CannyEdgeDetect
         void RunThresholding(Image* input, Image* output); 
 };
 	
+}
 }

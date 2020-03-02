@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Morph::Internal
 {
@@ -219,4 +221,5 @@ void Morph::SetKernel(int size, Shape shape)
     internal->SetKernel(size, shape); 
 }
 
+}
 }

@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT GaussianDerivative
 {
@@ -26,4 +28,5 @@ class VISI_EXPORT GaussianDerivative
         void Run(Image* input, Image* output); 
 };
 	
+}
 }

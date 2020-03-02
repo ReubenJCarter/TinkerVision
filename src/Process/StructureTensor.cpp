@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class StructureTensor::Internal
 {
@@ -113,4 +115,5 @@ void StructureTensor::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

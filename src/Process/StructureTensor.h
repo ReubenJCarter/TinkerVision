@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT StructureTensor
 {
@@ -23,4 +25,5 @@ class VISI_EXPORT StructureTensor
         void Run(Image* input, Image* output); 
 };
 	
+}
 }

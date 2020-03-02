@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT Sobel
 {
@@ -25,4 +27,5 @@ class VISI_EXPORT Sobel
         void SetMode(Mode m); 
 };
 	
+}
 }

@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT Thinning
 {
@@ -21,4 +23,5 @@ class VISI_EXPORT Thinning
         void Run(Image* input, Image* output); 
 };
 	
+}
 }

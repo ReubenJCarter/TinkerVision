@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class CameraDistortion::Internal
 {
@@ -218,4 +220,5 @@ void CameraDistortion::SetFocalLength(float fl)
     internal->SetFocalLength(fl); 
 }
 
+}
 }

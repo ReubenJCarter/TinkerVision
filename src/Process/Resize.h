@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT Resize
 {
@@ -27,4 +29,5 @@ class VISI_EXPORT Resize
         void SetDownsampleMode(Downsample::Mode m); 
 };
 	
+}
 }

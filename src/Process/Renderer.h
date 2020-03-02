@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class VISI_EXPORT Renderer
 {
@@ -30,4 +32,5 @@ class VISI_EXPORT Renderer
         void Add3DAxis(float fovy, Vec3 pos);
 };
 	
+}
 }

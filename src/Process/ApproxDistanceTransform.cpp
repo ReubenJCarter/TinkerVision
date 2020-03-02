@@ -16,6 +16,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class ApproxDistanceTransform::Internal
 {
@@ -129,4 +131,5 @@ void ApproxDistanceTransform::Run(Image* input, Image* output)
 }
 
 
+}
 }

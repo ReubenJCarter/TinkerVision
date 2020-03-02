@@ -348,7 +348,8 @@ namespace lambdatwist {
 
 namespace Visi
 {
-
+namespace Process
+{
 
 
 class Perspective3Point::Internal
@@ -426,4 +427,5 @@ bool Perspective3Point::Run(std::vector<Vec3>* normalizedImageCoords, std::vecto
 }
 
 
+}
 }

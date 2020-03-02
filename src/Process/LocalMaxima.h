@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT LocalMaxima
 {
@@ -26,4 +28,5 @@ class VISI_EXPORT LocalMaxima
         void SetSize(int s);
 };
 	
+}
 }

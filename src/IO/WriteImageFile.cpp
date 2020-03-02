@@ -6,6 +6,8 @@
 
 namespace Visi 
 {
+namespace IO
+{
 	
 void WriteImageFile(std::string fileName, Image* image)
 {
@@ -125,4 +127,5 @@ void WriteImageFile(std::string fileName, Image* image)
     return ; 
 }
 	
+}
 }

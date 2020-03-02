@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT StereoPairDepth
 {
@@ -22,4 +24,5 @@ class VISI_EXPORT StereoPairDepth
         void Run(Image* inputL, Image* inputR, Image* output); 
 };
 	
+}
 }

@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class VISI_EXPORT Perspective3Point
 {
@@ -24,4 +26,5 @@ class VISI_EXPORT Perspective3Point
         bool Run(std::vector<Vec3>* normalizedImageCoords, std::vector<Vec3>* worldCoords, std::vector<CameraPose>* cameraPoses);  
 };
 	
+}
 }

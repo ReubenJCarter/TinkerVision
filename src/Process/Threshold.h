@@ -10,6 +10,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT Threshold
 {
@@ -26,4 +28,5 @@ class VISI_EXPORT Threshold
         void Run(Image* input, Image* output); 
 };
 	
+}
 }

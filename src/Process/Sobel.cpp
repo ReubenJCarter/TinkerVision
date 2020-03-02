@@ -12,6 +12,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Sobel::Internal
 {
@@ -275,4 +277,5 @@ void Sobel::SetMode(Mode m)
     internal->SetMode(m); 
 }
 
+}
 }

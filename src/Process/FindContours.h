@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT FindContours
 {
@@ -24,4 +26,5 @@ class VISI_EXPORT FindContours
         void Run(Image* input, Image* output, std::vector<Contour>* contours=NULL); 
 };
 	
+}
 }

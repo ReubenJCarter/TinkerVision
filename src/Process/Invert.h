@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT Invert
 {
@@ -22,4 +24,5 @@ class VISI_EXPORT Invert
         void Run(Image* input, Image* output); 
 };
 	
+}
 }

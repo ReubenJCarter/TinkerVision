@@ -19,6 +19,10 @@
 
 namespace Visi
 {
+namespace CompositeProcess
+{
+
+using namespace Process;
 
 //http://www.ipol.im/pub/art/2018/229/article_lr.pdf
 
@@ -151,4 +155,5 @@ void CornerDetector::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
+}
 }

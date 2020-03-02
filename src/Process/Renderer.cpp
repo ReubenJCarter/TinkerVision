@@ -11,6 +11,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 
 class Renderer::Internal
 {
@@ -371,4 +373,5 @@ void Renderer::Add3DAxis(float fovy, Vec3 pos)
     //AddPolyLine(); 
 }
 
+}
 }

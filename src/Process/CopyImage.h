@@ -8,6 +8,8 @@
 
 namespace Visi
 {
+namespace Process
+{
 	
 class VISI_EXPORT CopyImage
 {
@@ -23,4 +25,5 @@ class VISI_EXPORT CopyImage
         void Run(Image* input, Image* output); 
 };
 	
+}
 }
