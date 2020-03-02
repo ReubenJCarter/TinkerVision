@@ -67,8 +67,7 @@ void main()
     {
         for(int j = -halfBlockH; j <= halfBlockH; j++)
         {
-            ivec2 posL = ivec2(i, j);
-            vec4 pixl =  imageLoad(inputImageL, id + posL);
+            vec4 pixl =  imageLoad(inputImageL, id + ivec2(i, j));
             cachel[(i + halfBlockW) * blockW + j + halfBlockH] = pixl.r;
         }
     }
@@ -81,10 +80,10 @@ void main()
         {
             for(int j = -halfBlockH; j <= halfBlockH; j++)
             {
-                ivec2 posR = ivec2(-k + i, j);
-                vec4 pixr = imageLoad(inputImageR, posR);
+                vec4 pixr = imageLoad(inputImageR, id + ivec2(-k + i, j));
                 float avpixl = cachel[(i + halfBlockW) * blockW + j + halfBlockH];
-                float pixAbsDiff = abs(avpixl - pixr.r);
+                avpixl =  imageLoad(inputImageL, id + ivec2(i, j)).r;
+                float pixAbsDiff = length (avpixl - pixr.r);
                 sad += pixAbsDiff;
             }
         }
@@ -95,7 +94,7 @@ void main()
         }
     }
     float finalPix = float(lowestsadK) / float(maxK);
-	vec4 outVec = vec4(finalPix, lowestsad, 0, 1.0f);
+	vec4 outVec = vec4(finalPix, finalPix, finalPix, 1.0f);
     imageStore(outputImage, id, outVec); 
 }
 
@@ -107,7 +106,7 @@ StereoMatchSAD::Internal::Internal()
 {
     blockW = 16;
     blockH = 16;
-    maxK = 120;
+    maxK = 80;
 }
 
 void StereoMatchSAD::Internal::Run(ImageGPU* inputL, ImageGPU* inputR, ImageGPU* output)

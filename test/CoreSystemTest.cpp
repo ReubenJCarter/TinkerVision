@@ -524,7 +524,13 @@ int main(int argc, char *argv[])
 			leftGrey.Allocate(left.GetWidth(), left.GetHeight(), Visi::ImageType::GRAYSCALE16); 
 			rightGrey.Allocate(right.GetWidth(), right.GetHeight(), Visi::ImageType::GRAYSCALE16); 
 			gs.Run(&left, &leftGrey);
-			/*gs.Run(&right, &rightGrey);
+			gs.Run(&right, &rightGrey);
+
+			Visi::IO::WriteImageFile("imageDepth1LeftTest.png", &left);
+			Visi::IO::WriteImageFile("imageDepth1RightTest.png", &right);
+
+			Visi::IO::WriteImageFile("imageDepth1LeftGrayTest.png", &leftGrey);
+			Visi::IO::WriteImageFile("imageDepth1RightGrayTest.png", &rightGrey);
 
 
 			Visi::ImageGPU leftGPU;
@@ -534,11 +540,12 @@ int main(int argc, char *argv[])
 			leftGPU.Copy(&leftGrey); 
 			rightGPU.Copy(&rightGrey); 
 
+
 			Visi::Process::StereoMatchSAD smsad;
 			smsad.Run(&leftGPU, &rightGPU, &outputGPU);	
 
-			output.Copy(&outputGPU);*/
-			Visi::IO::WriteImageFile("imageDepth1Test.png", &leftGrey);
+			output.Copy(&outputGPU);
+			Visi::IO::WriteImageFile("imageDepth1Test.png", &output);
 		}
 	}
 

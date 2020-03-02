@@ -96,7 +96,7 @@ class VISI_EXPORT ParallelFor
             for(int t = 0; t < workers.size(); t++)
             {
                 
-                int len = itemsPerThread + (t < leftOvers) ? 1 : 0;
+                int len = itemsPerThread + ((t < leftOvers) ? 1 : 0);
 
                 if(len == 0)
                     break;

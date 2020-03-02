@@ -86,7 +86,7 @@ void GrayScale::Internal::Run(ImageGPU* input, ImageGPU* output)
 }
 
 void GrayScale::Internal::Run(Image* input, Image* output)
-{/*
+{
     if(input->GetType() == ImageType::RGB32F || input->GetType() == ImageType::RGBA32F)
     {
         if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() )
@@ -101,7 +101,7 @@ void GrayScale::Internal::Run(Image* input, Image* output)
             output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
         }
     }
-    */
+    
     ParallelFor& pf = ParallelFor::GetInstance(); 
 
     auto kernel = [this, input, output](int x, int y)
@@ -117,6 +117,7 @@ void GrayScale::Internal::Run(Image* input, Image* output)
         outVec.a = d.a;
 
         SetPixel(output, x, y, outVec); 
+        
     };
 
     pf.Run(input->GetWidth(), input->GetHeight(), kernel); 
