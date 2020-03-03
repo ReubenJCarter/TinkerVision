@@ -20,6 +20,7 @@ set(LIBRARYSRCFILES
 
 	Process/AdaptiveThreshold.cpp
 	Process/ApproxDistanceTransform.cpp
+	Process/ARUCOBitExtract.cpp
 	Process/AverageFilter.cpp
 	Process/BilateralFilter.cpp
 	Process/Blend.cpp

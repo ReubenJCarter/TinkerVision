@@ -527,6 +527,13 @@ int main(int argc, char *argv[])
 			}
 			videoHelper.Close(); 
 		}
+		else if(std::string( argv[1] ) == "-aruco")
+		{
+			Visi::Image input;
+			Visi::IO::ReadImageFile(argv[2], &input);
+
+			
+		}
 		
 	}
 	else if(argc == 4)
