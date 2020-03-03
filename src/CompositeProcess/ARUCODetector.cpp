@@ -79,7 +79,7 @@ void ARUCODetector::Internal::Run(ImageGPU* input)
     temp[1].Copy(input); 
 
     markerBitExtract.Run(&temp[1], &contoursQuads, &bitImages); 
-
+    /*
     for(int i = 0; i < bitImages.size(); i++)
     {
         std::string fn = "bitImage";
@@ -92,6 +92,7 @@ void ARUCODetector::Internal::Run(ImageGPU* input)
     render.AddContours(&contoursQuads);
     render.Run(&temp[0], &temp[2]); 
     Visi::IO::WriteImageFile("testTemp.png", &temp[2]); 
+    */
 }
 
 
