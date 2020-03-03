@@ -8,6 +8,7 @@
 #include "../Process/AdaptiveThreshold.h"
 #include "../Process/FindContours.h"
 #include "../Process/MarkerBitExtract.h"
+#include "../Process/Renderer.h"
 
 #include "../IO/WriteImageFile.h"
 
@@ -26,7 +27,7 @@ class ARUCODetector::Internal
 {
     private:
         ImageGPU tempGPU[4]; 
-        Image temp[2];
+        Image temp[3];
 
         std::vector<Contour> contours;
         std::vector<Visi::Contour> contoursFiltered; 
@@ -39,6 +40,8 @@ class ARUCODetector::Internal
         AdaptiveThreshold adaptiveThreshold; 
         FindContours findContours; 
         MarkerBitExtract markerBitExtract; 
+
+        Renderer render;
 
     public:
         Internal(); 
@@ -85,6 +88,10 @@ void ARUCODetector::Internal::Run(ImageGPU* input)
         Visi::IO::WriteImageFile(fn, &bitImages[i]); 
     }
     
+    
+    render.AddContours(&contoursQuads);
+    render.Run(&temp[0], &temp[2]); 
+    Visi::IO::WriteImageFile("testTemp.png", &temp[2]); 
 }
 
 

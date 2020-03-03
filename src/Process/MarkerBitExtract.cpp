@@ -31,7 +31,7 @@ class MarkerBitExtract::Internal
 
 MarkerBitExtract::Internal::Internal()
 {
-    marginSize = 0;
+    marginSize = 0.0;//fraction of the size of the cell  
     gridW = 8;
     gridH = 8; 
 }
@@ -45,10 +45,6 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
     {
         bitImages->resize(contours->size()); 
     }
-    for(int i = 0 ; i < bitImages->size(); i++)
-    {
-        bitImages->at(i).Allocate(gridW, gridH, Visi::ImageType::GRAYSCALE8); 
-    }
     
     //for each contour
     for(int c = 0; c < contours->size(); c++)
@@ -56,13 +52,18 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
         std::vector<glm::vec2> verts(contours->at(c).verticies.size()); 
         for(int i = 0; i < contours->at(c).verticies.size(); i++)
         {
-            verts.push_back(glm::vec2(contours->at(c).verticies[i].x, contours->at(c).verticies[i].y)); 
+            verts[i] = glm::vec2(contours->at(c).verticies[i].x, contours->at(c).verticies[i].y);
         }
 
         //if not 4 verts continue
         if(verts.size() != 4)
         {
+            bitImages->at(c).Allocate(0, 0, Visi::ImageType::GRAYSCALE8);
             continue; 
+        }
+        else
+        {
+            bitImages->at(c).Allocate(gridW, gridH, Visi::ImageType::GRAYSCALE8);
         }
 
         //sort into lowest and highest two x values 
@@ -108,8 +109,10 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
                                               (std::max)(glm::length(minX[1] - minX[0]), glm::length(maxX[1] - maxX[0])) / gridH
                                            ); 
         
+        Image* bitImage = &(bitImages->at(c)); 
+
         //run grid cell value kernel
-        auto kernel = [this, input, contours, bitImages, gridCellSizePx, minX, maxX, c](int gx, int gy)
+        auto kernel = [this, input, contours, bitImages, gridCellSizePx, minX, maxX, bitImage](int gx, int gy)
         {
             glm::vec2 gridCoordStart = glm::vec2((float)gx / (float)gridW, (float)gy / (float)gridH); 
             glm::vec2 gridCoordEnd = glm::vec2(((float)gx+1) / (float)gridW, ((float)gy+1) / (float)gridH); 
@@ -117,10 +120,10 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
             glm::vec4 sum = glm::vec4(0, 0, 0, 0); 
             int count = 0; 
 
-            for(float j = 0; j < 1.0f; j += 1.0f / gridCellSizePx.y)
+            for(float j = marginSize; j < 1.0f-marginSize; j += 1.0f / gridCellSizePx.y)
             {
                
-                for(float i = 0; i < 1.0f; i += 1.0f / gridCellSizePx.x)
+                for(float i = marginSize; i < 1.0f-marginSize; i += 1.0f / gridCellSizePx.x)
                 {
                     glm::vec2 uv = gridCoordStart + (gridCoordEnd - gridCoordStart) * glm::vec2(i, j); 
 
@@ -133,9 +136,9 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
             }   
             sum /= count; 
             if(sum.r > 0.5f)
-                SetPixel(&(bitImages->at(c)), gx, gy, glm::vec4(1, 1, 1, 1));  
+                SetPixel(bitImage, gx, gy, glm::vec4(1, 1, 1, 1));  
             else
-                SetPixel(&(bitImages->at(c)), gx, gy, glm::vec4(0, 0, 0, 0));  
+                SetPixel(bitImage, gx, gy, glm::vec4(0, 0, 0, 1));  
         };
 
         pf.Run(gridW, gridH, kernel);

@@ -530,6 +530,7 @@ int main(int argc, char *argv[])
 		}
 		else if(std::string( argv[1] ) == "-aruco")
 		{
+			std::cout << "Starting aruco test\n"; 
 			Visi::Image input;
 			Visi::IO::ReadImageFile(argv[2], &input);
 			Visi::CompositeProcess::ARUCODetector arucoDetector;
