@@ -1,4 +1,4 @@
-#include "ARUCOBitExtract.h"
+#include "MarkerBitExtract.h"
 
 #include "../Core/ComputeShader.h"
 #include "../Core/ProcessHelper.h"
@@ -14,7 +14,7 @@ namespace Visi
 namespace Process
 {
 
-class ARUCOBitExtract::Internal
+class MarkerBitExtract::Internal
 {
     private:
         float marginSize; 
@@ -29,14 +29,14 @@ class ARUCOBitExtract::Internal
         void SetMarginSize(float s); 
 };
 
-ARUCOBitExtract::Internal::Internal()
+MarkerBitExtract::Internal::Internal()
 {
     marginSize = 0;
     gridW = 8;
     gridH = 8; 
 }
 
-void ARUCOBitExtract::Internal::Run(Image* input, std::vector<Contour>* contours,  std::vector<Image>* bitImages)
+void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contours,  std::vector<Image>* bitImages)
 {
     ParallelFor& pf = ParallelFor::GetInstance(); 
 
@@ -142,13 +142,13 @@ void ARUCOBitExtract::Internal::Run(Image* input, std::vector<Contour>* contours
     }
 }
 
-void ARUCOBitExtract::Internal::SetGridSize(int W, int H)
+void MarkerBitExtract::Internal::SetGridSize(int W, int H)
 {
     gridW = W; 
     gridH = H; 
 }
 
-void ARUCOBitExtract::Internal::SetMarginSize(float s)
+void MarkerBitExtract::Internal::SetMarginSize(float s)
 {
     marginSize = s; 
 }
@@ -156,27 +156,27 @@ void ARUCOBitExtract::Internal::SetMarginSize(float s)
 
 
 
-ARUCOBitExtract::ARUCOBitExtract()
+MarkerBitExtract::MarkerBitExtract()
 {
     internal = new Internal(); 
 }
 
-ARUCOBitExtract::~ARUCOBitExtract()
+MarkerBitExtract::~MarkerBitExtract()
 {
     delete internal; 
 }
 
-void ARUCOBitExtract::SetGridSize(int W, int H)
+void MarkerBitExtract::SetGridSize(int W, int H)
 {
     internal->SetGridSize(W, H); 
 }
 
-void ARUCOBitExtract::SetMarginSize(float s)
+void MarkerBitExtract::SetMarginSize(float s)
 {
     internal->SetMarginSize(s); 
 }
 
-void ARUCOBitExtract::Run(Image* input, std::vector<Contour>* contours,  std::vector<Image>* bitImages)
+void MarkerBitExtract::Run(Image* input, std::vector<Contour>* contours,  std::vector<Image>* bitImages)
 {
     internal->Run(input, contours, bitImages); 
 }

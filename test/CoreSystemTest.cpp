@@ -40,6 +40,7 @@
 
 #include "CompositeProcess/CannyEdgeDetect.h"
 #include "CompositeProcess/CornerDetector.h"
+#include "CompositeProcess/ARUCODetector.h"
 
 #include <iostream>
 #include <thread>
@@ -531,8 +532,10 @@ int main(int argc, char *argv[])
 		{
 			Visi::Image input;
 			Visi::IO::ReadImageFile(argv[2], &input);
-
-			
+			Visi::CompositeProcess::ARUCODetector arucoDetector;
+			Visi::ImageGPU inputGPU; 
+			inputGPU.Copy(&input);
+			arucoDetector.Run(&inputGPU);
 		}
 		
 	}

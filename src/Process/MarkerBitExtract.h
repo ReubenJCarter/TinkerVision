@@ -14,15 +14,15 @@ namespace Visi
 namespace Process
 {
 
-class VISI_EXPORT ARUCOBitExtract
+class VISI_EXPORT MarkerBitExtract
 {
     private: 
         class Internal;
         Internal* internal;
 
 	public:
-		ARUCOBitExtract(); 
-        ~ARUCOBitExtract(); 
+		MarkerBitExtract(); 
+        ~MarkerBitExtract(); 
         void SetGridSize(int W, int H); 
         void SetMarginSize(float s); 
         void Run(Image* input, std::vector<Contour>* contours,  std::vector<Image>* bitImages); 

@@ -1,4 +1,5 @@
 set(LIBRARYSRCFILES
+	CompositeProcess/ARUCODetector.cpp
 	CompositeProcess/CannyEdgeDetect.cpp
 	CompositeProcess/CornerDetector.cpp
 
@@ -20,7 +21,6 @@ set(LIBRARYSRCFILES
 
 	Process/AdaptiveThreshold.cpp
 	Process/ApproxDistanceTransform.cpp
-	Process/ARUCOBitExtract.cpp
 	Process/AverageFilter.cpp
 	Process/BilateralFilter.cpp
 	Process/Blend.cpp
@@ -43,6 +43,7 @@ set(LIBRARYSRCFILES
 	Process/InRange.cpp
 	Process/Invert.cpp
 	Process/LocalMaxima.cpp
+	Process/MarkerBitExtract.cpp
 	Process/MedianFilter.cpp
 	Process/Morph.cpp
 	Process/NonMaximumEdgeSuppression.cpp
