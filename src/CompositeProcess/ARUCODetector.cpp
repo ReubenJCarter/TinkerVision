@@ -8,6 +8,7 @@
 #include "../Process/AdaptiveThreshold.h"
 #include "../Process/FindContours.h"
 #include "../Process/MarkerBitExtract.h"
+#include "../Process/MarkerDictionary.h"
 #include "../Process/Renderer.h"
 
 #include "../IO/WriteImageFile.h"
@@ -40,6 +41,7 @@ class ARUCODetector::Internal
         AdaptiveThreshold adaptiveThreshold; 
         FindContours findContours; 
         MarkerBitExtract markerBitExtract; 
+        MarkerDictionary markerDictionary; 
 
         Renderer render;
 
@@ -79,6 +81,15 @@ void ARUCODetector::Internal::Run(ImageGPU* input)
     temp[1].Copy(input); 
 
     markerBitExtract.Run(&temp[1], &contoursQuads, &bitImages); 
+
+    for(int i = 0; i < bitImages.size(); i++)
+    {
+        int id = markerDictionary.Lookup(&bitImages[i]); 
+        if(id != -1)
+        {
+            
+        } 
+    }
     /*
     for(int i = 0; i < bitImages.size(); i++)
     {

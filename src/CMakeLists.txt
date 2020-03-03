@@ -44,6 +44,7 @@ set(LIBRARYSRCFILES
 	Process/Invert.cpp
 	Process/LocalMaxima.cpp
 	Process/MarkerBitExtract.cpp
+	Process/MarkerDictionary.cpp
 	Process/MedianFilter.cpp
 	Process/Morph.cpp
 	Process/NonMaximumEdgeSuppression.cpp
