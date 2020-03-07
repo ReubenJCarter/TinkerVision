@@ -35,6 +35,7 @@ class ARUCODetector::Internal
         std::vector<Visi::Contour> contoursSimplified; 
         std::vector<Visi::Contour> contoursMerged; 
         std::vector<Visi::Contour> contoursQuads; 
+        std::vector<Visi::Contour> arucoQuads; 
         std::vector<Visi::Image> bitImages;  
 
         GrayScale gray; 
@@ -48,6 +49,7 @@ class ARUCODetector::Internal
     public:
         Internal(); 
         void Run(ImageGPU* input);
+        void AddDictionaryEntry(Image* entry, int id);
 };
 
 
@@ -81,6 +83,7 @@ void ARUCODetector::Internal::Run(ImageGPU* input)
     temp[1].Copy(input); 
 
     markerBitExtract.Run(&temp[1], &contoursQuads, &bitImages); 
+
 
     for(int i = 0; i < bitImages.size(); i++)
     {
@@ -121,6 +124,11 @@ ARUCODetector::~ARUCODetector()
 void ARUCODetector::Run(ImageGPU* input)
 {
     internal->Run(input); 
+}
+
+void ARUCODetector::AddDictionaryEntry(Image* entry, int id)
+{
+    internal->AddDictionaryEntry(entry, id);
 }
 
 

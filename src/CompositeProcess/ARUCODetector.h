@@ -22,6 +22,7 @@ class VISI_EXPORT ARUCODetector
         ~ARUCODetector(); 
         
 		void Run(ImageGPU* input); 
+        void AddDictionaryEntry(Image* entry, int id);
 };
 	
 }
