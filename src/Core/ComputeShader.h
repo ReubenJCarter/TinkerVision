@@ -8,6 +8,9 @@
 namespace Visi
 {
 	
+/**
+ *An opengl compute shader class. 
+ */
 class ComputeShader
 {
 	public: 
