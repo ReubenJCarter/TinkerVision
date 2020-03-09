@@ -27,8 +27,8 @@ class VISI_EXPORT BoundingBox
 		BoundingBox();
 
 		/**Returns the affine transform of the bouding box, 
-		 * T = (cos(rot), sin(rot), 0, -sin(rot), cos(rot),0, 0, 0, 0) * (0,0,p.x, 0,0,p.y, 0,0,1) .
-		 * The transform does not include the extends.
+		 *T = (cos(rot), sin(rot), 0, -sin(rot), cos(rot),0, 0, 0, 0) * (0,0,p.x, 0,0,p.y, 0,0,1) .
+		 *The transform does not include the extends.
 		 */
 		Mat3 GetTransform(); 
 };
