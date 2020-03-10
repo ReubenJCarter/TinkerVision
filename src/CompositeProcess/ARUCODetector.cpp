@@ -11,7 +11,7 @@
 #include "../Process/MarkerDictionary.h"
 #include "../Process/Renderer.h"
 
-#include "../IO/WriteImageFile.h"
+#include "../IO/ImageFile.h"
 
 #include <string>
 #include <iostream>
@@ -99,14 +99,19 @@ void ARUCODetector::Internal::Run(ImageGPU* input)
         std::string fn = "bitImage";
         fn += std::to_string(i); 
         fn += ".png"; 
-        Visi::IO::WriteImageFile(fn, &bitImages[i]); 
+        Visi::IO::ImageFile::Write(fn, &bitImages[i]); 
     }
     
     
     render.AddContours(&contoursQuads);
     render.Run(&temp[0], &temp[2]); 
-    Visi::IO::WriteImageFile("testTemp.png", &temp[2]); 
+    Visi::IO::ImageFile::Write("testTemp.png", &temp[2]); 
     */
+}
+
+void ARUCODetector::Internal::AddDictionaryEntry(Image* entry, int id)
+{
+    markerDictionary.AddEntry(entry, id);
 }
 
 

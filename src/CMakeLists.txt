@@ -2,6 +2,7 @@ set(LIBRARYSRCFILES
 	CompositeProcess/ARUCODetector.cpp
 	CompositeProcess/CannyEdgeDetect.cpp
 	CompositeProcess/CornerDetector.cpp
+	CompositeProcess/Resize.cpp
 
 	Core/BoundingBox.cpp
 	Core/ComputeShader.cpp
@@ -14,10 +15,9 @@ set(LIBRARYSRCFILES
 	Core/ShaderStorageBuffer.cpp
 	Core/Window.cpp
 
-	IO/ReadImageFile.cpp
+	IO/ImageFile.cpp
 	IO/VideoFile.cpp
 	IO/VideoHelper.cpp
-	IO/WriteImageFile.cpp
 
 	Process/AdaptiveThreshold.cpp
 	Process/ApproxDistanceTransform.cpp
@@ -51,7 +51,6 @@ set(LIBRARYSRCFILES
 	Process/Normalize.cpp
 	Process/Perspective3Point.cpp
 	Process/Renderer.cpp
-	Process/Resize.cpp
 	Process/RGBToHSV.cpp
 	Process/Sobel.cpp
 	Process/StereoMatchSAD.cpp
@@ -78,3 +77,31 @@ install(TARGETS ${CMAKE_PROJECT_NAME}
 		RUNTIME DESTINATION bin
 		COMPONENT MainLibrary  
 )
+
+
+if(CREATE_JAVA_SUPPORT)
+	SET_SOURCE_FILES_PROPERTIES(SwigInterface.i PROPERTIES CPLUSPLUS ON)
+
+
+
+	#Core package 
+	#set(CMAKE_SWIG_FLAGS -package ${CMAKE_PROJECT_NAME})	
+	#SET_SOURCE_FILES_PROPERTIES(SwigInterface.i PROPERTIES SWIG_FLAGS "-includeall")
+	SWIG_ADD_LIBRARY(${CMAKE_PROJECT_NAME}_Java TYPE SHARED LANGUAGE java OUTPUT_DIR java/ SOURCES SwigInterface.i)
+	SWIG_LINK_LIBRARIES(${CMAKE_PROJECT_NAME}_Java ${CMAKE_PROJECT_NAME} )
+	install(TARGETS ${CMAKE_PROJECT_NAME}_Java 
+		ARCHIVE DESTINATION lib
+		LIBRARY DESTINATION lib
+		RUNTIME DESTINATION bin
+		COMPONENT MainLibrary  
+	)
+	install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/java/ DESTINATION java/ FILES_MATCHING PATTERN "*.java")
+
+
+	
+	#add_jar(${CMAKE_PROJECT_NAME}_Java.jar  SOURCES javaTest.java)
+    #install_jar(${CMAKE_PROJECT_NAME}_Java.jar  DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+endif()
+
+

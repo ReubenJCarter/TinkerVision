@@ -10,29 +10,29 @@
 
 namespace Visi
 {
-namespace Process
+namespace CompositeProcess
 {
 
 class Resize::Internal
 {
     private:
-        Upsample::Mode upsampleMode; 
-        Downsample::Mode downsampleMode; 
+        Process::Upsample::Mode upsampleMode; 
+        Process::Downsample::Mode downsampleMode; 
 
        
     public:
         Internal(); 
         void Run(ImageGPU* input, ImageGPU* output);
         void Run(Image* input, Image* output);
-        void SetUpsampleMode(Upsample::Mode m);
-        void SetDownsampleMode(Downsample::Mode m); 
+        void SetUpsampleMode(Process::Upsample::Mode m);
+        void SetDownsampleMode(Process::Downsample::Mode m); 
 };
 
 
 Resize::Internal::Internal()
 {
-    upsampleMode = Upsample::Mode::BILINEAR; 
-    downsampleMode = Downsample::Mode::BOX; 
+    upsampleMode = Process::Upsample::Mode::BILINEAR; 
+    downsampleMode = Process::Downsample::Mode::BOX; 
 
 }
 
@@ -54,12 +54,12 @@ void Resize::Internal::Run(Image* input, Image* output)
     
 }
 
-void Resize::Internal::SetUpsampleMode(Upsample::Mode m)
+void Resize::Internal::SetUpsampleMode(Process::Upsample::Mode m)
 {
     upsampleMode = m; 
 }
 
-void Resize::Internal::SetDownsampleMode(Downsample::Mode m)
+void Resize::Internal::SetDownsampleMode(Process::Downsample::Mode m)
 {
     downsampleMode = m; 
 }
@@ -86,12 +86,12 @@ void Resize::Run(Image* input, Image* output)
     internal->Run(input, output); 
 }
 
-void Resize::SetUpsampleMode(Upsample::Mode m)
+void Resize::SetUpsampleMode(Process::Upsample::Mode m)
 {
     internal->SetUpsampleMode(m); 
 }
 
-void Resize::SetDownsampleMode(Downsample::Mode m)
+void Resize::SetDownsampleMode(Process::Downsample::Mode m)
 {
     internal->SetDownsampleMode(m); 
 }

@@ -6,12 +6,12 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
-#include "Upsample.h"
-#include "Downsample.h"
+#include "../Process/Upsample.h"
+#include "../Process/Downsample.h"
 
 namespace Visi
 {
-namespace Process
+namespace CompositeProcess
 {
 	
 class VISI_EXPORT Resize
@@ -25,8 +25,8 @@ class VISI_EXPORT Resize
         ~Resize(); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
-        void SetUpsampleMode(Upsample::Mode m);
-        void SetDownsampleMode(Downsample::Mode m); 
+        void SetUpsampleMode(Process::Upsample::Mode m);
+        void SetDownsampleMode(Process::Downsample::Mode m); 
 };
 	
 }

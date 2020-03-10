@@ -102,6 +102,26 @@ if (USE_FFMPEG)
 	)
 endif()
 
+
+
+#Swig and other languages support 
+option(CREATE_JAVA_SUPPORT "Create java support" ON)
+option(CREATE_CSHARP_SUPPORT "Create CSHARP support" OFF)
+
+if (CREATE_JAVA_SUPPORT) #OR CREATE_CSHARP_SUPPORT)
+	find_package(SWIG REQUIRED)
+	include(${SWIG_USE_FILE})
+	set(CMAKE_SWIG_FLAGS)
+endif()
+
+if(CREATE_JAVA_SUPPORT)
+	find_package(JNI REQUIRED)
+	include_directories(${JNI_INCLUDE_DIRS})
+	include_directories(${JNI_LIBRARIES})
+	find_package(Java 1.8 REQUIRED )
+	include(UseJava)
+endif()
+
 #cmake dirs
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(src)
