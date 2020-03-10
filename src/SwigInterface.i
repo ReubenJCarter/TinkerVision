@@ -59,14 +59,14 @@
 #include "CompositeProcess/Resize.h"
 
 %}
-%feature(nspace);//seems to generate nice namespace packages in java 
-%pragma(java) jniclasspackage="Visi";
+//%feature(nspace);//seems to generate nice namespace packages in java but also break everything when building 
+//%pragma(java) jniclasspackage="Visi";
 
 #define VISI_EXPORT __declspec(dllimport)
 
 %include "windows.i"
 %include "std_string.i" 
-%include "pointer.i"
+%include "cpointer.i"
 
 %include "std_vector.i"
 namespace std{
