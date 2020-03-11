@@ -59,8 +59,30 @@
 #include "CompositeProcess/Resize.h"
 
 %}
-//%feature(nspace);//seems to generate nice namespace packages in java but also break everything when building 
-//%pragma(java) jniclasspackage="Visi";
+
+//put things into packages correctly and put the JNI class into the visi package
+%feature(nspace);//seems to generate nice namespace packages in java but also break everything when building 
+%pragma(java) jniclasspackage="Visi";
+
+
+
+//Solve the cPtr being protected problem
+//https://stackoverflow.com/questions/24166297/swig-java-how-to-add-a-method-to-a-swigtype-class
+//http://www.swig.org/Doc2.0/Java.html
+//http://www.swig.org/Doc2.0/Java.html
+SWIG_JAVABODY_PROXY(public, public, SWIGTYPE) 
+SWIG_JAVABODY_TYPEWRAPPER(public, public, public, SWIGTYPE) 
+
+
+
+//solves problems of not finding certain classes when using multiple packages
+//http://swig.10945.n7.nabble.com/Using-multiple-modules-and-packages-in-Java-td12215.html
+%typemap(javaimports) SWIGTYPE, SWIGTYPE * "import VisiJava.*;"
+%pragma(java) jniclassimports="import VisiJava.*;"
+%pragma(java) moduleimports="import VisiJava.*;"
+
+
+
 
 #define VISI_EXPORT __declspec(dllimport)
 
