@@ -46,6 +46,7 @@ set(LIBRARYSRCFILES
 	Process/MarkerBitExtract.cpp
 	Process/MarkerDictionary.cpp
 	Process/MedianFilter.cpp
+	Process/Mipmaps.cpp
 	Process/Morph.cpp
 	Process/NonMaximumEdgeSuppression.cpp
 	Process/Normalize.cpp
