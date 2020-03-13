@@ -3,6 +3,7 @@ set(LIBRARYSRCFILES
 	CompositeProcess/CannyEdgeDetect.cpp
 	CompositeProcess/CornerDetector.cpp
 	CompositeProcess/Resize.cpp
+	CompositeProcess/Sift.cpp
 
 	Core/BoundingBox.cpp
 	Core/ComputeShader.cpp

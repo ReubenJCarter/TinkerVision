@@ -25,6 +25,8 @@ class VISI_EXPORT ImageGPU
 	public:
 		ImageGPU(); 
         ~ImageGPU(); 
+        inline void AllocateLike(ImageGPU* referanceImage){Allocate(referanceImage->GetWidth(), referanceImage->GetHeight(), referanceImage->GetType());}
+        void AllocateLike(Image* referanceImage);
 		void Allocate(unsigned int w, unsigned int h, ImageType t);
         void Deallocate();
         unsigned int GetWidth();

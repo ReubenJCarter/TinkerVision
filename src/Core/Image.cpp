@@ -23,6 +23,11 @@ Image::~Image()
     Deallocate();
 }
 
+void Image::AllocateLike(ImageGPU* referanceImage)
+{
+    Allocate(referanceImage->GetWidth(), referanceImage->GetHeight(), referanceImage->GetType());
+}
+
 void Image::Allocate(unsigned int w, unsigned int h, ImageType t)
 {
     if(width == w && height == h && type == t)

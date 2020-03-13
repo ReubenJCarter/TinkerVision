@@ -41,6 +41,7 @@
 #include "CompositeProcess/CannyEdgeDetect.h"
 #include "CompositeProcess/CornerDetector.h"
 #include "CompositeProcess/ARUCODetector.h"
+#include "CompositeProcess/Sift.h"
 
 #include <iostream>
 #include <thread>
@@ -531,6 +532,21 @@ int main(int argc, char *argv[])
 			Visi::IO::ImageFile::Write(ss.str(), &(mmstackCPU[i]));
 			if(i > 3)
 				break; //break after saving first 4 images
+		}
+
+		//Sift
+		std::cout << "Sift\n"; 
+		Visi::CompositeProcess::Sift sift;
+		sift.Run(&imageGPU1, &imageGPU1);
+		std::vector<Visi::ImageGPU>* pyramid = sift.GetPyramid(); 
+
+		for(int i = 0; i < pyramid->size(); i++)
+		{
+			Visi::ImageGPU* py = &( pyramid->at(i) );
+			image2.Copy(py);
+			std::stringstream ss;
+			ss << "image22_0_" << i << ".png";
+			Visi::IO::ImageFile::Write(ss.str(), &image2 );
 		}
 
 		std::cout << "DONE\n";
