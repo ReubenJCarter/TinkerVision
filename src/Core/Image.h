@@ -30,7 +30,7 @@ class VISI_EXPORT Image
         inline unsigned int GetWidth() {return width;}
 		inline unsigned int GetHeight() {return height;}
         inline ImageType GetType() {return type;}
-        unsigned char* GetData() {return data;}
+        inline unsigned char* GetData() {return data;}
         void Copy(ImageGPU* image); 
         void Copy(Image* image); 
         bool IsSameDimensions(ImageGPU* image); 

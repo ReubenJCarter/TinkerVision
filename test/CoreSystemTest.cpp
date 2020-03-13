@@ -36,6 +36,7 @@
 #include "Process/Downsample.h"
 #include "Process/Upsample.h"
 #include "Process/StereoMatchSAD.h"
+#include "Process/Mipmaps.h"
 
 #include "CompositeProcess/CannyEdgeDetect.h"
 #include "CompositeProcess/CornerDetector.h"
@@ -44,6 +45,7 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include <sstream>
 
 
 int main(int argc, char *argv[])
@@ -505,6 +507,31 @@ int main(int argc, char *argv[])
 		upSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
 		Visi::IO::ImageFile::Write("image19_2Test.png", &image2);
+
+		//Mipmaps
+		std::cout << "Mipmaps\n"; 
+		Visi::Process::Mipmaps mmaps;
+		std::vector<Visi::ImageGPU> mmstack; 
+		std::vector<Visi::Image> mmstackCPU; 
+		mmaps.Run(&imageGPU1, &mmstack); 
+		for(int i = 0; i < mmstack.size(); i++)
+		{
+			std::stringstream ss;
+			ss << "image20_" << i << ".png";
+			image2.Copy(&(mmstack[i])); 
+			Visi::IO::ImageFile::Write(ss.str(), &image2);
+			if(i > 3)
+				break; //break after saving first 4 images
+		}
+		mmaps.Run(&image1, &mmstackCPU); 
+		for(int i = 0; i < mmstackCPU.size(); i++)
+		{
+			std::stringstream ss;
+			ss << "image21_" << i << ".png";
+			Visi::IO::ImageFile::Write(ss.str(), &(mmstackCPU[i]));
+			if(i > 3)
+				break; //break after saving first 4 images
+		}
 
 		std::cout << "DONE\n";
 		

@@ -133,7 +133,7 @@ void Mipmaps::Internal::Run(ImageGPU* input, std::vector<ImageGPU>* output) //ou
 
         output->at(i).Allocate(runningW, runningH, input->GetType()); 
 
-        computeShader.SetImage("inputImage", input);
+        computeShader.SetImage("inputImage", &(output->at(i-1)) );
         computeShader.SetImage("outputImage", &(output->at(i)), ComputeShader::WRITE_ONLY);
 
         glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(output->at(i).GetWidth(), output->at(i).GetHeight()), glm::i32vec2(16, 16)); 
@@ -144,7 +144,40 @@ void Mipmaps::Internal::Run(ImageGPU* input, std::vector<ImageGPU>* output) //ou
 
 void Mipmaps::Internal::Run(Image* input, std::vector<Image>* output)
 {
+    if(input->GetWidth() == 0 || input->GetHeight() == 0)
+    {
+        return; 
+    }
+    int smallestDim = (std::min)(input->GetHeight(), input->GetWidth());
+    int maxLevelsBelow = floor(log2((double)smallestDim));
+    output->resize(maxLevelsBelow + 1); 
+
+    Image* firstimage = &output->at(0);
+    firstimage->Copy(input); 
+
+    ParallelFor& pf = ParallelFor::GetInstance(); 
     
+    double runningW = output->at(0).GetWidth();
+    double runningH = output->at(0).GetHeight();
+    for(int i = 1; i <= maxLevelsBelow; i++)
+    {
+        runningW /= 2;
+        runningH /= 2;
+        output->at(i).Allocate(runningW, runningH, input->GetType()); 
+        Image* localInput = &(output->at(i-1));
+        Image* localOutput = &(output->at(i)); 
+        auto kernel = [this, localInput, localOutput](int x, int y)
+        {
+            glm::vec4 outpix = glm::vec4(0, 0, 0, 0); 
+            outpix += GetPixel(localInput, x*2,     y*2); 
+            outpix += GetPixel(localInput, x*2 + 1, y*2); 
+            outpix += GetPixel(localInput, x*2,     y*2 + 1); 
+            outpix += GetPixel(localInput, x*2 + 1, y*2 + 1); 
+            outpix /= 4.0f; 
+            SetPixel(localOutput, x, y, outpix); 
+        };
+        pf.Run(localOutput->GetWidth(), localOutput->GetHeight(), kernel);
+    }
 }
 
 
