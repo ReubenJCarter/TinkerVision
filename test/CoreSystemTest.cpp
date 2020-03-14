@@ -578,7 +578,37 @@ int main(int argc, char *argv[])
 			Visi::CompositeProcess::ARUCODetector arucoDetector;
 			Visi::ImageGPU inputGPU; 
 			inputGPU.Copy(&input);
-			arucoDetector.Run(&inputGPU);
+
+
+			std::vector<bool> bitsequence0 = {0, 0, 0, 0, 0, 0, 0, 0,
+											 0, 0, 0, 0, 0, 0, 0, 0,
+											 0, 1, 0, 1, 1, 0, 0, 0, 
+											 0, 0, 0, 1, 0, 0, 1, 0, 
+											 0, 1, 1, 1, 0, 0, 1, 0, 
+											 0, 1, 1, 1, 0, 1, 1, 0, 
+											 0, 1, 0, 1, 0, 1, 1, 0, 
+											 0, 0, 0, 0, 0, 0, 0, 0};
+											 
+			arucoDetector.AddDictionaryEntry(&bitsequence0, 8, 123); 
+
+			
+
+			std::vector<Visi::Contour> markerQuads; 
+			std::vector<int> markerIds;
+			arucoDetector.Run(&inputGPU, &markerQuads, &markerIds, false);
+			
+			
+			
+			Visi::Process::Renderer renderer;
+			for(int i = 0; i < markerQuads.size(); i++)
+			{
+				Visi::Color color(1, 0, 0); 
+				renderer.AddContour(&(markerQuads[i]), color, true, 4, true, true); 
+			}
+			
+			Visi::Image image2;
+			renderer.Run(&input, &image2); 
+			Visi::IO::ImageFile::Write("arcuo1Test.png", &image2); 
 		}
 		
 	}

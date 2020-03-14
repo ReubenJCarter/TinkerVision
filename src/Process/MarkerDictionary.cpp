@@ -25,6 +25,7 @@ class MarkerDictionary::Internal
         Internal(); 
         int Lookup(Image* input);
         void AddEntry(Image* im, int id); 
+        void SetMaxBitError(int mbe); 
 };
 
 MarkerDictionary::Internal::Internal()
@@ -34,8 +35,17 @@ MarkerDictionary::Internal::Internal()
 
 int MarkerDictionary::Internal::Lookup(Image* input)
 {
+    if(input->GetWidth() == 0 && input->GetHeight() == 0)
+    {
+        return -1;
+    }
+
     for(int d = 0; d < dict.size(); d++)
     {
+        if(input->GetWidth() != dict[d].im.GetWidth() && input->GetHeight() != dict[d].im.GetHeight())
+        {
+            continue; 
+        }
         //0 deg
         int missCount = 0; 
         bool match = true; 
@@ -168,6 +178,11 @@ void MarkerDictionary::Internal::AddEntry(Image* im, int id)
     e.id = id; 
 }
 
+void MarkerDictionary::Internal::SetMaxBitError(int mbe)
+{
+    maxBitError = mbe; 
+}
+
 
 
 
@@ -189,6 +204,11 @@ int MarkerDictionary::Lookup(Image* input)
 void MarkerDictionary::AddEntry(Image* im, int id)
 {
     internal->AddEntry(im, id);
+}
+
+void MarkerDictionary::SetMaxBitError(int mbe)
+{
+    internal->SetMaxBitError(mbe);
 }
 
 }

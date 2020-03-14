@@ -41,7 +41,7 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
     ParallelFor& pf = ParallelFor::GetInstance(); 
 
     //Allocate bit image
-    if(bitImages->size() < contours->size())    
+    if(bitImages->size() != contours->size())    
     {
         bitImages->resize(contours->size()); 
     }
@@ -136,9 +136,9 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
             }   
             sum /= count; 
             if(sum.r > 0.5f)
-                SetPixel(bitImage, gx, gy, glm::vec4(1, 1, 1, 1));  
+                SetPixelUI(bitImage, gx, gy, glm::ivec4(255, 255, 255, 255));  
             else
-                SetPixel(bitImage, gx, gy, glm::vec4(0, 0, 0, 1));  
+                SetPixelUI(bitImage, gx, gy, glm::vec4(0, 0, 0, 1));  
         };
 
         pf.Run(gridW, gridH, kernel);

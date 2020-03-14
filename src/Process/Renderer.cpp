@@ -301,6 +301,19 @@ void Renderer::AddCircle(Vec2 centre, float radius, Color color, bool filled, fl
     internal->AddCircle(glm::vec2(centre.x, centre.y), radius, glm::vec4(color.r, color.g, color.b, color.a), filled, borderWidth); 
 }
 
+void Renderer::AddContour(Contour* contour, Color color, bool renderVerts, float vertRad, bool renderLines, bool closed)
+{
+    if(renderVerts)
+    {
+        for(int j = 0; j < (*contour).verticies.size(); j++)
+        {
+            AddCircle( (*contour).verticies[j], vertRad, color, false, 1);
+        }
+    } 
+    if(renderLines)
+        AddPolyLine(&((*contour).verticies), color, 1, closed); 
+}
+
 void Renderer::AddContours(std::vector<Contour>* contours, bool renderVerts, float vertRad, bool renderLines, bool closed)
 {
     std::default_random_engine randgenerator;

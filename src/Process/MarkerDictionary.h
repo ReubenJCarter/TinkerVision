@@ -22,6 +22,7 @@ class VISI_EXPORT MarkerDictionary
         ~MarkerDictionary(); 
         void AddEntry(Image* im, int id); 
         int Lookup(Image* input); 
+        void SetMaxBitError(int mbe); 
 };
 	
 }
