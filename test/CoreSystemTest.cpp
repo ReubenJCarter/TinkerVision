@@ -581,15 +581,15 @@ int main(int argc, char *argv[])
 
 
 			std::vector<bool> bitsequence0 = {0, 0, 0, 0, 0, 0, 0, 0,
-											 0, 0, 0, 0, 0, 0, 0, 0,
-											 0, 1, 0, 1, 1, 0, 0, 0, 
-											 0, 0, 0, 1, 0, 0, 1, 0, 
-											 0, 1, 1, 1, 0, 0, 1, 0, 
-											 0, 1, 1, 1, 0, 1, 1, 0, 
-											 0, 1, 0, 1, 0, 1, 1, 0, 
-											 0, 0, 0, 0, 0, 0, 0, 0};
-											 
-			arucoDetector.AddDictionaryEntry(&bitsequence0, 8, 123); 
+											  0, 0, 0, 0, 0, 0, 0, 0,
+											  0, 1, 0, 1, 1, 0, 0, 0, 
+											  0, 0, 0, 1, 0, 0, 1, 0, 
+											  0, 1, 1, 1, 0, 0, 1, 0, 
+											  0, 1, 1, 1, 0, 1, 1, 0, 
+											  0, 1, 0, 1, 0, 1, 1, 0, 
+											  0, 0, 0, 0, 0, 0, 0, 0};
+			int markerId0 = 123; 								 
+			arucoDetector.AddDictionaryEntry(&bitsequence0, 8, markerId0); 
 
 			
 
@@ -602,7 +602,10 @@ int main(int argc, char *argv[])
 			Visi::Process::Renderer renderer;
 			for(int i = 0; i < markerQuads.size(); i++)
 			{
-				Visi::Color color(1, 0, 0); 
+				Visi::Color color; 
+				if(markerIds[i] == markerId0)
+					color = Visi::Color(1, 0, 0); 
+				
 				renderer.AddContour(&(markerQuads[i]), color, true, 4, true, true); 
 			}
 			

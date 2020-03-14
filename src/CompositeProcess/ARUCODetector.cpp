@@ -97,14 +97,14 @@ void ARUCODetector::Internal::Run(ImageGPU* input, std::vector<Visi::Contour>* m
             markerIds->push_back(id); 
         } 
     }
-    
+    /*
     for(int i = 0; i < bitImages.size(); i++)
     {
         std::string fn = "bitImage";
         fn += std::to_string(i); 
         fn += ".png"; 
         Visi::IO::ImageFile::Write(fn, &bitImages[i]); 
-    }
+    }*/
     
     /*
     render.AddContours(&contoursQuads);
@@ -135,8 +135,6 @@ void ARUCODetector::Internal::AddDictionaryEntry(std::vector<bool>* bitsequence,
         }
     }
     markerDictionary.AddEntry(&entry, id); 
-
-    Visi::IO::ImageFile::Write("lobbedin.png", &entry); 
 }
 
 void ARUCODetector::Internal::SetMaxBitError(int mbe)

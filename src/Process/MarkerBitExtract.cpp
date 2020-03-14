@@ -5,6 +5,8 @@
 
 #include "../Core/ParallelFor.h"
 
+#include "OtsuThreshold.h"
+
 #include <string>
 #include <iostream>
 #include <map>
@@ -17,6 +19,8 @@ namespace Process
 class MarkerBitExtract::Internal
 {
     private:
+        OtsuThreshold otsuThreshold; 
+        
         float marginSize; 
         int gridW;
         int gridH;
@@ -110,6 +114,7 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
                                            ); 
         
         Image* bitImage = &(bitImages->at(c)); 
+
 
         //run grid cell value kernel
         auto kernel = [this, input, contours, bitImages, gridCellSizePx, minX, maxX, bitImage](int gx, int gy)

@@ -51,6 +51,7 @@ set(LIBRARYSRCFILES
 	Process/Morph.cpp
 	Process/NonMaximumEdgeSuppression.cpp
 	Process/Normalize.cpp
+	Process/OtsuThreshold.cpp
 	Process/Perspective3Point.cpp
 	Process/Renderer.cpp
 	Process/RGBToHSV.cpp
