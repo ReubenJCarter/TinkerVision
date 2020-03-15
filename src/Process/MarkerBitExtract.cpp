@@ -49,6 +49,9 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
     {
         bitImages->resize(contours->size()); 
     }
+
+    //Allocate histogram for the otsu threshold
+    std::vector<int> hist(256); 
     
     //for each contour
     for(int c = 0; c < contours->size(); c++)
@@ -109,15 +112,88 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
         }
 
         //compute the number of samples to take per cell 
-        glm::vec2 gridCellSizePx = glm::vec2( (std::max)(glm::length(maxX[0] - minX[0]), glm::length(maxX[1] - minX[1])) / gridW,
-                                              (std::max)(glm::length(minX[1] - minX[0]), glm::length(maxX[1] - maxX[0])) / gridH
-                                           ); 
+        glm::ivec2 gridSize = glm::ivec2((std::max)(glm::length(maxX[0] - minX[0]), glm::length(maxX[1] - minX[1])),
+                                         (std::max)(glm::length(minX[1] - minX[0]), glm::length(maxX[1] - maxX[0]))); 
+
+        glm::vec2 gridCellSizePx = glm::vec2((std::max)(glm::length(maxX[0] - minX[0]), glm::length(maxX[1] - minX[1])) / gridW,
+                                             (std::max)(glm::length(minX[1] - minX[0]), glm::length(maxX[1] - maxX[0])) / gridH); 
         
         Image* bitImage = &(bitImages->at(c)); 
+        
+       
+        //
+        //Build otsu Threshold
+        ////Information from here: http://www.labbookpages.co.uk/software/imgProc/otsuThreshold.html
+        double otsuThreshold;
 
+        {
+            //Zero Histogram
+            for(int i = 0; i < 256; i++)
+            {
+                hist[i] = 0; 
+            }
+            //Scan whoel aruco region of image and extract pixels
+            int totalPixels = 0; 
+            for(int j = 0; j < gridSize.y; j++)
+            {
+                for(int i = 0; i < gridSize.x; i++)
+                {
+                    glm::vec2 uv = glm::vec2((float)i / gridSize.x, (float)j / gridSize.y); 
+                    glm::vec2 a = minX[0] + (minX[1] - minX[0]) * uv.y;
+                    glm::vec2 b = maxX[0] + (maxX[1] - maxX[0]) * uv.y;
+                    glm::vec2 imCoord = a + (b - a ) * uv.x; 
+                    glm::vec4 pix = GetPixelBilinear(input, imCoord.x, imCoord.y); 
+                    int r = pix.x * 255; 
+                    if(r > 255) r = 255;
+                    if(r < 0) r = 0; 
+                    hist[r]++; 
+                    totalPixels++; 
+                }
+            }
+            //Sum of the pixels
+            double pixelSum = 0; //this will get very big !
+            for(int i =0; i < 256; i++)
+            {
+                pixelSum += i * hist[i]; 
+            }
+            
+            //Compute the actual threshold
+            double sumB = 0;
+            int wB = 0;
+            int wF = 0;
 
+            double varMax = 0;
+            int threshold = 0;
+
+            for (int t = 0; t < 256; t++) 
+            {
+                wB += hist[t];// Weight Background
+                if (wB == 0) continue;
+
+                wF = totalPixels - wB; // Weight Foreground
+                if (wF == 0) break;
+
+                sumB += (double) (t * hist[t]);
+
+                double mB = sumB / wB;// Mean Background
+                double mF = (pixelSum - sumB) / wF;// Mean Foreground
+
+                // Calculate Between Class Variance
+                double varBetween = (double)wB * (double)wF * (mB - mF) * (mB - mF);
+
+                // Check if new maximum found
+                if (varBetween > varMax) 
+                {
+                    varMax = varBetween;
+                    threshold = t;
+                }
+            }
+
+            otsuThreshold = (double)threshold / 255.0f;
+        }
+        
         //run grid cell value kernel
-        auto kernel = [this, input, contours, bitImages, gridCellSizePx, minX, maxX, bitImage](int gx, int gy)
+        auto kernel = [this, input, contours, gridCellSizePx, minX, maxX, bitImage, otsuThreshold](int gx, int gy)
         {
             glm::vec2 gridCoordStart = glm::vec2((float)gx / (float)gridW, (float)gy / (float)gridH); 
             glm::vec2 gridCoordEnd = glm::vec2(((float)gx+1) / (float)gridW, ((float)gy+1) / (float)gridH); 
@@ -140,13 +216,14 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
                 }
             }   
             sum /= count; 
-            if(sum.r > 0.5f)
+            if(sum.r > otsuThreshold)
                 SetPixelUI(bitImage, gx, gy, glm::ivec4(255, 255, 255, 255));  
             else
                 SetPixelUI(bitImage, gx, gy, glm::vec4(0, 0, 0, 1));  
         };
 
         pf.Run(gridW, gridH, kernel);
+        
     }
 }
 
