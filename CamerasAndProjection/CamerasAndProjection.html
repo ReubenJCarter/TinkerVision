@@ -2,14 +2,25 @@
 <html>
 <head>
 <title>Visi: Cameras and Projection</title>
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
 </head>
 <body>
+
+
 
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 
 <h1>Cameras, projection and the problem of 2D to 3D</h1>
+
+<h2>1. The pinhole camera model and homogeneous image coordinates</h2>
 
 Start with a point in 3D world space \(P\). 
 Our pinhole camera is somwhere in the world, with a position and a rotation and from this, a transform which can be expressed as a matrix.
@@ -71,6 +82,13 @@ We must divide the horizontal image coordinate by the aspect if we want to norma
 The pricipal point will most likely be \(0.5, 0.5\) which is the middle of the image. 
 This would have the effect of making the range of \(u_{y}\) zero to one.  
 (Consider how the image coordinates actually relate to the image pixels.)
+
+<img src="diag2.svg" alt="diagram" height="400" class=" center" /><br>
+
+<h2>2. The PnP problem, and finding camera pose</h2>
+
+Oftern we need to find the pose of a camera from a series of image coordinates which map to known 3D points in world space.
+This is how many marker AR based applications work. 
 
 
 </body>
