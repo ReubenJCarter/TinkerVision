@@ -22,7 +22,7 @@
 
 <h2>1. The pinhole camera model and homogeneous image coordinates</h2>
 
-Start with a point in 3D world space \(P\). 
+Start with a point in 3D world space \(p\). 
 Our pinhole camera is somwhere in the world, with a position and a rotation and from this, a transform which can be expressed as a matrix.
 The pose matrix is the inverse of the cameras world space transform, and when applied to a point in world space, moves it to the view space. 
 (imagine looking at the world space relitive to the camera instead, where the camera is the origin, that is what I mean with the view space).
@@ -86,9 +86,32 @@ This would have the effect of making the range of \(u_{y}\) zero to one.
 <img src="diag2.svg" alt="diagram" height="400" class=" center" /><br>
 
 <h2>2. The PnP problem, and finding camera pose</h2>
-
-Oftern we need to find the pose of a camera from a series of image coordinates which map to known 3D points in world space.
+<h3>2.1 P3P</h3>
+Often we need to find the pose of a camera from a series of image coordinates which map to known 3D points in world space.
 This is how many marker AR based applications work. 
+It turns out that given at least 3 sets of 2D homogeneous image coordinates and 3D worldspace point pairs, it is possible to extract the pose of the camera. 
+This subset of the PnP problem is called the P3P poblem. 
+Lets look at a particular application of pose from a square marker. 
+Take a rightangled unit lengthed sidded triangle in worldspace and its corosponding homogeneous coordinates. 
+
+<img src="diag3.svg" alt="diagram" height="400" class=" center" /><br>
+
+$$
+\begin{aligned}
+v_{0} = \begin{bmatrix} \mathbf{R} & \vec{t} \end{bmatrix} p_{0} \qquad
+v_{1} = \begin{bmatrix} \mathbf{R} & \vec{t} \end{bmatrix} p_{1} \qquad
+v_{2} = \begin{bmatrix} \mathbf{R} & \vec{t} \end{bmatrix} p_{2}\\
+
+\left|v_{1}-v_{0}\right|=1 \qquad
+\left|v_{2}-v_{0}\right|=1 \qquad
+\left|v_{2}-v_{1}\right|=\sqrt{2}\\
+
+\left|h_{1}v_{1z}-h_{0}v_{0z}\right|=1 \qquad
+\left|h_{2}v_{2z}-h_{0}v_{0z}\right|=1 \qquad
+\left|h_{2}v_{2z}-h_{1}v_{1z}\right|=\sqrt{2}
+\end{aligned}
+$$
+
 
 
 </body>
