@@ -83,8 +83,6 @@ void ARUCODetector::Internal::Run(ImageGPU* input, std::vector<Visi::Contour>* m
 
     temp[1].Copy(input); 
     markerBitExtract.Run(&temp[1], &contoursQuads, &bitImages);
-    //markerBitExtract.Run(&temp[0], &contoursQuads, &bitImages); //Do this on input image or threshold image??
-    //I think this should be the origional image nand then maybe the markerbitextract does some cleaver different filtering and thresh
 
     markerQuads->clear();
     markerIds->clear();

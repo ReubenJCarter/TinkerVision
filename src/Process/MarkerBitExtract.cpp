@@ -192,6 +192,7 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
             otsuThreshold = (double)threshold / 255.0f;
         }
         
+        //extract marker bits
         //run grid cell value kernel
         auto kernel = [this, input, contours, gridCellSizePx, minX, maxX, bitImage, otsuThreshold](int gx, int gy)
         {
