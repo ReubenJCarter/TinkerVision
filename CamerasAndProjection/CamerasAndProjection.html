@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Visi: Cameras and Projection</title>
+</head>
+<body>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<h1>Cameras, projection and the problem of 2D to 3D</h1>
+
+Start with a point in 3D world space \(P\). 
+Our pinhole camera is somwhere in the world, with a position and a rotation and from this, a transform which can be expressed as a matrix.
+The pose matrix is the inverse of the cameras world space transform, and when applied to a point in world space, moves it to the view space. 
+(imagine looking at the world space relitive to the camera instead, where the camera is the origin, that is what I mean with the view space).
+
+$$ 
+\vec{v} = \begin{bmatrix} \mathbf{R} & \vec{t} \end{bmatrix} * \vec{p}
+$$
+
+The matrix \(\begin{bmatrix} \mathbf{R} & \vec{t} \end{bmatrix}\) is the cameras pose matrix, and is made up of a rotation \(\mathbf{R}\), and a translation \(t\). 
+It is like taking everything in the world (including the point \(p\)) and rotating it all together so that the camera faces forwards (whatever we 
+end up defining forwards to be...), and then moving everything so that the camera is positioned at zero. 
+Once the point is in view space, we then need to project it onto a plane to form the image. 
+Imagine the ray formed by each point as the light from it goes into the camera and hits a pixel on the sensor. 
+Before we find the exact position in the image the ray hits, it is extremelly useful to first transform the point onto a plane at distance 1 away from the camera position. 
+This is called the homogeneous image coordinate. 
+This is very simply achived in view space by dividing each view space posints components by the z component.  
+
+$$ 
+\vec{h} = \begin{bmatrix} h_{x}\\h_{y}\\1 \end{bmatrix} =\begin{bmatrix} v_{x} / v_{z} \\ v_{y} / v_{z} \\ v_{z} / v_{z} \end{bmatrix}
+$$
+
+It is extremelly useful to store this result for other calculations because all pinhole cameras, no matter what parameters (field of view etc. ) share this quality (the homogenious image coordinates will all be the same). 
+
+To move the homogeneous image coordinate \(h\) into actual image coordinates we use another matrix that is called the intrinsic camera matrix. 
+This matrix represents the internal properties of the camera.
+There are many different models for this, but a simple one given here includes the cameras length and principal point.
+A full model can also include the skew factor, pixel scales in each axis of the camera. 
+
+$$ 
+\vec{u}=\begin{bmatrix} L & 0 & c_{x}\\ 0 & L & c_{y} \\ 0 & 0 & 1 \end{bmatrix} * 
+\vec{h}
+$$
+
+The focal length can be though of as the distance of the image plane from the origin of the camera. 
+It can also be related to the field of view of the camera \(f\). 
+
+$$
+L = \frac{1}{2 * tan(f / 2)}
+$$
+
+Lets assume that the image coordinates are normalized vertically, and that the field of view extends its full range over the image vertically. 
+The \(c_{x}\) and \(c_{y}\) terms are the principal point, which is the coordinate of the centre of the image (in image space coordinates). 
+Lets look at what happens when multiplying a homogeneous image coordinate by this intrinsic camera matrix. 
+
+$$
+\begin{aligned}
+u_{x} &= L * h_{x} + 1 * c_{x},\\
+u_{y} &= L * h_{y} + 1 * c_{y},\\
+u_{z} &= 1
+\end{aligned}
+$$ 
+
+This gives us a normalized image coordinate \(u_{y}\). 
+If the images was square the coordinates would be normalized both horizonrtally and vertically.
+However the final image may have an aspect ratio not equal to 1. 
+We must divide the horizontal image coordinate by the aspect if we want to normalized horizontally. 
+The pricipal point will most likely be \(0.5, 0.5\) which is the middle of the image. 
+This would have the effect of making the range of \(u_{y}\) zero to one.  
+(Consider how the image coordinates actually relate to the image pixels.)
+
+
+</body>
+</html>
