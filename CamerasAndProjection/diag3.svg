@@ -14,7 +14,7 @@
    viewBox="0 0 135.46666 92.604308"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="diag3.svg">
   <defs
      id="defs2" />
@@ -26,16 +26,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4142136"
-     inkscape:cx="230.75932"
+     inkscape:cx="115.85447"
      inkscape:cy="261.92873"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
-     inkscape:window-width="1920"
-     inkscape:window-height="986"
-     inkscape:window-x="-11"
-     inkscape:window-y="-11"
+     inkscape:window-width="2560"
+     inkscape:window-height="1377"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata5">
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -246,5 +246,38 @@
        d="M 41.095667,276.15938 20.190103,286.18514"
        id="path909"
        inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05556631px;line-height:1.25;font-family:Constantia;-inkscape-font-specification:Constantia;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458374"
+       x="104.39552"
+       y="258.08548"
+       id="text849"><tspan
+         sodipodi:role="line"
+         id="tspan847"
+         x="104.39552"
+         y="258.08548"
+         style="stroke-width:0.26458374">1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05556631px;line-height:1.25;font-family:Constantia;-inkscape-font-specification:Constantia;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458374"
+       x="98.595764"
+       y="235.07355"
+       id="text853"><tspan
+         sodipodi:role="line"
+         id="tspan851"
+         x="98.595764"
+         y="235.07355"
+         style="stroke-width:0.26458374">1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05556631px;line-height:1.25;font-family:Constantia;-inkscape-font-specification:Constantia;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458374"
+       x="113.56288"
+       y="234.88646"
+       id="text857"><tspan
+         sodipodi:role="line"
+         id="tspan855"
+         x="113.56288"
+         y="234.88646"
+         style="stroke-width:0.26458374">sqrt 2</tspan></text>
   </g>
 </svg>

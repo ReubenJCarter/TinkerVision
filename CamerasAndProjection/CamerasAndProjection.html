@@ -94,10 +94,13 @@ This subset of the PnP problem is called the P3P poblem.
 Lets look at a particular application of pose from a square marker. 
 Take a rightangled unit lengthed sidded triangle in worldspace and its corosponding homogeneous coordinates. 
 
-<img src="diag3.svg" alt="diagram" height="400" class=" center" /><br>
+<img src="diag3.svg" alt="diagram" height="300" class=" center" /><br>
+
+We define the length of each side of the triangle to be 1, 1, \(sqrt(2)\), and the following relationships hold.
 
 $$
 \begin{aligned}
+
 v_{0} = \begin{bmatrix} \mathbf{R} & \vec{t} \end{bmatrix} p_{0} \qquad
 v_{1} = \begin{bmatrix} \mathbf{R} & \vec{t} \end{bmatrix} p_{1} \qquad
 v_{2} = \begin{bmatrix} \mathbf{R} & \vec{t} \end{bmatrix} p_{2}\\
@@ -109,8 +112,10 @@ v_{2} = \begin{bmatrix} \mathbf{R} & \vec{t} \end{bmatrix} p_{2}\\
 \left|h_{1}v_{1z}-h_{0}v_{0z}\right|=1 \qquad
 \left|h_{2}v_{2z}-h_{0}v_{0z}\right|=1 \qquad
 \left|h_{2}v_{2z}-h_{1}v_{1z}\right|=\sqrt{2}
+
 \end{aligned}
 $$
+
 
 
 
