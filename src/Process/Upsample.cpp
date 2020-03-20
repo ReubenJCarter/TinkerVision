@@ -145,11 +145,6 @@ void Upsample::Internal::Run(Image* input, Image* output)
         return;
     }
 
-    if(output->GetType() != input->GetType()) 
-    {
-        output->Allocate(output->GetWidth(), output->GetHeight(), input->GetType()); 
-    }
-    
     ParallelFor& pf = ParallelFor::GetInstance(); 
 
     auto kernel = [this, input, output](int x, int y)
