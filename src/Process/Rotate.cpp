@@ -108,23 +108,23 @@ void Rotate::Internal::Run(Image* input, Image* output)
 
 Rotate::Rotate()
 {
-
+    internal = new Internal; 
 
 }
 
 Rotate::~Rotate()
 {
-
+    delete internal; 
 }
 
 void Rotate::Run(ImageGPU* input, ImageGPU* output)
 {
-
+    internal->Run(input, output); 
 }
 
 void Rotate::Run(Image* input, Image* output)
 {
-
+    internal->Run(input, output); 
 }
 	
 }
