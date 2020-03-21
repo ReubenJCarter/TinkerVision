@@ -33,7 +33,7 @@ std::map<ImageType, ComputeShader> Rotate::Internal::computeShaders;
 
 std::string Rotate::Internal::shaderSrc = R"(
 
-layout(rgba32f, binding=0) writeonly uniform image2D outputImage;
+layout( binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 const int MODE_FULL = 0; 
@@ -65,10 +65,7 @@ void Rotate::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight())
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
     
     ImageType inputType = input->GetType();
 
@@ -85,10 +82,7 @@ void Rotate::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void Rotate::Internal::Run(Image* input, Image* output)
 {
-    if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight())
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
     
     ParallelFor& pf = ParallelFor::GetInstance(); 
 

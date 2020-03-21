@@ -37,6 +37,10 @@ class VISI_EXPORT Image
         void Copy(Image* image); 
         bool IsSameDimensions(ImageGPU* image); 
         bool IsSameDimensions(Image* image); 
+        bool IsSameSize(ImageGPU* image); 
+        bool IsSameSize(Image* image); 
+        bool IsSameType(ImageGPU* image); 
+        bool IsSameType(Image* image); 
 };
 	
 }

@@ -33,7 +33,7 @@ std::map<ImageType, ComputeShader> ChannelMux::Internal::computeShaders;
 
 std::string ChannelMux::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout( binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 uniform int channel;

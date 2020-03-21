@@ -168,5 +168,25 @@ bool ImageGPU::IsSameDimensions(Image* image)
 {
     return image->GetWidth() == width && image->GetHeight() == height && image->GetType() == type; 
 }
+
+bool ImageGPU::IsSameSize(ImageGPU* image)
+{
+    return image->GetWidth() == width && image->GetHeight() == height; 
+}
+
+bool ImageGPU::IsSameSize(Image* image)
+{
+    return image->GetWidth() == width && image->GetHeight() == height; 
+}
+
+bool ImageGPU::IsSameType(ImageGPU* image)
+{
+    return image->GetType() == type; 
+}
+
+bool ImageGPU::IsSameType(Image* image)
+{
+    return image->GetType() == type; 
+}
 	
 }

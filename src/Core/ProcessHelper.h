@@ -8,6 +8,8 @@
 
 #include "Image.h"
 
+#include "ImageGPU.h"
+
 
 namespace Visi
 {
@@ -366,5 +368,72 @@ inline void SetPixelUI(Image* image, int x, int y, glm::ivec4 v)
     }
 }
 
+
+inline void ReallocateIfNotSameSize(Image* im, int szX, int szY, ImageType ty)
+{
+    if(im->GetWidth() != szX || im->GetHeight() != szY)
+    {
+        im->Allocate(szX, szY, ty); 
+    }
+}
+
+inline void ReallocateIfNotSameSize(ImageGPU* im, int szX, int szY, ImageType ty)
+{
+    if(im->GetWidth() != szX || im->GetHeight() != szY)
+    {
+        im->Allocate(szX, szY, ty); 
+    }
+}
+
+
+inline void ReallocateIfNotSameSize(Image* im, Image* likeImage)
+{
+    if(!im->IsSameSize(likeImage))
+    {
+        im->Allocate(likeImage->GetWidth(), likeImage->GetHeight(), likeImage->GetType()); 
+    }
+}
+
+inline void ReallocateIfNotSameSize(ImageGPU* im, ImageGPU* likeImage)
+{
+    if(!im->IsSameSize(likeImage))
+    {
+        im->Allocate(likeImage->GetWidth(), likeImage->GetHeight(), likeImage->GetType()); 
+    }
+}
+
+
+inline void ReallocateIfNotSameSize(Image* im, Image* likeImage, ImageType ty)
+{
+    if(!im->IsSameSize(likeImage))
+    {
+        im->Allocate(likeImage->GetWidth(), likeImage->GetHeight(), ty); 
+    }
+}
+
+inline void ReallocateIfNotSameSize(ImageGPU* im, ImageGPU* likeImage, ImageType ty)
+{
+    if(!im->IsSameSize(likeImage))
+    {
+        im->Allocate(likeImage->GetWidth(), likeImage->GetHeight(), ty); 
+    }
+}
+
+
+inline void ReallocateSame(Image* im, Image* likeImage)
+{
+    if(!im->IsSameDimensions(likeImage))
+    {
+        im->Allocate(likeImage->GetWidth(), likeImage->GetHeight(), likeImage->GetType()); 
+    }
+}
+
+inline void ReallocateSame(ImageGPU* im, ImageGPU* likeImage)
+{
+    if(!im->IsSameDimensions(likeImage))
+    {
+        im->Allocate(likeImage->GetWidth(), likeImage->GetHeight(), likeImage->GetType()); 
+    }
+}
 
 }

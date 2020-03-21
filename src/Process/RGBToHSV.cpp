@@ -31,7 +31,7 @@ std::map<ImageType, ComputeShader> RGBToHSV::Internal::computeShaders;
 //http://www.chilliant.com/rgb2hsv.html
 std::string RGBToHSV::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout( binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 float Epsilon = 1e-10;
@@ -79,10 +79,7 @@ void RGBToHSV::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
 
     ImageType inputType = input->GetType();
 

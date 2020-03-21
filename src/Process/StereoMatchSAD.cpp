@@ -122,12 +122,8 @@ void StereoMatchSAD::Internal::Run(ImageGPU* inputL, ImageGPU* inputR, ImageGPU*
         std::cout << "Visi:StereoMatchSAD:inputL is not the same dimentions as inputR\n";
         return;
     }
-
-    if(output->GetWidth() != inputL->GetWidth() || 
-       output->GetHeight() != inputL->GetHeight())
-    {
-        output->Allocate(inputL->GetWidth(), inputL->GetHeight(), ImageType::GRAYSCALE16); 
-    }
+ 
+    ReallocateIfNotSameSize(output, inputL, ImageType::GRAYSCALE16); 
     
     ImageType inputType = inputL->GetType();
 
@@ -158,11 +154,7 @@ void StereoMatchSAD::Internal::Run(Image* inputL, Image* inputR, Image* output)
         return;
     }
 
-    if(output->GetWidth() != inputL->GetWidth() || 
-       output->GetHeight() != inputL->GetHeight() )
-    {
-        output->Allocate(inputL->GetWidth(), inputL->GetHeight(), ImageType::GRAYSCALE16); 
-    }
+    ReallocateIfNotSameSize(output, inputL, ImageType::GRAYSCALE16); 
     
     ParallelFor& pf = ParallelFor::GetInstance(); 
 

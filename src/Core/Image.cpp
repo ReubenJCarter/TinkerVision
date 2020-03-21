@@ -193,6 +193,8 @@ void Image::Copy(Image* image)
     
 }
 
+
+
 bool Image::IsSameDimensions(ImageGPU* image)
 {
     return image->GetWidth() == width && image->GetHeight() == height && image->GetType() == type; 
@@ -202,5 +204,34 @@ bool Image::IsSameDimensions(Image* image)
 {
     return image->GetWidth() == width && image->GetHeight() == height && image->GetType() == type; 
 }
+
+
+
+
+bool Image::IsSameSize(ImageGPU* image)
+{
+    return image->GetWidth() == width && image->GetHeight() == height; 
+}
+
+bool Image::IsSameSize(Image* image)
+{
+    return image->GetWidth() == width && image->GetHeight() == height; 
+}
+
+
+
+
+bool Image::IsSameType(ImageGPU* image)
+{
+    return image->GetType() == type; 
+}
+
+bool Image::IsSameType(Image* image)
+{
+    return image->GetType() == type; 
+}
 	
+
+
+    
 }

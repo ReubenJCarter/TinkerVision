@@ -88,12 +88,8 @@ void InRange::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(output->GetWidth() != input->GetWidth() || 
-       output->GetHeight() != input->GetHeight() || 
-       output->GetType() != ImageType::GRAYSCALE8)
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
-    }
+    
+    ReallocateIfNotSameSize(output, input, ImageType::GRAYSCALE8); 
 
     ImageType inputType = input->GetType();
 
@@ -114,12 +110,7 @@ void InRange::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void InRange::Internal::Run(Image* input, Image* output)
 {
-    if(output->GetWidth() != input->GetWidth() || 
-       output->GetHeight() != input->GetHeight() || 
-       output->GetType() != ImageType::GRAYSCALE8)
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
-    }
+    ReallocateIfNotSameSize(output, input, ImageType::GRAYSCALE8); 
     
     ParallelFor& pf = ParallelFor::GetInstance(); 
 

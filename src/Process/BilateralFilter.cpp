@@ -35,7 +35,7 @@ std::map<ImageType, ComputeShader> BilateralFilter::Internal::computeShaders;
 //https://www.shadertoy.com/view/4dfGDH
 std::string BilateralFilter::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 uniform float sigma; 
@@ -69,10 +69,7 @@ void BilateralFilter::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
 
     ImageType inputType = input->GetType();
 
@@ -91,11 +88,8 @@ void BilateralFilter::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void BilateralFilter::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
-    
+    ReallocateIfNotSameSize(output, input); 
+
     unsigned char* inputData = input->GetData(); 
     unsigned char* outputData = output->GetData(); 
     for(int i = 0; i < input->GetHeight(); i++)

@@ -30,10 +30,8 @@ Normalize::Internal::Internal()
 
 void Normalize::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    
+    ReallocateIfNotSameSize(output, input); 
     
     glm::vec4 minI;
     glm::vec4 maxI; 

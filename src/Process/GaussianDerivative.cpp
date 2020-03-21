@@ -60,7 +60,7 @@ std::map<ImageType, ComputeShader> GaussianDerivative::Internal::computeShadersV
 
 std::string GaussianDerivative::Internal::shaderHorizontalSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 layout (r32f, binding=2) readonly uniform image2D guassFunc; 
@@ -88,7 +88,7 @@ void main()
 
 std::string GaussianDerivative::Internal::shaderVerticalSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 layout (r32f, binding=2) readonly uniform image2D guassFunc; 
@@ -131,12 +131,7 @@ void GaussianDerivative::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(output->GetWidth() != input->GetWidth() || 
-       output->GetHeight() != input->GetHeight() || 
-       output->GetType() != ImageType::RGBA32F)
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::RGBA32F); 
-    }
+    ReallocateIfNotSameSize(output, input, ImageType::RGBA32F); 
 
     if(sigma == 0)
         return; 
@@ -196,10 +191,7 @@ void GaussianDerivative::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void GaussianDerivative::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input, ImageType::RGBA32F); 
     
     unsigned char* inputData = input->GetData(); 
     unsigned char* outputData = output->GetData(); 

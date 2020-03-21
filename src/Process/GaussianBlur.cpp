@@ -50,7 +50,7 @@ std::map<ImageType, ComputeShader> GaussianBlur::Internal::computeShadersVertica
 
 std::string GaussianBlur::Internal::shaderHorizontalSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout( binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 layout (r32f, binding=2) readonly uniform image2D guassFunc; 
@@ -85,7 +85,7 @@ void main()
 
 std::string GaussianBlur::Internal::shaderVerticalSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout( binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 layout (r32f, binding=2) readonly uniform image2D guassFunc; 
@@ -135,10 +135,7 @@ void GaussianBlur::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
 
     if(sigma == 0)
         return; 
@@ -183,10 +180,7 @@ void GaussianBlur::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void GaussianBlur::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
     
     unsigned char* inputData = input->GetData(); 
     unsigned char* outputData = output->GetData(); 

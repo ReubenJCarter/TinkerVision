@@ -65,10 +65,8 @@ Renderer::Internal::Internal()
 
 void Renderer::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    
+    ReallocateIfNotSameSize(output, input); 
     
     //copy input image to output
     output->Copy(input); 

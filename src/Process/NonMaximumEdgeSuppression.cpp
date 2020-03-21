@@ -30,7 +30,7 @@ std::map<ImageType, ComputeShader> NonMaximumEdgeSuppression::Internal::computeS
 
 std::string NonMaximumEdgeSuppression::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 const float sin45 = 0.70710678118;
@@ -100,10 +100,9 @@ void NonMaximumEdgeSuppression::Internal::Run(ImageGPU* input, ImageGPU* output)
         return; 
     }
 
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    
+    ReallocateIfNotSameSize(output, input); 
+
 
     ImageType inputType = input->GetType();
 
@@ -119,10 +118,8 @@ void NonMaximumEdgeSuppression::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void NonMaximumEdgeSuppression::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
+
     
     unsigned char* inputData = input->GetData(); 
     unsigned char* outputData = output->GetData(); 

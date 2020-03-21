@@ -58,19 +58,14 @@ void GrayScale::Internal::Run(ImageGPU* input, ImageGPU* output)
         CompileImageComputeShaders(computeShaders, shaderSrc); 
         shaderCompiled = true; 
     }
+
     if(input->GetType() == ImageType::RGB32F || input->GetType() == ImageType::RGBA32F)
-    {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE32F)
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE32F); 
-        }
+    {  
+        ReallocateIfNotSameSize(output, input, ImageType::GRAYSCALE32F); 
     }
     else
     {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE8)
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
-        }
+        ReallocateIfNotSameSize(output, input, ImageType::GRAYSCALE8); 
     }
 
     ImageType inputType = input->GetType();
@@ -88,18 +83,12 @@ void GrayScale::Internal::Run(ImageGPU* input, ImageGPU* output)
 void GrayScale::Internal::Run(Image* input, Image* output)
 {
     if(input->GetType() == ImageType::RGB32F || input->GetType() == ImageType::RGBA32F)
-    {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() )
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE32F); 
-        }
+    {  
+        ReallocateIfNotSameSize(output, input, ImageType::GRAYSCALE32F); 
     }
     else
     {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight())
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
-        }
+        ReallocateIfNotSameSize(output, input, ImageType::GRAYSCALE8); 
     }
     
     ParallelFor& pf = ParallelFor::GetInstance(); 

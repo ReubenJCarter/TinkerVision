@@ -148,10 +148,7 @@ void Blend::Internal::Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* outp
         return; 
     }
 
-    if(!output->IsSameDimensions(inputSrc)) 
-    {
-        output->Allocate(inputSrc->GetWidth(), inputSrc->GetHeight(), inputSrc->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, inputSrc); 
 
     ImageType inputType = inputSrc->GetType();
 
@@ -194,10 +191,7 @@ void Blend::Internal::Run(Image* inputSrc, Image* inputDst, Image* output, Image
         return; 
     }
 
-    if(!output->IsSameDimensions(inputSrc)) 
-    {
-        output->Allocate(inputSrc->GetWidth(), inputSrc->GetHeight(), inputSrc->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, inputDst); 
 
     bool useMask = false; 
     if(blendMask != NULL)

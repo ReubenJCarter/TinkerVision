@@ -58,10 +58,7 @@ void CircleHoughTransform::Internal::Run(ImageGPU* input, ImageGPU* output)
         CompileImageComputeShaders(computeShaders, shaderSrc); 
         shaderCompiled = true; 
     }
-    if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE16)
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE16); 
-    }
+    ReallocateIfNotSameSize(output, input,  ImageType::GRAYSCALE16); 
 
     ImageType inputType = input->GetType();
 
@@ -77,10 +74,8 @@ void CircleHoughTransform::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void CircleHoughTransform::Internal::Run(Image* input, Image* output)
 { 
-    if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE16)
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE16); 
-    }
+    
+    ReallocateIfNotSameSize(output, input,  ImageType::GRAYSCALE16); 
     
     ParallelFor& pf = ParallelFor::GetInstance(); 
 

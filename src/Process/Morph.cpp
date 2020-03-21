@@ -45,7 +45,7 @@ std::string Morph::Internal::shaderSrc = R"(
 #define ERODE 0
 #define DILATE 1
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 uniform int mode;
@@ -141,11 +141,8 @@ void Morph::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(!input->IsSameDimensions(output))
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
-    
+    ReallocateIfNotSameSize(output, input); 
+
     ImageType inputType = input->GetType();
 
     glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(input->GetWidth(), input->GetHeight()), glm::i32vec2(16, 16)); 

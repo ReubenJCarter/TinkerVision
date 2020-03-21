@@ -99,11 +99,8 @@ void HarrisShiTomasiResponse::Internal::Run(ImageGPU* input, ImageGPU* output)
         CompileImageComputeShaders(harrisShaders, harrisShaderSrc); 
         shaderCompiled = true; 
     }
-
-    if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::RGBA32F)
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::RGBA32F); 
-    }
+   
+    ReallocateIfNotSameSize(output, input, ImageType::RGBA32F); 
 
     glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(input->GetWidth(), input->GetHeight()), glm::i32vec2(16, 16)); 
 
@@ -120,12 +117,7 @@ void HarrisShiTomasiResponse::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void HarrisShiTomasiResponse::Internal::Run(Image* input, Image* output)
 {
-    if(output->GetWidth() != input->GetWidth() || 
-       output->GetHeight() != input->GetHeight() || 
-       output->GetType() != ImageType::GRAYSCALE32F)
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE32F); 
-    }
+    ReallocateIfNotSameSize(output, input, ImageType::RGBA32F); 
     
     unsigned char* inputData = input->GetData(); 
     unsigned char* outputData = output->GetData(); 

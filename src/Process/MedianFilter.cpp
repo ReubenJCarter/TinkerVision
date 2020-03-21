@@ -36,7 +36,7 @@ std::string MedianFilter::Internal::shaderSrc3x3 = R"(
 
 //3x3 median filter
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout( binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 #define s2(a, b)				temp = a; a = min(a, b); b = max(temp, b);
@@ -84,7 +84,7 @@ std::string MedianFilter::Internal::shaderSrc5x5 = R"(
 
 //5x5 median filter
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout(binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 #define s2(a, b)				temp = a; a = min(a, b); b = max(temp, b);
@@ -153,10 +153,7 @@ void MedianFilter::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
 
     ImageType inputType = input->GetType();
     
@@ -176,10 +173,7 @@ void MedianFilter::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void MedianFilter::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
     
     unsigned char* inputData = input->GetData(); 
     unsigned char* outputData = output->GetData(); 

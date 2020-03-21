@@ -30,7 +30,7 @@ std::map<ImageType, ComputeShader> Invert::Internal::computeShaders;
 
 std::string Invert::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout( binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
@@ -59,10 +59,8 @@ void Invert::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    
+    ReallocateIfNotSameSize(output, input); 
 
     ImageType inputType = input->GetType();
 
@@ -78,10 +76,7 @@ void Invert::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void Invert::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
     
     ParallelFor& pf = ParallelFor::GetInstance(); 
 

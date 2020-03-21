@@ -86,12 +86,7 @@ void ChannelDemux::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    
-    if(input->GetWidth() != output->GetWidth() || input->GetHeight() != output->GetHeight())
-    {
-        ImageType outputType = output->GetType(); 
-        output->Allocate(input->GetWidth(), input->GetHeight(), outputType ); 
-    }
+    ReallocateIfNotSameSize(output, input,  output->GetType()); 
 
     ImageType inputType = input->GetType();
 

@@ -36,9 +36,9 @@ std::map<ImageType, ComputeShader> ClearColor::Internal::computeShaders;
 
 std::string ClearColor::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout(binding=0) writeonly uniform image2D outputImage;
 
-vec4 color; 
+uniform vec4 color; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()

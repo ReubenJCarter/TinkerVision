@@ -36,7 +36,7 @@ std::map<ImageType, ComputeShader> Threshold::Internal::computeShaders;
 
 std::string Threshold::Internal::shaderSrc = R"(
 
-layout(FORMAT_QUALIFIER, binding=0) writeonly uniform image2D outputImage;
+layout( binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 uniform vec3 threshold; 
@@ -70,10 +70,7 @@ void Threshold::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
 
     ImageType inputType = input->GetType();
 
@@ -91,10 +88,7 @@ void Threshold::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void Threshold::Internal::Run(Image* input, Image* output)
 {
-    if(!output->IsSameDimensions(input)) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input); 
     
     ParallelFor& pf = ParallelFor::GetInstance(); 
 

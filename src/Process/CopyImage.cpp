@@ -66,17 +66,11 @@ void CopyImage::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     if(formatTranslate)
     {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() )
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), output->GetType()); 
-        }
+        ReallocateIfNotSameSize(output, input); 
     }
     else
     {
-        if(!output->IsSameDimensions(input)) 
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-        }
+        ReallocateSame(output, input); 
     }
 
     ImageType inputType = input->GetType();
@@ -95,17 +89,11 @@ void CopyImage::Internal::Run(Image* input, Image* output)
 {
     if(formatTranslate)
     {
-        if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() )
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), output->GetType()); 
-        }
+        ReallocateIfNotSameSize(output, input,  output->GetType()); 
     }
     else
     {
-        if(!output->IsSameDimensions(input)) 
-        {
-            output->Allocate(input->GetWidth(), input->GetHeight(), input->GetType()); 
-        }
+        ReallocateSame(output, input); 
     }
     for(int j = 0; j < input->GetHeight(); j++)
     {

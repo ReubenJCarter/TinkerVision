@@ -83,10 +83,8 @@ void ChannelMapper::Internal::Run(ImageGPU* input, ImageGPU* output)
         shaderCompiled = true; 
     }
 
-    if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight()) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), output->GetType()); 
-    }
+    
+    ReallocateIfNotSameSize(output, input,  output->GetType()); 
 
     ImageType inputType = input->GetType();
 
@@ -105,10 +103,7 @@ void ChannelMapper::Internal::Run(ImageGPU* input, ImageGPU* output)
 
 void ChannelMapper::Internal::Run(Image* input, Image* output)
 {
-    if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight()) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), output->GetType()); 
-    }
+    ReallocateIfNotSameSize(output, input,  output->GetType()); 
     
     ParallelFor& pf = ParallelFor::GetInstance(); 
     auto kernel = [this, input, output](int x, int y)

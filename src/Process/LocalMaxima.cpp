@@ -37,10 +37,8 @@ LocalMaxima::Internal::Internal()
 
 void LocalMaxima::Internal::Run(Image* input, Image* output, std::vector<Vec2>& localMaxima)
 {
-    if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE8)
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE8); 
-    }
+    
+    ReallocateIfNotSameSize(output, input,  ImageType::GRAYSCALE8); 
 
     for(int j = 0; j < input->GetHeight(); j++)
     {

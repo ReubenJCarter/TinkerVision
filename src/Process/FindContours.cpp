@@ -190,10 +190,9 @@ void FindContours::Internal::TraceBorder(Image* im, int startI, int startJ, int 
 
 void FindContours::Internal::Run(Image* input, Image* output, std::vector<Contour>* contours)
 {
-    if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE16) 
-    {
-        output->Allocate(input->GetWidth(), input->GetHeight(), ImageType::GRAYSCALE16); 
-    }
+    
+    ReallocateIfNotSameSize(output, input,  ImageType::GRAYSCALE16); 
+    
     uint16_t* outputData = (uint16_t*)output->GetData(); 
     {
         unsigned char* data = input->GetData(); 
