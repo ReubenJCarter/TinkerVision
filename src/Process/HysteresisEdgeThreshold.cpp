@@ -237,11 +237,20 @@ void HysteresisEdgeThreshold::Internal::Run(Image* input, Image* output)
             
             int inx = j * output->GetWidth() + i; 
             if(pix.r > highThreshold)
-                outputData[inx] = 2;
+            {
+                //outputData[inx] = 2;
+                SetPixelUI(output, i, j, glm::ivec4(2, 0, 0, 1) ); 
+            }
             else if(pix.r > lowThreshold)
-                 outputData[inx] = 1;
+            {
+                 //outputData[inx] = 1;
+                 SetPixelUI(output, i, j, glm::ivec4(1, 0, 0, 1) ); 
+            }
             else
-                outputData[inx] = 0; 
+            {
+                //outputData[inx] = 0; 
+                SetPixelUI(output, i, j, glm::ivec4(0, 0, 0, 1) ); 
+            }
         }
     }
     

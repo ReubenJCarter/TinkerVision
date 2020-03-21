@@ -39,7 +39,7 @@ void main()
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
     vec4 d = imageLoad(inputImage, id);
     float av = (d.r + d.g + d.b ) / 3.0f; 
-    imageStore(outputImage, id, vec4(av, av, av, av)); 
+    imageStore(outputImage, id, vec4(av, av, av, d.a)); 
 }
 
 )";

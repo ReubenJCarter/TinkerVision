@@ -399,7 +399,7 @@ int main(int argc, char *argv[])
 		canny.SetBlurSigma(0.5); 
 		canny.SetLowEdgeThreshold(0.1);
 		canny.SetHighEdgeThreshold(0.2);
-
+		image2.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Visi::ImageType::GRAYSCALE16); 
 		canny.Run(&imageGPU1, &image2); 
 		Visi::IO::ImageFile::Write("image12_1Test.png", &image2);
 
