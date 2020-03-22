@@ -55,6 +55,7 @@ set(LIBRARYSRCFILES
 	Process/Perspective3Point.cpp
 	Process/Renderer.cpp
 	Process/RGBToHSV.cpp
+	Process/Rotate.cpp
 	Process/Sobel.cpp
 	Process/StereoMatchSAD.cpp
 	Process/StructureTensor.cpp

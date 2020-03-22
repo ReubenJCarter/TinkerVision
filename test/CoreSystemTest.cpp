@@ -37,6 +37,7 @@
 #include "Process/Upsample.h"
 #include "Process/StereoMatchSAD.h"
 #include "Process/Mipmaps.h"
+#include "Process/Rotate.h"
 
 #include "CompositeProcess/CannyEdgeDetect.h"
 #include "CompositeProcess/CornerDetector.h"
@@ -537,7 +538,7 @@ int main(int argc, char *argv[])
 		//Sift
 		std::cout << "Sift\n"; 
 		Visi::CompositeProcess::Sift sift;
-		sift.Run(&imageGPU1, &imageGPU1);
+		sift.Run(&imageGPU1, &imageGPU2);
 		std::vector<Visi::ImageGPU>* pyramid = sift.GetPyramid(); 
 
 		for(int i = 0; i < pyramid->size(); i++)
@@ -546,8 +547,17 @@ int main(int argc, char *argv[])
 			image2.Copy(py);
 			std::stringstream ss;
 			ss << "image22_0_" << i << ".png";
-			Visi::IO::ImageFile::Write(ss.str(), &image2 );
+			//Visi::IO::ImageFile::Write(ss.str(), &image2 );
 		}
+
+		//Rotate
+		std::cout << "Rotate\n"; 
+		Visi::Process::Rotate rotate;
+		rotate.SetRotation(29); 
+
+		rotate.Run(&imageGPU1, &imageGPU2);
+		image2.Copy(&imageGPU2);
+		Visi::IO::ImageFile::Write("image23_1Test.png", &image2);
 
 		std::cout << "DONE\n";
 		

@@ -22,6 +22,7 @@ class VISI_EXPORT Rotate
         ~Rotate(); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
+        void SetRotation(double degs);
 };
 	
 }
