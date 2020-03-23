@@ -91,26 +91,6 @@ void ImageGPU::Deallocate()
     }
 }
 
-unsigned int ImageGPU::GetWidth()
-{
-    return width;
-}
-
-unsigned int ImageGPU::GetHeight()
-{
-    return height;
-}
-
-ImageType ImageGPU::GetType()
-{
-    return type; 
-}
-
-unsigned int ImageGPU::GetTexture()
-{
-    return texture; 
-}
-
 void ImageGPU::Copy(void* data, int w, int h, int offX, int offY)
 {
     int wfinal = w;

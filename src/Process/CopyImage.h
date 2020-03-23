@@ -21,6 +21,8 @@ class VISI_EXPORT CopyImage
 		CopyImage(); 
         ~CopyImage(); 
         void SetFormatTranslate(bool ftr); 
+        void UseOutputSize(bool outSz); 
+        void SetOffset(int x, int y); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
 };

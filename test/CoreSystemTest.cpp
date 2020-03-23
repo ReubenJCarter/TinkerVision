@@ -226,29 +226,25 @@ int main(int argc, char *argv[])
 		Visi::Process::Sobel sobel; 
 		sobel.Run(&imageGPU1, &imageGPU2); 
 
+		imageGPU3.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Visi::ImageType::GRAYSCALE8); 
 		Visi::Process::ChannelDemux demux; 
 		demux.SetChannel(2);
 		demux.Run(&imageGPU2, &imageGPU3);
 
-		Visi::Process::CopyImage copyImage; 
-		imageGPU4.Allocate(imageGPU3.GetWidth(), imageGPU3.GetWidth(), Visi::ImageType::GRAYSCALE8);
-		copyImage.Run(&imageGPU3, &imageGPU4); 	
-
-		image2.Copy(&imageGPU4);
+		image2.Copy(&imageGPU3);
 		Visi::IO::ImageFile::Write("image8_1Test.png", &image2);
 
 		//NMS
+		imageGPU3.Allocate(imageGPU2.GetWidth(), imageGPU2.GetHeight(), imageGPU2.GetType()); 
 		std::cout << "NonMaximumEdgeSuppression\n"; 
 		Visi::Process::NonMaximumEdgeSuppression nms; 
 		nms.Run(&imageGPU2, &imageGPU3); 
 
+		imageGPU2.Allocate(imageGPU2.GetWidth(), imageGPU2.GetHeight(), Visi::ImageType::GRAYSCALE8); 
 		demux.SetChannel(2);
 		demux.Run(&imageGPU3, &imageGPU2);
 
-		imageGPU4.Allocate(imageGPU2.GetWidth(), imageGPU2.GetWidth(), Visi::ImageType::GRAYSCALE8);
-		copyImage.Run(&imageGPU2, &imageGPU4); 	
-
-		image2.Copy(&imageGPU4);
+		image2.Copy(&imageGPU2);
 		Visi::IO::ImageFile::Write("image8_2Test.png", &image2);
 
 		//Renderer
@@ -334,6 +330,9 @@ int main(int argc, char *argv[])
 		//Find Contours
 		std::cout << "Find Contours\n"; 
 		Visi::Process::FindContours findContours; 
+		imageGPU2.AllocateLike(&imageGPU1);
+		imageGPU3.AllocateLike(&imageGPU1);
+		imageGPU4.AllocateLike(&imageGPU1);
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 		adaptiveThreshold.SetThreshold(0.02); 
 		adaptiveThreshold.SetSize(7); 
@@ -437,6 +436,7 @@ int main(int argc, char *argv[])
 		normalize.Run(&image2, &image3); 
 		imageGPU3.Copy(&image3);
 		imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Visi::ImageType::GRAYSCALE8); 
+		Visi::Process::CopyImage copyImage; 
 		copyImage.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
 		Visi::IO::ImageFile::Write("image14_1Test.png", &image2);
@@ -553,14 +553,45 @@ int main(int argc, char *argv[])
 		//Rotate
 		std::cout << "Rotate\n"; 
 		Visi::Process::Rotate rotate;
-		rotate.SetRotation(45); 
-
+		rotate.SetRotation(0); 
+		imageGPU2.AllocateLike(&imageGPU1);
 		rotate.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);
 		Visi::IO::ImageFile::Write("image23_1Test.png", &image2);
 
-		std::cout << "DONE\n";
 		
+		//CopyImage
+		std::cout << "CopyImage\n"; 
+
+		imageGPU2.Allocate(imageGPU1.GetWidth()*2, imageGPU1.GetHeight(), imageGPU1.GetType()); 
+		imageGPU3.Allocate(imageGPU1.GetWidth()/2, imageGPU1.GetHeight(), imageGPU1.GetType()); 
+
+		Visi::Process::CopyImage cpIm;
+		cpIm.UseOutputSize(true);
+		cpIm.SetOffset(0, 0);
+		cpIm.Run(&imageGPU1, &imageGPU2) ;
+		cpIm.SetOffset(imageGPU1.GetWidth(), 0);
+		cpIm.Run(&imageGPU1, &imageGPU2) ;
+		image2.Copy(&imageGPU2);
+		Visi::IO::ImageFile::Write("image24_1Test.png", &image2);
+
+		cpIm.SetOffset( -imageGPU1.GetWidth()/2, 0);
+		cpIm.Run(&imageGPU1, &imageGPU3) ;
+		image2.Copy(&imageGPU3);
+		Visi::IO::ImageFile::Write("image24_2Test.png", &image2);
+
+
+
+
+
+
+
+
+
+
+
+		std::cout << "DONE\n";
+
 	}
 	else if(argc == 3)
 	{

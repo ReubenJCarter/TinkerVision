@@ -124,8 +124,6 @@ void Rotate::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     glm::vec2 offset = -aabbMin;  
 
-    std::cout << "offset:" << offset.x << " " << offset.y << "\n"; 
-
     ImageType inputType = input->GetType();
 
     glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(output->GetWidth(), output->GetHeight()), glm::i32vec2(16, 16)); 

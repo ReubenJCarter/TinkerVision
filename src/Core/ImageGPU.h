@@ -29,10 +29,10 @@ class VISI_EXPORT ImageGPU
         void AllocateLike(Image* referanceImage);
 		void Allocate(unsigned int w, unsigned int h, ImageType t);
         void Deallocate();
-        unsigned int GetWidth();
-		unsigned int GetHeight();
-        ImageType GetType();
-        unsigned int GetTexture();
+        inline int GetWidth() {return (int)width;}
+		inline int GetHeight() {return (int)height;}
+        inline ImageType GetType() {return type;}
+        inline unsigned int GetTexture() {return texture;}
         void Copy(void* data, int w, int h, int offX=0, int offY=0);
         void Copy(Image* image); 
         bool IsSameDimensions(ImageGPU* image); 
