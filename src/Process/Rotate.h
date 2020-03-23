@@ -23,6 +23,7 @@ class VISI_EXPORT Rotate
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
         void SetRotation(double degs);
+        void SetResizeToFit(bool r); 
 };
 	
 }

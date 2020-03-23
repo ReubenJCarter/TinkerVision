@@ -553,7 +553,7 @@ int main(int argc, char *argv[])
 		//Rotate
 		std::cout << "Rotate\n"; 
 		Visi::Process::Rotate rotate;
-		rotate.SetRotation(29); 
+		rotate.SetRotation(45); 
 
 		rotate.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);

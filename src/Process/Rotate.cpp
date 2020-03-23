@@ -26,6 +26,7 @@ class Rotate::Internal
         static bool shaderCompiled; 
 
         double rotationDeg; 
+        bool resizeToFit;
 
     public:
         Internal(); 
@@ -33,6 +34,7 @@ class Rotate::Internal
         void Run(Image* input, Image* output);
 
         void SetRotation(double r){rotationDeg=r;}
+        void SetResizeToFit(bool r){resizeToFit = r;}
 };
 
 std::map<ImageType, ComputeShader> Rotate::Internal::computeShaders;
@@ -59,8 +61,8 @@ layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-    vec2 idf = vec2(float(id.x), float(id.y)); 
-    idf = rotMat * idf; 
+    vec2 idf = vec2(float(id.x), float(id.y)) - offset; 
+    idf = (rotMat * idf) ; 
     vec4 d = image2DBilinear(inputImage, idf); 
     imageStore(outputImage, id, d); 
 }
@@ -72,6 +74,7 @@ bool Rotate::Internal::shaderCompiled = false;
 Rotate::Internal::Internal()
 {
     rotationDeg = 0; 
+    resizeToFit = true; 
 }
 
 void Rotate::Internal::Run(ImageGPU* input, ImageGPU* output)
@@ -89,10 +92,13 @@ void Rotate::Internal::Run(ImageGPU* input, ImageGPU* output)
     glm::mat2 rotMat = glm::mat2(glm::vec2(cos(ang),  sin(ang)), 
                                  glm::vec2(-sin(ang), cos(ang))   );
 
+    glm::mat2 rotMatInv = glm::mat2(glm::vec2(cos(-ang),  sin(-ang)), 
+                                 glm::vec2(-sin(-ang), cos(-ang))   );
+
     glm::vec2 a = glm::vec2(0, 0); 
-    glm::vec2 b = rotMat * glm::vec2(input->GetWidth(), 0); 
-    glm::vec2 c = rotMat * glm::vec2(input->GetWidth(), input->GetHeight()); 
-    glm::vec2 d = rotMat * glm::vec2(0, input->GetHeight()); 
+    glm::vec2 b = rotMatInv * glm::vec2(input->GetWidth(), 0); 
+    glm::vec2 c = rotMatInv * glm::vec2(input->GetWidth(), input->GetHeight()); 
+    glm::vec2 d = rotMatInv * glm::vec2(0, input->GetHeight()); 
 
     glm::vec2 aabbMin;
     glm::vec2 aabbMax;
@@ -106,11 +112,19 @@ void Rotate::Internal::Run(ImageGPU* input, ImageGPU* output)
     int newW = aabbMax.x - aabbMin.x;
     int newH = aabbMax.y - aabbMin.y;
 
-
-    ReallocateIfNotSameSize(output, newW, newH, input->GetType() ); 
+    if(resizeToFit)
+    {
+        ReallocateIfNotSameSize(output, newW, newH, input->GetType() ); 
+    }
+    else
+    {
+        ReallocateIfNotSameSize(output, input); 
+    }
 
 
     glm::vec2 offset = -aabbMin;  
+
+    std::cout << "offset:" << offset.x << " " << offset.y << "\n"; 
 
     ImageType inputType = input->GetType();
 
@@ -171,6 +185,11 @@ void Rotate::Run(Image* input, Image* output)
 void Rotate::SetRotation(double degs)
 {
     internal->SetRotation(degs); 
+}
+
+void Rotate::SetResizeToFit(bool r)
+{
+    internal->SetResizeToFit(r); 
 }
 	
 }
