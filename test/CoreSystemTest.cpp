@@ -38,6 +38,7 @@
 #include "Process/StereoMatchSAD.h"
 #include "Process/Mipmaps.h"
 #include "Process/Rotate.h"
+#include "Process/Translate.h"
 
 #include "CompositeProcess/CannyEdgeDetect.h"
 #include "CompositeProcess/CornerDetector.h"
@@ -559,7 +560,19 @@ int main(int argc, char *argv[])
 		image2.Copy(&imageGPU2);
 		Visi::IO::ImageFile::Write("image23_1Test.png", &image2);
 
-		
+		//Translate
+		std::cout << "Translate\n"; 
+		Visi::Process::Translate transl;
+		transl.SetTranslation(100, 200); 
+		imageGPU2.AllocateLike(&imageGPU1);
+		transl.Run(&imageGPU1, &imageGPU2);
+		image2.Copy(&imageGPU2);
+		Visi::IO::ImageFile::Write("image24_1Test.png", &image2);
+		transl.SetTranslation(-100, -200); 
+		transl.Run(&imageGPU1, &imageGPU2);
+		image2.Copy(&imageGPU2);
+		Visi::IO::ImageFile::Write("image24_2Test.png", &image2);
+
 		//CopyImage
 		std::cout << "CopyImage\n"; 
 
@@ -573,12 +586,12 @@ int main(int argc, char *argv[])
 		cpIm.SetOffset(imageGPU1.GetWidth(), 0);
 		cpIm.Run(&imageGPU1, &imageGPU2) ;
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image24_1Test.png", &image2);
+		Visi::IO::ImageFile::Write("image25_1Test.png", &image2);
 
 		cpIm.SetOffset( -imageGPU1.GetWidth()/2, 0);
 		cpIm.Run(&imageGPU1, &imageGPU3) ;
 		image2.Copy(&imageGPU3);
-		Visi::IO::ImageFile::Write("image24_2Test.png", &image2);
+		Visi::IO::ImageFile::Write("image25_2Test.png", &image2);
 
 
 

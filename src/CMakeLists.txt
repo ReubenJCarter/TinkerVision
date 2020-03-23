@@ -61,6 +61,7 @@ set(LIBRARYSRCFILES
 	Process/StructureTensor.cpp
 	Process/Thinning.cpp
 	Process/Threshold.cpp
+	Process/Translate.cpp
 	Process/Upsample.cpp
 )
 
