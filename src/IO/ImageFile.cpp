@@ -126,6 +126,14 @@ bool ImageFile::Write(std::string fileName, Image* image)
     FreeImage_Unload(dib);
     return true; 
 }
+
+bool ImageFile::Write(std::string fileName, ImageGPU* image)
+{
+    Image temp; 
+    temp.Copy(image); 
+    bool r = Write(fileName, &temp); 
+    return r; 
+}
 	
 bool ImageFile::Read(std::string fileName, Image* image)
 {
@@ -228,6 +236,15 @@ bool ImageFile::Read(std::string fileName, Image* image)
 
     FreeImage_Unload(dib);
     return true; 
+}
+
+bool ImageFile::Read(std::string fileName, ImageGPU* image)
+{
+    Image temp; 
+    bool r = Read(fileName, &temp); 
+    if(r)
+        image->Copy(&temp); 
+    return r; 
 }
 	
 }

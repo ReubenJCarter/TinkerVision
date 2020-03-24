@@ -22,6 +22,8 @@ class VISI_EXPORT StereoMatchSAD
         ~StereoMatchSAD(); 
 		void Run(ImageGPU* inputL, ImageGPU* inputR, ImageGPU* output); 
         void Run(Image* inputL, Image* inputR, Image* output); 
+        void SetBlockSize(int W, int H);
+        void SetMaxK(int mk);
 };
 	
 }

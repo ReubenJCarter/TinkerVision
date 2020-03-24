@@ -32,8 +32,8 @@ class StereoMatchSAD::Internal
         Internal(); 
         void Run(ImageGPU* inputL, ImageGPU* inputR, ImageGPU* output); 
         void Run(Image* inputL, Image* inputR, Image* output); 
-        void SetBlockSize(int W, int H); 
-        void SetMaxK(int mk); 
+        void SetBlockSize(int W, int H){blockW = W; blockH = H; } 
+        void SetMaxK(int mk){maxK = mk;}
 };
 
 
@@ -191,6 +191,16 @@ void StereoMatchSAD::Run(ImageGPU* inputL, ImageGPU* inputR, ImageGPU* output)
 void StereoMatchSAD::Run(Image* inputL, Image* inputR, Image* output)
 {
     internal->Run(inputL, inputR, output); 
+}
+ 
+void StereoMatchSAD::SetBlockSize(int W, int H)
+{
+    internal->SetBlockSize(W, H); 
+}
+
+void StereoMatchSAD::SetMaxK(int mk)
+{
+    internal->SetMaxK(mk); 
 }
 
 }
