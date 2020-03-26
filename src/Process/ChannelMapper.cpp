@@ -40,9 +40,6 @@ std::string ChannelMapper::Internal::shaderSrc = R"(
 
 layout( binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage0;
-layout(FORMAT_QUALIFIER, binding=2) uniform image2D inputImage1;
-layout(FORMAT_QUALIFIER, binding=3) uniform image2D inputImage2;
-layout(FORMAT_QUALIFIER, binding=4) uniform image2D inputImage3;
 
 uniform ivec4 channelMap; 
 uniform vec4 defaultChannelValues; 

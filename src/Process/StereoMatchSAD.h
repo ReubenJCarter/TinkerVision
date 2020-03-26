@@ -24,6 +24,7 @@ class VISI_EXPORT StereoMatchSAD
         void Run(Image* inputL, Image* inputR, Image* output); 
         void SetBlockSize(int W, int H);
         void SetMaxK(int mk);
+        void SetSADThreshold(float st); 
 };
 	
 }

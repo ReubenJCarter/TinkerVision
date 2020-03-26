@@ -9,6 +9,8 @@
 #include "../Process/NonMaximumEdgeSuppression.h"
 #include "../Process/StructureTensor.h"
 #include "../Process/HarrisShiTomasiResponse.h"
+#include "../Process/ChannelMapper.h"
+#include "../Process/CopyImage.h"
 
 
 #include <string>
@@ -35,8 +37,11 @@ class CornerDetector::Internal
         NonMaximumEdgeSuppression nms; 
         StructureTensor strucTens;
         HarrisShiTomasiResponse harShiTomResp;
+        ChannelMapper chmp; 
+        CopyImage cpyIm; 
 
         ImageGPU temp[4]; 
+        Image tempCPU[4]; 
 
         float sigmaD; 
         float sigmaI; 
@@ -95,7 +100,6 @@ void CornerDetector::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     //Compute Harris response
     harShiTomResp.Run(&temp[2], output);
-
 }
 
 void CornerDetector::Internal::Run(Image* input, Image* output)

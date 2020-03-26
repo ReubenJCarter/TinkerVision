@@ -27,6 +27,8 @@ class StereoMatchSAD::Internal
         int blockW;
         int blockH;
         int maxK; 
+        float sadThreshold; 
+        float sadRangeThreshold; 
 
     public:
         Internal(); 
@@ -34,6 +36,8 @@ class StereoMatchSAD::Internal
         void Run(Image* inputL, Image* inputR, Image* output); 
         void SetBlockSize(int W, int H){blockW = W; blockH = H; } 
         void SetMaxK(int mk){maxK = mk;}
+        void SetSADThreshold(float st){sadThreshold = st;}
+        void SetSADRangeThreshold(float srt){sadRangeThreshold = srt;}
 };
 
 
@@ -51,6 +55,8 @@ uniform int blockA;
 uniform int halfBlockW;
 uniform int halfBlockH;
 uniform int maxK; 
+uniform float sadThreshold; 
+uniform float sadRangeThreshold; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
@@ -59,42 +65,51 @@ void main()
 
     float cachel[256];
 	float lowestsad = 1000.0f;
+    float highestsad = -1.0f;
 	int lowestsadK = 0;
 	float sad = 0;
 
     //Build Cache for left image 
-    for(int i = -halfBlockW; i <= halfBlockW; i++)
+    
+    for(int j = -halfBlockH; j <= halfBlockH; j++)
     {
-        for(int j = -halfBlockH; j <= halfBlockH; j++)
+        for(int i = -halfBlockW; i <= halfBlockW; i++)
         {
             vec4 pixl =  imageLoad(inputImageL, id + ivec2(i, j));
-            cachel[(i + halfBlockW) * blockW + j + halfBlockH] = pixl.r;
+            cachel[(j + halfBlockH) * blockW + i + halfBlockW] = pixl.r;
         }
     }
 
     //Run SAD operation on right image at each horizontal position
-    for(int k = -maxK; k < maxK; k++)
+    for(int k = 0; k < maxK; k++)
     {
         sad = 0;
-        for(int i = -halfBlockW; i <= halfBlockW; i++)
+        for(int j = -halfBlockH; j <= halfBlockH; j++)
         {
-            for(int j = -halfBlockH; j <= halfBlockH; j++)
+            for(int i = -halfBlockW; i <= halfBlockW; i++)
             {
                 vec4 pixr = imageLoad(inputImageR, id + ivec2(-k + i, j));
-                float avpixl = cachel[(i + halfBlockW) * blockW + j + halfBlockH];
-                avpixl =  imageLoad(inputImageL, id + ivec2(i, j)).r;
+                float avpixl = cachel[(j + halfBlockH) * blockW + i + halfBlockW];
+                
                 float pixAbsDiff = length (avpixl - pixr.r);
                 sad += pixAbsDiff;
             }
         }
+
+        if(sad > highestsad)
+            highestsad = sad; 
+
         if(sad < lowestsad)
         {
             lowestsad = sad;
             lowestsadK = abs(k);
         }
     }
-    float finalPix = float(lowestsadK) / float(maxK);
-	vec4 outVec = vec4(finalPix, finalPix, finalPix, 1.0f);
+    float finalPix = 0; 
+    if(lowestsad < sadThreshold && (highestsad - lowestsad) > sadRangeThreshold)
+        finalPix = float(lowestsadK) / float(maxK);
+	
+    vec4 outVec = vec4(finalPix, finalPix, finalPix, 1.0f);
     imageStore(outputImage, id, outVec); 
 }
 
@@ -107,6 +122,8 @@ StereoMatchSAD::Internal::Internal()
     blockW = 16;
     blockH = 16;
     maxK = 80;
+    sadThreshold = 50.0f;
+    sadRangeThreshold = 0;
 }
 
 void StereoMatchSAD::Internal::Run(ImageGPU* inputL, ImageGPU* inputR, ImageGPU* output)
@@ -137,6 +154,8 @@ void StereoMatchSAD::Internal::Run(ImageGPU* inputL, ImageGPU* inputR, ImageGPU*
     computeShader.SetInt("halfBlockW", blockW * 0.5);
     computeShader.SetInt("halfBlockH", blockH * 0.5);
     computeShader.SetInt("maxK", maxK);
+    computeShader.SetFloat("sadThreshold", sadThreshold); 
+    computeShader.SetFloat("sadRangeThreshold", sadRangeThreshold); 
 
     computeShader.SetImage("inputImageL", inputL);
     computeShader.SetImage("inputImageR", inputR);
@@ -201,6 +220,11 @@ void StereoMatchSAD::SetBlockSize(int W, int H)
 void StereoMatchSAD::SetMaxK(int mk)
 {
     internal->SetMaxK(mk); 
+}
+
+void StereoMatchSAD::SetSADThreshold(float st)
+{
+    internal->SetSADThreshold(st); 
 }
 
 }
