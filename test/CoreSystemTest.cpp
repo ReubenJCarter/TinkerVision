@@ -667,6 +667,12 @@ int main(int argc, char *argv[])
 			renderer.Run(&input, &image2); 
 			Visi::IO::ImageFile::Write("arcuo1Test.png", &image2); 
 		}
+		else if(std::string( argv[1] ) == "-nodes")
+		{
+			std::cout << "Starting Node test\n"; 
+
+			
+		}
 		
 	}
 	else if(argc == 4)

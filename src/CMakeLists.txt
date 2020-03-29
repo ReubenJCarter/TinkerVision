@@ -63,6 +63,9 @@ set(LIBRARYSRCFILES
 	Process/Threshold.cpp
 	Process/Translate.cpp
 	Process/Upsample.cpp
+
+	ComputeGraph/Node.cpp
+	ComputeGraph/Graph.cpp
 )
 
 add_library(${CMAKE_PROJECT_NAME} SHARED ${LIBRARYSRCFILES})
