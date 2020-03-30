@@ -45,6 +45,9 @@
 #include "CompositeProcess/ARUCODetector.h"
 #include "CompositeProcess/Sift.h"
 
+#include "ComputeGraph/Node.h"
+#include "ComputeGraph/Graph.h"
+
 #include <iostream>
 #include <thread>
 #include <atomic>
