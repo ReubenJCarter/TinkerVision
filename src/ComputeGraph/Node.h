@@ -61,7 +61,7 @@ class VISI_EXPORT Node
                 }
 
                 template<class T>
-                T* AsType (DataType ty) //Can we get rid of the Datatype param in the future by using c++ stuff?
+                T* AsType(DataType ty) //Can we get rid of the Datatype param in the future by using c++ stuff?
                 {
                     if(ty == type)
                     {
@@ -71,7 +71,7 @@ class VISI_EXPORT Node
                 }
 
                 template<class T>
-                T DerefAsType (DataType ty, T defaultValue)
+                T DerefAsType(DataType ty, T defaultValue)
                 {
                     if(ty == type)
                     {
