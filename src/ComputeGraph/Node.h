@@ -21,16 +21,24 @@ namespace ComputeGraph
 class VISI_EXPORT Node
 {
     public:
-        enum DataType
+        enum DataType //could be replaced with typeinfo?
         {
            NullDate,
 
            ImageData,
            ImageGPUData, 
            ImageTypeData, 
+
            IntData,
            FloatData,  
-           BoolData
+           BoolData, 
+           Vec2Data,
+           Vec3Data,
+           Vec4Data, 
+           Mat2Data,
+           Mat3Data,
+           ColorData, 
+
         }; 
 
         class Data
@@ -77,7 +85,7 @@ class VISI_EXPORT Node
                     {
                         return *((T*)ptr); 
                     }
-                    return NULL; 
+                    return defaultValue; 
                 }
         };
 
@@ -95,7 +103,7 @@ class VISI_EXPORT Node
         /**Gets a pointer to a generic value at the output index of the node. */
         virtual Data GetOutput(int inx) { return {NullDate, NULL}; }
 
-         /**Sets directly the value of the output of the node from a value pointer */
+         /**Sets directly the value of the output of the node from data */
         virtual void SetOutput(int inx, Data nodeData) {}
 
         /**Run the node. can be overloaded to use the inputconnections.GetOutput functions to get data.*/

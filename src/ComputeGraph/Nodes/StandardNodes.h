@@ -2,7 +2,7 @@
 
 #include "Visi_export.h"
 
-#include "Node.h"
+#include "../Node.h"
 
 #include "../../Core/Image.h"
 #include "../../Core/ImageGPU.h"
@@ -12,40 +12,10 @@ namespace Visi
 
 namespace ComputeGraph
 {
-		
-/**
- */
-	
-class VISI_EXPORT ImageSource: public Node
+
+namespace Nodes
 {
-    private:
-        Image image;
 
-	public:
-        Data GetOutput(int inx)
-        {
-            return {ImageData, &image};
-        }
-};
-
-/**
- */
-	
-class VISI_EXPORT ImageTypeSource: public Node
-{        
-    private:
-        ImageType imageType;
-
-	public:
-        Data GetOutput(int inx)
-        {
-            return {ImageTypeData, &imageType};
-        }
-};
-
-/**
- */
-	
 class VISI_EXPORT AllocateImage: public Node
 {
     private:
@@ -73,7 +43,7 @@ class VISI_EXPORT AllocateImage: public Node
             else if(inAsimageGPU != NULL)
             {
                 inAsimageGPU->Allocate(inWidth, inHeight, inType); 
-                outImageData = {ImageData, inAsimageGPU};
+                outImageData = {ImageGPUData, inAsimageGPU};
             }
             else
             {
@@ -82,6 +52,8 @@ class VISI_EXPORT AllocateImage: public Node
         }
 };
 	
+}
+
 }
 
 }

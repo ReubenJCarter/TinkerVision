@@ -47,6 +47,8 @@
 
 #include "ComputeGraph/Node.h"
 #include "ComputeGraph/Graph.h"
+#include "ComputeGraph/Nodes/SourceNodes.h"
+#include "ComputeGraph/Nodes/StandardNodes.h"
 
 #include <iostream>
 #include <thread>

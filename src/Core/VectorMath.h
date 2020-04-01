@@ -76,19 +76,20 @@ class Vec4
 
 class Mat2 
 {
-    Vec2 col[2]; 
+    public: 
+        Vec2 col[2]; 
 
-    Mat2(Vec2 col0, Vec2 col1){col[0] = col0; col[1] = col1;}
-    Mat2(){}
-    Mat2(float v){col[0] = Vec2(v, 0); col[1] = Vec2(0, v);}
+        Mat2(Vec2 col0, Vec2 col1){col[0] = col0; col[1] = col1;}
+        Mat2(){}
+        Mat2(float v){col[0] = Vec2(v, 0); col[1] = Vec2(0, v);}
 
-    friend Vec2 operator*(Mat2& a, Vec2& b)
-    {
-        Vec2 ret;
-        ret.x = a.col[0].x*b.x + a.col[1].x*b.y; 
-        ret.y = a.col[0].y*b.x + a.col[1].y*b.y; 
-        return ret; 
-    }
+        friend Vec2 operator*(Mat2& a, Vec2& b)
+        {
+            Vec2 ret;
+            ret.x = a.col[0].x*b.x + a.col[1].x*b.y; 
+            ret.y = a.col[0].y*b.x + a.col[1].y*b.y; 
+            return ret; 
+        }
 }; 
 
 class Mat3
