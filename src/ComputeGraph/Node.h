@@ -23,7 +23,7 @@ class VISI_EXPORT Node
     public:
         enum DataType //could be replaced with typeinfo?
         {
-           NullDate,
+           NullData,
 
            ImageData,
            ImageGPUData, 
@@ -49,7 +49,8 @@ class VISI_EXPORT Node
                 
                 Data() 
                 {
-
+                    type = NullData;
+                    ptr = NULL;
                 }
 
                 Data(DataType t, void* p) 
@@ -65,7 +66,7 @@ class VISI_EXPORT Node
 
                 inline bool IsNull()
                 {
-                    return type == NullDate;
+                    return type == NullData;
                 }
 
                 template<class T>
@@ -101,7 +102,7 @@ class VISI_EXPORT Node
 
 
         /**Gets a pointer to a generic value at the output index of the node. */
-        virtual Data GetOutput(int inx) { return {NullDate, NULL}; }
+        virtual Data GetOutput(int inx) { return Data(NullData, NULL); }
 
          /**Sets directly the value of the output of the node from data */
         virtual void SetOutput(int inx, Data nodeData) {}
@@ -114,10 +115,16 @@ class VISI_EXPORT Node
         {
             if(inx < 0 || inx >= inputConnection.size()) //range check on input array
             {
-                return {NullDate, NULL}; 
+                return {NullData, NULL}; 
             }
 
             return inputConnection[inx].node->GetOutput(inputConnection[inx].outputInx); 
+        }
+
+        /**Loads a node from a json object*/
+        inline void FromJSON(char* str)
+        {
+            
         }
 
     public:
