@@ -7,6 +7,7 @@
 #include "../../IO/ImageFile.h"
 
 #include "../../Process/AdaptiveThreshold.h"
+#include "../../Process/ApproxDistanceTransform.h"
 
 namespace Visi
 {
@@ -86,6 +87,10 @@ class BaseProcess1In1Out: public Node
 class AdaptiveThresholdNode: public BaseProcess1In1Out<Process::AdaptiveThreshold>
 {
 };
+
+class ApproxDistanceTransformNode: public BaseProcess1In1OutCPUOnly<Process::ApproxDistanceTransform>
+{
+}; 
 
 
 }

@@ -15,12 +15,19 @@ namespace ComputeGraph
 	
 class VISI_EXPORT Graph: public Node
 {        
-	public:
-        /**The constructor.*/
-        Graph(); 
+    protected:
+        std::vector<Node> nodes; 
 
-        /**The destructor.*/
-        ~Graph();     
+	public:
+        /**Reads a json string and creates the appropriate nodes and connects them up */
+        virtual void ReadFromJSON(char* str)
+        {
+        }
+
+        /**write to a json string from the nodes.*/
+        virtual void WriteToJSON(char* str)
+        {
+        }
 };
 	
 }

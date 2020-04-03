@@ -122,18 +122,13 @@ class VISI_EXPORT Node
         }
 
         /**Loads a node from a json object*/
-        inline void FromJSON(char* str)
-        {
-            
-        }
+        virtual void ReadFromJSON(char* str){}
+        
+        /**writes node from a json object*/
+        virtual void WriteToJSON(char* str){}
 
     public:
-        /**The constructor.*/
-        Node(); 
-
-        /**The destructor.*/
-        ~Node();       
-
+        
         /**Setup and input to this node.*/
         inline void SetInput(Node* innode, int outinx=0)
         {
