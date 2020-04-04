@@ -151,13 +151,7 @@ class VISI_EXPORT Node
             }
 
             return inputConnection[inx].node->GetOutput(inputConnection[inx].outputInx); 
-        }
-
-        /**Loads a node from a json object*/
-        virtual void ReadFromJSON(SerializedObject* sObj){}
-        
-        /**writes node from a json object*/
-        virtual void WriteToJSON(SerializedObject* sObj){}
+        } 
 
     public:
         
@@ -166,6 +160,10 @@ class VISI_EXPORT Node
         {
             inputConnection.push_back({innode, outinx});
         }
+        
+        virtual void Serialize(SerializedObject* sObj){}
+        
+        virtual void Deserialize(SerializedObject* sObj){}
 };
 	
 }

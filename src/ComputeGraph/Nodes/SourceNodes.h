@@ -44,6 +44,7 @@ class IntSource: public BaseSource<int>
     VISI_CLONEABLE_MACRO(IntSource)
     public:
         IntSource(): BaseSource<int>(IntData){}
+        virtual void Serialize(SerializedObject* sObj){sObj->SetInt("val", value);}
 };
 
 /**
@@ -54,6 +55,7 @@ class FloatSource: public BaseSource<float>
     VISI_CLONEABLE_MACRO(FloatSource)     
     public:
         FloatSource(): BaseSource<float>(FloatData){}
+        virtual void Serialize(SerializedObject* sObj){sObj->SetFloat("val", value);}
 };
 
 /**
@@ -64,6 +66,7 @@ class BoolSource: public BaseSource<bool>
     VISI_CLONEABLE_MACRO(BoolSource)  
 	public:
         BoolSource(): BaseSource<bool>(BoolData){}
+        virtual void Serialize(SerializedObject* sObj){sObj->SetBool("val", value);}
 };
 
 /**
@@ -74,6 +77,7 @@ class Vec2Source: public BaseSource<Vec2>
     VISI_CLONEABLE_MACRO(Vec2Source)       
 	public:
         Vec2Source(): BaseSource<Vec2>(Vec2Data){}
+        virtual void Serialize(SerializedObject* sObj){sObj->SetVec2("val", value);}
 };
 
 /**
@@ -84,6 +88,7 @@ class Vec3Source: public BaseSource<Vec3>
     VISI_CLONEABLE_MACRO(Vec3Source)    
 	public:
         Vec3Source(): BaseSource<Vec3>(Vec3Data){}
+        virtual void Serialize(SerializedObject* sObj){sObj->SetVec3("val", value);}
 };
 
 /**
@@ -94,6 +99,7 @@ class Vec4Source: public BaseSource<Vec4>
     VISI_CLONEABLE_MACRO(Vec4Source)    
 	public:
         Vec4Source(): BaseSource<Vec4>(Vec4Data){}
+        virtual void Serialize(SerializedObject* sObj){sObj->SetVec4("val", value);}
 };
 
 /**
@@ -104,6 +110,7 @@ class Mat2Source: public BaseSource<Mat2>
     VISI_CLONEABLE_MACRO(Mat2Source)     
 	public:
         Mat2Source(): BaseSource<Mat2>(Mat2Data){}
+        virtual void Serialize(SerializedObject* sObj){sObj->SetMat2("val", value);}
 };
 
 /**
@@ -114,6 +121,7 @@ class Mat3Source: public BaseSource<Mat3>
     VISI_CLONEABLE_MACRO(Mat3Source)       
 	public:
         Mat3Source(): BaseSource<Mat3>(Mat3Data){}
+        virtual void Serialize(SerializedObject* sObj){sObj->SetMat3("val", value);}
 };
 
 /**
