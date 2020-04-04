@@ -41,6 +41,7 @@ class BaseSource: public Node
 	
 class IntSource: public BaseSource<int>
 {        
+    VISI_CLONEABLE_MACRO(IntSource)
     public:
         IntSource(): BaseSource<int>(IntData){}
 };
@@ -49,7 +50,8 @@ class IntSource: public BaseSource<int>
  */
 	
 class FloatSource: public BaseSource<float>
-{        
+{   
+    VISI_CLONEABLE_MACRO(FloatSource)     
     public:
         FloatSource(): BaseSource<float>(FloatData){}
 };
@@ -59,6 +61,7 @@ class FloatSource: public BaseSource<float>
 	
 class BoolSource: public BaseSource<bool>
 {        
+    VISI_CLONEABLE_MACRO(BoolSource)  
 	public:
         BoolSource(): BaseSource<bool>(BoolData){}
 };
@@ -67,7 +70,8 @@ class BoolSource: public BaseSource<bool>
  */
 	
 class Vec2Source: public BaseSource<Vec2>
-{        
+{   
+    VISI_CLONEABLE_MACRO(Vec2Source)       
 	public:
         Vec2Source(): BaseSource<Vec2>(Vec2Data){}
 };
@@ -76,7 +80,8 @@ class Vec2Source: public BaseSource<Vec2>
  */
 	
 class Vec3Source: public BaseSource<Vec3>
-{        
+{      
+    VISI_CLONEABLE_MACRO(Vec3Source)    
 	public:
         Vec3Source(): BaseSource<Vec3>(Vec3Data){}
 };
@@ -85,7 +90,8 @@ class Vec3Source: public BaseSource<Vec3>
  */
 	
 class Vec4Source: public BaseSource<Vec4>
-{        
+{      
+    VISI_CLONEABLE_MACRO(Vec4Source)    
 	public:
         Vec4Source(): BaseSource<Vec4>(Vec4Data){}
 };
@@ -94,7 +100,8 @@ class Vec4Source: public BaseSource<Vec4>
  */
 	
 class Mat2Source: public BaseSource<Mat2>
-{        
+{     
+    VISI_CLONEABLE_MACRO(Mat2Source)     
 	public:
         Mat2Source(): BaseSource<Mat2>(Mat2Data){}
 };
@@ -103,7 +110,8 @@ class Mat2Source: public BaseSource<Mat2>
  */
 	
 class Mat3Source: public BaseSource<Mat3>
-{        
+{   
+    VISI_CLONEABLE_MACRO(Mat3Source)       
 	public:
         Mat3Source(): BaseSource<Mat3>(Mat3Data){}
 };
@@ -112,7 +120,8 @@ class Mat3Source: public BaseSource<Mat3>
  */
 	
 class ColorSource: public BaseSource<Color>
-{        
+{    
+    VISI_CLONEABLE_MACRO(ColorSource)      
 	public:
         ColorSource(): BaseSource<Color>(ColorData){}
 };
@@ -122,6 +131,7 @@ class ColorSource: public BaseSource<Color>
 	
 class ImageTypeSource: public BaseSource<ImageType>
 {        
+    VISI_CLONEABLE_MACRO(ImageTypeSource)  
 	public:
         ImageTypeSource(): BaseSource<ImageType>(ImageTypeData){}
 };
@@ -130,7 +140,8 @@ class ImageTypeSource: public BaseSource<ImageType>
  */
 	
 class ImageSource: public BaseSource<Image>
-{        
+{   
+    VISI_CLONEABLE_MACRO(ImageSource)       
 	public:
         ImageSource(): BaseSource<Image>(ImageData){}
 };
@@ -139,7 +150,8 @@ class ImageSource: public BaseSource<Image>
  */
 	
 class ImageGPUSource: public BaseSource<ImageGPU>
-{        
+{       
+    VISI_CLONEABLE_MACRO(ImageGPUSource)   
 	public:
         ImageGPUSource(): BaseSource<ImageGPU>(ImageGPUData){}
 };

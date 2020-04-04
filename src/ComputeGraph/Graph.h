@@ -4,9 +4,10 @@
 
 #include "Node.h"
 
+#include "SerializedObject.h"
+
 namespace Visi
 {
-
 namespace ComputeGraph
 {
 		
@@ -14,22 +15,20 @@ namespace ComputeGraph
  */
 	
 class VISI_EXPORT Graph: public Node
-{        
+{
+    VISI_CLONEABLE_MACRO(Graph) 
     protected:
         std::vector<Node> nodes; 
 
 	public:
-        /**Reads a json string and creates the appropriate nodes and connects them up */
-        virtual void ReadFromJSON(char* str)
+        virtual void Serialize(SerializedObject* sObj)
         {
         }
 
-        /**write to a json string from the nodes.*/
-        virtual void WriteToJSON(char* str)
+        virtual void Deserialize(SerializedObject* sObj)
         {
         }
 };
 	
 }
-
 }

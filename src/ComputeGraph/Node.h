@@ -3,10 +3,20 @@
 #include "Visi_export.h"
 
 #include <vector>
+#include <map>
 
 #include "../Core/VectorMath.h"
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
+
+#include "SerializedObject.h"
+
+#define VISI_CLONEABLE_MACRO(TYPE)\
+public:\
+TYPE* CloneType() { return new TYPE(); }\
+std::string GetTypeName() { return #TYPE;}\
+private:
+
 
 namespace Visi
 {
@@ -20,6 +30,28 @@ namespace ComputeGraph
 	
 class VISI_EXPORT Node
 {
+    private:
+		static std::map<std::string, Node*> nodeTypes; 
+
+	public:
+		template<class T> static void RegisterType()
+		{
+			T* n = new T(NULL);
+			nodeTypes[com->GetTypeName()] = n;
+		}
+
+		static Node* Create(std::string typeName)
+        {
+            if(nodeTypes.count(typeName) != 0)
+            {
+                return nodeTypes[typeName]->CloneType();
+            }
+            return NULL;
+        } 
+
+        virtual Node* CloneType() = 0; 
+		virtual std::string GetTypeName() = 0; 
+
     public:
         enum DataType //could be replaced with typeinfo?
         {
@@ -115,17 +147,17 @@ class VISI_EXPORT Node
         {
             if(inx < 0 || inx >= inputConnection.size()) //range check on input array
             {
-                return {NullData, NULL}; 
+                return Data(NullData, NULL); 
             }
 
             return inputConnection[inx].node->GetOutput(inputConnection[inx].outputInx); 
         }
 
         /**Loads a node from a json object*/
-        virtual void ReadFromJSON(char* str){}
+        virtual void ReadFromJSON(SerializedObject* sObj){}
         
         /**writes node from a json object*/
-        virtual void WriteToJSON(char* str){}
+        virtual void WriteToJSON(SerializedObject* sObj){}
 
     public:
         

@@ -15,6 +15,7 @@ namespace Nodes
 
 class ImageFileRead: public Node
 {
+    VISI_CLONEABLE_MACRO(ImageFileRead) 
     private:
         Data outImageData; /** cache of the output data, also null data when no image avilible.*/
 
@@ -46,6 +47,7 @@ class ImageFileRead: public Node
 
 class ImageFileWrite: public Node
 {
+    VISI_CLONEABLE_MACRO(ImageFileWrite) 
     private:
         Data outImageData; /** cache of the output data, also null data when no image avilible.*/
 

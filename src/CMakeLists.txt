@@ -5,6 +5,8 @@ set(LIBRARYSRCFILES
 	CompositeProcess/Resize.cpp
 	CompositeProcess/Sift.cpp
 
+	ComputeGraph/SerializedObject.cpp
+
 	Core/BoundingBox.cpp
 	Core/ComputeShader.cpp
 	Core/Context.cpp

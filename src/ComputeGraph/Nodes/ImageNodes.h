@@ -14,6 +14,7 @@ namespace Nodes
 
 class ImageAllocate: public Node
 {
+    VISI_CLONEABLE_MACRO(ImageAllocate) 
     private:
         Data outImageData; /** cache of the output data, also null data when no image avilible.*/
 
@@ -47,6 +48,7 @@ class ImageAllocate: public Node
 
 class ImageDeallocate: public Node
 {
+    VISI_CLONEABLE_MACRO(ImageDeallocate) 
     private:
         Data outImageData; /** cache of the output data, also null data when no image avilible.*/
 
@@ -77,6 +79,7 @@ class ImageDeallocate: public Node
 
 class ImageGetDims: public Node
 {
+    VISI_CLONEABLE_MACRO(ImageGetDims) 
     private:
         Data outIntData; 
         int width;
@@ -114,6 +117,7 @@ class ImageGetDims: public Node
 	
 class ImageCopy: public Node
 {
+    VISI_CLONEABLE_MACRO(ImageCopy) 
     private:
         Data outImageData;  
         

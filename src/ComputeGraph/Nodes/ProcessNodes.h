@@ -86,10 +86,12 @@ class BaseProcess1In1Out: public Node
 
 class AdaptiveThresholdNode: public BaseProcess1In1Out<Process::AdaptiveThreshold>
 {
+    VISI_CLONEABLE_MACRO(AdaptiveThresholdNode) 
 };
 
 class ApproxDistanceTransformNode: public BaseProcess1In1OutCPUOnly<Process::ApproxDistanceTransform>
 {
+    VISI_CLONEABLE_MACRO(ApproxDistanceTransformNode) 
 }; 
 
 
