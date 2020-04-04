@@ -8,6 +8,8 @@
 
 #include "../../Process/AdaptiveThreshold.h"
 #include "../../Process/ApproxDistanceTransform.h"
+#include "../../Process/Blend.h"
+#include "../../Process/BrightnessContrast.h"
 
 namespace Visi
 {
@@ -61,7 +63,7 @@ class BaseProcess1In1Out: public Node
 
         void Run()
         {
-            Image* inDstAsimage = GetInputData(0).AsType<Image>(ImageData);  
+            Image* inDstAsimage = GetInputData(0).AsType<Image>(ImageData);
             ImageGPU* inDstAsimageGPU = GetInputData(0).AsType<ImageGPU>(ImageGPUData);  
 
             Image* inSrcAsimage = GetInputData(1).AsType<Image>(ImageData);  
@@ -92,6 +94,11 @@ class AdaptiveThresholdNode: public BaseProcess1In1Out<Process::AdaptiveThreshol
 class ApproxDistanceTransformNode: public BaseProcess1In1OutCPUOnly<Process::ApproxDistanceTransform>
 {
     VISI_CLONEABLE_MACRO(ApproxDistanceTransformNode) 
+}; 
+
+class BrightnessContrastNode: public BaseProcess1In1OutCPUOnly<Process::BrightnessContrast>
+{
+    VISI_CLONEABLE_MACRO(BrightnessContrastNode) 
 }; 
 
 

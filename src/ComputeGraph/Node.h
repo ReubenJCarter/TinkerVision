@@ -20,7 +20,6 @@ private:
 
 namespace Visi
 {
-
 namespace ComputeGraph
 {
 		
@@ -167,5 +166,4 @@ class VISI_EXPORT Node
 };
 	
 }
-
 }

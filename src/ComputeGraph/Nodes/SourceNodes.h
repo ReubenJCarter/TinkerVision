@@ -21,9 +21,10 @@ class BaseSource: public Node
 {
     protected:
         Data data; 
+        
+    public:
         T value; 
 
-    public:
         BaseSource(DataType type)
         {
             data.ptr = &value; 
