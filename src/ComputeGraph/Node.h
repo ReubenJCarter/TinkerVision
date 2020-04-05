@@ -27,7 +27,7 @@ namespace ComputeGraph
  * Node of a compute graph.
  */
 	
-class VISI_EXPORT Node
+class Node
 {
     private:
 		static std::map<std::string, Node*> nodeTypes; 
@@ -35,8 +35,8 @@ class VISI_EXPORT Node
 	public:
 		template<class T> static void RegisterType()
 		{
-			T* n = new T(NULL);
-			nodeTypes[com->GetTypeName()] = n;
+			T* n = new T();
+			nodeTypes[n->GetTypeName()] = n;
 		}
 
 		static Node* Create(std::string typeName)
@@ -69,6 +69,8 @@ class VISI_EXPORT Node
            Mat2Data,
            Mat3Data,
            ColorData, 
+           
+           StringData
 
         }; 
 
@@ -127,19 +129,16 @@ class VISI_EXPORT Node
             int outputInx;
         };
 
-    protected:
-        /**connection list*/
-        std::vector<Connection> inputConnection; 
-
-
-        /**Gets a pointer to a generic value at the output index of the node. */
-        virtual Data GetOutput(int inx) { return Data(NullData, NULL); }
-
-         /**Sets directly the value of the output of the node from data */
-        virtual void SetOutput(int inx, Data nodeData) {}
-
+    protected:    
         /**Run the node. can be overloaded to use the inputconnections.GetOutput functions to get data.*/
         virtual void Run() {}; 
+
+    public:
+         /**connection list*/    
+        std::vector<Connection> inputConnection; 
+
+        /**id of node*/
+        std::string id; 
 
         /** Gets the input value at a particular index. fromt the output of an input connection*/
         inline Data GetInputData(int inx)
@@ -150,10 +149,11 @@ class VISI_EXPORT Node
             }
 
             return inputConnection[inx].node->GetOutput(inputConnection[inx].outputInx); 
-        } 
+        }
 
-    public:
-        
+        /**Gets a pointer to a generic value at the output index of the node. */
+        virtual Data GetOutput(int inx) { return Data(NullData, NULL); }
+
         /**Setup and input to this node.*/
         inline void SetInput(Node* innode, int outinx=0)
         {
@@ -164,6 +164,8 @@ class VISI_EXPORT Node
         
         virtual void Deserialize(SerializedObject* sObj){}
 };
+
+std::map<std::string, Node*>  Node::nodeTypes; 
 	
 }
 }

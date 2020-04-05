@@ -45,6 +45,7 @@
 #include "CompositeProcess/ARUCODetector.h"
 #include "CompositeProcess/Sift.h"
 
+#include "ComputeGraph/RegisterNodes.h"
 #include "ComputeGraph/Node.h"
 #include "ComputeGraph/Graph.h"
 #include "ComputeGraph/Nodes/SourceNodes.h"
@@ -63,6 +64,8 @@ int main(int argc, char *argv[])
 	std::string testFileName = "aruco.png"; 
 	Visi::Context context; 
 	context.MakeCurrent(); 
+
+	Visi::ComputeGraph::RegisterNodes(); 
 
 	if(argc == 2)
 	{
@@ -600,16 +603,6 @@ int main(int argc, char *argv[])
 		image2.Copy(&imageGPU3);
 		Visi::IO::ImageFile::Write("image25_2Test.png", &image2);
 
-
-
-
-
-
-
-
-
-
-
 		std::cout << "DONE\n";
 
 	}
@@ -674,11 +667,60 @@ int main(int argc, char *argv[])
 			renderer.Run(&input, &image2); 
 			Visi::IO::ImageFile::Write("arcuo1Test.png", &image2); 
 		}
-		else if(std::string( argv[1] ) == "-nodes")
+		else if(std::string( argv[1] ) == "-computegraph")
 		{
-			std::cout << "Starting Node test\n"; 
+			std::cout << "Starting ComputeGraph test\n\n"; 
+
+			Visi::ComputeGraph::SerializedObject graphJson; 
+
+			graphJson.FromString(R"(
+			{
+				"nodes":[
+					{
+						"type":"ImageSource", 
+						"id":"ImageSource1", 
+						"params":{}
+					}, 
+					{
+						"type":"StringSource", 
+						"id":"StringSource1", 
+						"params":{"value":"aruco.png"}
+					}, 
+					{
+						"type":"StringSource", 
+						"id":"StringSource2", 
+						"params":{"value":"aruco_NODETEST.png"}
+					}, 
+					{
+						"type":"ImageFileRead", 
+						"id":"ImageFileRead1", 
+						"params":{},
+						"connections": [
+							{"id": "ImageSource1", "outinx": 0},
+							{"id": "StringSource1", "outinx": 0}
+						]
+					}, 
+					{
+						"type":"ImageFileWrite", 
+						"id":"ImageFileWrite1", 
+						"params":{},
+						"connections": [
+							{"id": "ImageFileRead1", "outinx": 0}, 
+							{"id": "StringSource2", "outinx": 0}
+						]
+					}
+				]	
+			}
+			)"); 
+
+			Visi::ComputeGraph::Graph graph;
+			graph.Deserialize(&graphJson); 
+			Visi::ComputeGraph::SerializedObject outJson; 
+			graph.Serialize(&outJson); 
+			std::cout << outJson.ToString() << "\n"; 
 
 			
+
 		}
 		
 	}

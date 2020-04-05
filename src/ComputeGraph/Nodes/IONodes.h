@@ -26,7 +26,7 @@ class ImageFileRead: public Node
         {
             Image* inAsimage = GetInputData(0).AsType<Image>(ImageData);  
             ImageGPU* inAsimageGPU = GetInputData(0).AsType<ImageGPU>(ImageGPUData);  
-            std::string inFileName = GetInputData(1).DerefAsType<std::string>(IntData, "");            
+            std::string inFileName = GetInputData(1).DerefAsType<std::string>(StringData, "");            
             
             if(inAsimage != NULL)
             {
@@ -58,7 +58,7 @@ class ImageFileWrite: public Node
         {
             Image* inAsimage = GetInputData(0).AsType<Image>(ImageData);  
             ImageGPU* inAsimageGPU = GetInputData(0).AsType<ImageGPU>(ImageGPUData);  
-            std::string inFileName = GetInputData(1).DerefAsType<std::string>(IntData, "");            
+            std::string inFileName = GetInputData(1).DerefAsType<std::string>(StringData, "");            
             
             if(inAsimage != NULL)
             {

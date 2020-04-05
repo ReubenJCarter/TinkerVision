@@ -35,6 +35,7 @@ class VISI_EXPORT SerializedObject
         void SetVec2(std::string name, Vec2 v);
         void SetVec3(std::string name, Vec3 v);
         void SetVec4(std::string name, Vec4 v);
+        void SetColor(std::string name, Color v);
         void SetMat2(std::string name, Mat2 v);
         void SetMat3(std::string name, Mat3 v);
         void SetSerializedObject(std::string name, SerializedObject* v);
@@ -57,6 +58,7 @@ class VISI_EXPORT SerializedObject
         Vec2 GetVec2(std::string name, Vec2 v=Vec2(0, 0));
         Vec3 GetVec3(std::string name, Vec3 v=Vec3(0, 0, 0));
         Vec4 GetVec4(std::string name, Vec4 v=Vec4(0, 0, 0, 0));
+        Color GetColor(std::string name, Color v=Color(0, 0, 0, 1));
         Mat2 GetMat2(std::string name, Mat2 v=Mat2(1.0f));
         Mat3 GetMat3(std::string name, Mat3 v=Mat3(1.0f));
         SerializedObject* GetSerializedObject(std::string name, SerializedObject* v=NULL);

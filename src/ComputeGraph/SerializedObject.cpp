@@ -342,6 +342,11 @@ void SerializedObject::SetVec4(std::string name, Vec4 v)
     internal->floatArrays[name] = {v.x, v.y, v.z, v.w}; 
 }
 
+void SerializedObject::SetColor(std::string name, Color v)
+{
+    internal->floatArrays[name] = {v.r, v.g, v.b, v.a}; 
+}
+
 void SerializedObject::SetMat2(std::string name, Mat2 v)
 {  
     internal->floatArrays[name] = {v.col[0].x, v.col[0].y, 
@@ -510,6 +515,17 @@ Vec4 SerializedObject::GetVec4(std::string name, Vec4 v)
     if(vec->size() >= 4)
     {
         return Vec4((*vec)[0], (*vec)[1], (*vec)[2], (*vec)[3]);
+    } 
+    return v;
+}
+
+Color SerializedObject::GetColor(std::string name, Color v)
+{
+    if(internal->floatArrays.count(name) == 0) return v;
+    auto vec = &(internal->floatArrays[name]);
+    if(vec->size() >= 4)
+    {
+        return Color((*vec)[0], (*vec)[1], (*vec)[2], (*vec)[3]);
     } 
     return v;
 }
