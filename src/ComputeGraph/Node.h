@@ -155,7 +155,7 @@ class Node
         virtual Data GetOutput(int inx) { return Data(NullData, NULL); }
 
         /**Setup and input to this node.*/
-        inline void SetInput(Node* innode, int outinx=0)
+        inline void AddInput(Node* innode, int outinx=0)
         {
             inputConnection.push_back({innode, outinx});
         }

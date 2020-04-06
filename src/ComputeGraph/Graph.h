@@ -21,16 +21,16 @@ namespace ComputeGraph
 class Graph: public Node
 {
     VISI_CLONEABLE_MACRO(Graph) 
-    protected:
+	public:
         std::vector<Node*> nodes; 
         std::vector<Connection> graphOutputMapping;
-
-	public:
         Nodes::InputCopySource graphInputSource;         
 
-        Graph(): graphInputSource(this)
-        {
+        Graph(): graphInputSource(this) {}
 
+        inline void AddOutputMapping(Node* n, int outinx=0)
+        {
+            graphOutputMapping.push_back({n, outinx});
         }
 
         Data GetOutput(int inx)
@@ -96,6 +96,19 @@ class Graph: public Node
             }
 
             sObj->SetSerializedObjectArray("nodes", nodessobj);
+            
+            std::vector<SerializedObject*> graphOutputMappingSObj;
+            for(int i = 0; i < graphOutputMapping.size(); i++)
+            {
+                SerializedObject* connectionSObj = new SerializedObject();
+                int outInx = graphOutputMapping[i].outputInx;
+                connectionSObj->SetInt("outinx", outInx);
+                std::string connectionId = idmap[ graphOutputMapping[i].node ];
+                connectionSObj->SetString("id", connectionId);
+                graphOutputMappingSObj.push_back(connectionSObj); 
+            }
+            sObj->SetSerializedObjectArray("outmaps", graphOutputMappingSObj);
+            
         }
 
         virtual void Deserialize(SerializedObject* sObj)
@@ -148,7 +161,23 @@ class Graph: public Node
                         n->inputConnection.push_back(conec); 
                     }
                 }
-                
+
+                //build the output mappings
+                std::vector<SerializedObject*> graphOutputMappingSObj;
+                bool hasOutputMappings = sObj->GetSerializedObjectArray("outmaps", graphOutputMappingSObj);
+                graphOutputMapping.clear(); 
+                if(hasOutputMappings)
+                {
+                    for(int i = 0; i < graphOutputMappingSObj.size(); i++)
+                    {
+                        std::string connectionId = graphOutputMappingSObj[i]->GetString("id"); 
+                        int outInx = graphOutputMappingSObj[i]->GetInt("outinx"); 
+                        Connection conec;
+                        conec.node = ptrmap[connectionId]; 
+                        conec.outputInx = outInx; 
+                        graphOutputMapping.push_back(conec); 
+                    }
+                }           
             }
         }
 };
