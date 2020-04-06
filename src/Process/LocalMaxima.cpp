@@ -32,7 +32,7 @@ class LocalMaxima::Internal
 LocalMaxima::Internal::Internal()
 {
     size = 3;
-    threshold = 0.1; 
+    threshold = 0.00001f; 
 }
 
 void LocalMaxima::Internal::Run(Image* input, Image* output, std::vector<Vec2>& localMaxima)
@@ -59,7 +59,7 @@ void LocalMaxima::Internal::Run(Image* input, Image* output, std::vector<Vec2>& 
             glm::vec4 midPixel = GetPixel(input, i,   j); 
 
             //Test greated than threshold
-            if(midPixel.r < threshold)
+            if(midPixel.r <= threshold)
                 continue; 
             
             //test on neighbour (greatest in neighboorhood)

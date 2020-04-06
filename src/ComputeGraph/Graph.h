@@ -21,6 +21,13 @@ namespace ComputeGraph
 class Graph: public Node
 {
     VISI_CLONEABLE_MACRO(Graph) 
+
+    protected:
+        void Run()
+        {
+            
+        }
+
 	public:
         std::vector<Node*> nodes; 
         std::vector<Connection> graphOutputMapping;

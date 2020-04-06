@@ -459,4 +459,20 @@ BoundingBox Contour::FindBoundingBox(Contour* contour)
 	return minAreaBB;
 }
 
+Vec2 Contour::FindMeanVertex(Contour* contour)
+{
+    Vec2 av(0, 0); 
+    for(int i = 0; i < contour->verticies.size(); i++)
+    {
+        Vec2 v = contour->verticies[i]; 
+        av.x += v.x; 
+        av.y += v.y; 
+    }
+
+    av.x /= (float)contour->verticies.size(); 
+    av.y /= (float)contour->verticies.size(); 
+    return av; 
+}
+
+
 }

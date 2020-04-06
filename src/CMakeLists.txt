@@ -36,6 +36,7 @@ set(LIBRARYSRCFILES
 	Process/Crop.cpp
 	Process/Downsample.cpp
 	Process/FindContours.cpp
+	Process/FixedRadiusNN.cpp
 	Process/GaussianBlur.cpp
 	Process/GaussianDerivative.cpp
 	Process/GrayScale.cpp

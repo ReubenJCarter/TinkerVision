@@ -26,6 +26,7 @@ class VISI_EXPORT Contour
                 static void ContoursMergeVerticies(std::vector<Contour>* input, std::vector<Contour>* output, float mergeDist);
                 static void FindConvexHull(Contour* contour, std::vector<int>* convexHull); 
                 static BoundingBox FindBoundingBox(Contour* contour); 
+                static Vec2 FindMeanVertex(Contour* contour); 
 };
 	
 }

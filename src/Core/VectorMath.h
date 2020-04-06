@@ -124,4 +124,5 @@ class CameraPose
         Vec3 translation;
 };
 
+
 }
