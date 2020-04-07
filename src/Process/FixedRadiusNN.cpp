@@ -113,6 +113,45 @@ class FixedRadiusNN::Internal
                 nns->at(i) = distances2[i].inx; 
             }
         }
+
+        void RadialOutlierRemoval(std::vector<Vec2>* vecs, float minRadius, float maxRadius, int minNsWithinBounds)
+        {
+            Build(vecs, maxRadius); 
+            std::vector<Visi::Vec2> newVerticies;
+            newVerticies.reserve(vecs->size()); 
+            float minRadius2 = minRadius*minRadius;
+            float maxRadius2 = maxRadius*maxRadius;
+            for(int i = 0; i < vecs->size(); i++)
+            {
+                Visi::Vec2 vc = vecs->at(i);
+                std::vector<int> nns;
+                Test(vc, &nns); 
+                int validNCount = 0;
+                for(int j = 0; j < nns.size(); j++)
+                {
+                    if(nns[j] == i)
+                        continue; 
+
+                    Visi::Vec2 n = vecs->at( nns[j] );
+                    float dist = (n - vc).Length2(); 
+                    
+                    if(dist > minRadius2 && dist < maxRadius2)
+                    { 
+                        validNCount++; 
+                    }
+                }
+                if(validNCount >= minNsWithinBounds)	
+                {
+                    newVerticies.push_back(vc); 
+                }
+            }
+
+            vecs->clear(); 
+            for(int i = 0; i < newVerticies.size(); i++)
+            {
+                vecs->push_back(newVerticies[i]); 
+            }
+        }
 };
 
 
@@ -139,6 +178,11 @@ void FixedRadiusNN::Test(Vec2 point, std::vector<int>* nns)
 void FixedRadiusNN::SortByDistance(Vec2 point, std::vector<Vec2>* vecs, std::vector<int>* nns)
 {
     internal->SortByDistance(point, vecs, nns); 
+}
+
+void FixedRadiusNN::RadialOutlierRemoval(std::vector<Vec2>* vecs, float minRadius, float maxRadius, int minNsWithinBounds)
+{
+    internal->RadialOutlierRemoval(vecs, minRadius, maxRadius, minNsWithinBounds); 
 }
 
 
