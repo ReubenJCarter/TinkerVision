@@ -25,6 +25,12 @@ class FixedRadiusNN::Internal
             unsigned int hash;
         };
 
+        struct DistanceInx
+        {
+            unsigned int inx;
+            float dist; 
+        }; 
+
         std::vector<HashInx> hs; 
 
         float cellSize; 
@@ -71,13 +77,15 @@ class FixedRadiusNN::Internal
                 if(itt == hs.end()) continue;
 
                 //out of range
-		        if( itt->hash > hn[i] + 2) continue;
+		        if( (*itt).hash > hn[i] + 2) continue;
 
 
-                while( itt->hash <= hn[i] + 2  &&  itt != hs.end())
+                while( (*itt).hash <= hn[i] + 2)
                 {
-                    nns->push_back( itt->inx );
+                    nns->push_back( (*itt).inx );
                     itt++;
+                    if(itt == hs.end())
+                        break; 
                 }
             }
 
@@ -86,20 +94,15 @@ class FixedRadiusNN::Internal
 
         void SortByDistance(Vec2 point, std::vector<Vec2>* vecs, std::vector<int>* nns)
         {
-            struct InxDist
-            {
-                int inx; 
-                float dist;
-            };
-            std::vector<InxDist> distances2;
+            std::vector<DistanceInx> distances2;
             distances2.reserve(nns->size());
             for(int i = 0; i < nns->size(); i++)
             {
-                InxDist inxd; 
+                DistanceInx inxd; 
                 Vec2 v = vecs->at(nns->at(i)); 
                 float xdiff = (v.x - point.x);
                 float ydiff = (v.y - point.y);
-                inxd.dist = xdiff*xdiff + ydiff * ydiff;
+                inxd.dist = xdiff * xdiff + ydiff * ydiff;
                 inxd.inx = nns->at(i); 
                 distances2.push_back(inxd); 
             }

@@ -13,7 +13,7 @@ namespace Process
 {
 
 
-class FixedRadiusNN
+class VISI_EXPORT FixedRadiusNN
 {
     private:
         class Internal;
