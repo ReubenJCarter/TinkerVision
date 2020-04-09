@@ -21,6 +21,12 @@ option(USE_FFMPEG "link against FFMPEG" ON)
 if (USE_FFMPEG)
 	add_definitions(-DUSE_FFMPEG)
 endif()
+option(BUILD_GUI "Build the Node based UI" ON)
+if (BUILD_GUI)
+	add_definitions(-DBUILD_GUI)
+endif()
+option(CREATE_JAVA_SUPPORT "Create java support" ON)
+option(CREATE_CSHARP_SUPPORT "Create CSHARP support" OFF)
 
 #doxygen custom target 
 add_custom_target(doc doxygen ${CMAKE_SOURCE_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} 
@@ -105,9 +111,6 @@ endif()
 
 
 #Swig and other languages support 
-option(CREATE_JAVA_SUPPORT "Create java support" ON)
-option(CREATE_CSHARP_SUPPORT "Create CSHARP support" OFF)
-
 if (CREATE_JAVA_SUPPORT) #OR CREATE_CSHARP_SUPPORT)
 	find_package(SWIG REQUIRED)
 	include(${SWIG_USE_FILE})
@@ -120,6 +123,59 @@ if(CREATE_JAVA_SUPPORT)
 	include_directories(${JNI_LIBRARIES})
 	find_package(Java 1.8 REQUIRED )
 	include(UseJava)
+endif()
+
+#QT
+if(BUILD_GUI)
+	find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL)
+	include_directories(${Qt5Widgets_INCLUDE_DIRS})
+
+	set(QT_BIN_DIR "C:/Qt/5.12.0/msvc2017_64/bin" CACHE PATH "Path to QT binary files ")
+
+	install(FILES ${QT_BIN_DIR}/Qt5Core.dll
+				  ${QT_BIN_DIR}/Qt5Gui.dll
+				  ${QT_BIN_DIR}/Qt5Widgets.dll
+				  ${QT_BIN_DIR}/Qt5OpenGL.dll
+				  ${QT_BIN_DIR}/Qt5Concurrent.dll
+
+				  ${QT_BIN_DIR}/Qt5Cored.dll
+				  ${QT_BIN_DIR}/Qt5Guid.dll
+				  ${QT_BIN_DIR}/Qt5Widgetsd.dll
+				  ${QT_BIN_DIR}/Qt5OpenGLd.dll
+				  ${QT_BIN_DIR}/Qt5Concurrentd.dll
+
+				  ${QT_BIN_DIR}/../plugins/platforms/qwindows.dll
+			DESTINATION bin
+			COMPONENT gui
+	)
+
+	install(DIRECTORY ${QT_BIN_DIR}/../plugins/platforms
+			DESTINATION bin
+			COMPONENT gui
+	)
+endif()
+
+#QT nodeeditor
+if(BUILD_GUI)
+	add_definitions(-DNODE_EDITOR_SHARED)
+	set(QT_NODEEDITOR_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/nodeeditor/include)
+	set(QT_NODEEDITOR_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/nodeeditor/build/lib)
+	set(QT_NODEEDITOR_LIB_DEBUG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/nodeeditor/build/lib)
+	set(QT_NODEEDITOR_BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/nodeeditor/build/bin/Release)
+	set(QT_NODEEDITOR_BIN_DEBUG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/nodeeditor/build/bin/Debug)
+	include_directories(${QT_NODEEDITOR_INC_DIR})
+	link_directories(${QT_NODEEDITOR_LIB_DIR})
+
+	install(FILES ${QT_NODEEDITOR_BIN_DIR}/nodes.dll
+			CONFIGURATIONS Release
+			DESTINATION bin
+			COMPONENT gui
+	)
+	install(FILES ${QT_NODEEDITOR_BIN_DEBUG_DIR}/nodes.dll
+			CONFIGURATIONS Debug
+			DESTINATION bin
+			COMPONENT gui
+	)
 endif()
 
 #cmake dirs
