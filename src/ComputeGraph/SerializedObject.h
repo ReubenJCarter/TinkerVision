@@ -23,7 +23,10 @@ class VISI_EXPORT SerializedObject
 
     public:
         SerializedObject();
+        SerializedObject(std::string str);
         ~SerializedObject();
+
+        void Destroy(); 
 
         std::string ToString();
         void FromString(std::string str); 

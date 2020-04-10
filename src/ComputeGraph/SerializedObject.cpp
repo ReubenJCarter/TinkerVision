@@ -278,12 +278,43 @@ SerializedObject::SerializedObject()
     internal = new Internal;    
 }
 
+SerializedObject::SerializedObject(std::string str)
+{
+    internal = new Internal;    
+    FromString(str); 
+}
+
 SerializedObject::~SerializedObject()
 {
     delete internal; 
 }
 
+void SerializedObject::Destroy()
+{
+    for (auto it = internal->objs.begin(); it != internal->objs.end(); ++it)   
+    {
+        delete it->second;
+    }
 
+    for (auto it = internal->objArrays.begin(); it != internal->objArrays.end(); ++it)   
+    {
+        for(int i = 0; i < it->second.size(); i++)
+        {
+            delete it->second[i];
+        }
+    }
+
+    internal->floats.clear(); 
+    internal->floatArrays.clear(); 
+	internal->ints.clear(); 
+    internal->intArrays.clear(); 
+    internal->bools.clear(); 
+    internal->boolArrays.clear(); 
+    internal->strings.clear(); 
+    internal->stringArrays.clear(); 
+    internal->objs.clear(); 
+    internal->objArrays.clear(); 
+}
 
 std::string SerializedObject::ToString()
 {
@@ -302,6 +333,8 @@ std::string SerializedObject::ToString()
 
 void SerializedObject::FromString(std::string str)
 {
+    Destroy(); 
+    
     Document doc;
     doc.Parse(str.c_str());
     internal->ParseJson(&doc);

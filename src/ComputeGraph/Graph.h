@@ -28,7 +28,15 @@ class Graph: public Node
         Nodes::InputCopySource graphInputSource;    
 
 	public:
-        Graph(): graphInputSource(this) {}
+        Graph(): graphInputSource(this) 
+        {
+
+        }
+        
+        ~Graph()
+        {
+            Destroy(); 
+        }
 
         inline void Destroy()
         {
@@ -70,6 +78,7 @@ class Graph: public Node
 
         virtual void Serialize(SerializedObject* sObj)
         {
+            sObj->Destroy(); 
             //count the nubmer of different types
             std::map<std::string, int> typeCount;
             for(int i = 0; i < nodes.size(); i++)
@@ -178,7 +187,7 @@ class Graph: public Node
                     
                     Node* n = nodes[i]; 
                     
-                    n->ClearInputConnections(); 
+                    n->ClearInputConnections(); //needed??
 
                     for (int c = 0; c < connectionsArraySObj.size(); c++)
                     {
