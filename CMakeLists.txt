@@ -139,7 +139,8 @@ if(BUILD_GUI)
 	find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL)
 	include_directories(${Qt5Widgets_INCLUDE_DIRS})
 
-	set(QT_BIN_DIR "C:/Qt/5.12.0/msvc2017_64/bin" CACHE PATH "Path to QT binary files ")
+	#set(QT_BIN_DIR "C:/Qt/5.12.0/msvc2017_64/bin" CACHE PATH "Path to QT binary files ")
+	set(QT_BIN_DIR ${Qt5_DIR}/../../../bin CACHE PATH "Path to QT binary files ")
 
 	install(FILES ${QT_BIN_DIR}/Qt5Core.dll
 				  ${QT_BIN_DIR}/Qt5Gui.dll

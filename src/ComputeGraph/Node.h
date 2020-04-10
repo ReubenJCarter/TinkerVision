@@ -123,22 +123,42 @@ class Node
                 }
         };
 
-        struct Connection
+        class Connection
         {
-            Node* node; 
-            int outputInx;
+            public:
+                Connection()
+                {
+                    node = NULL;
+                    outputInx = -1; 
+                }
+
+                Connection(Node* n, int outInx)
+                {
+                    node = n;
+                    outputInx = outInx; 
+                }
+
+                Node* node; 
+                int outputInx;
         };
 
     protected:    
+        /**id of node*/
+        std::string id; 
+
+        /**connection list*/    
+        std::vector<Connection> inputConnection; 
+
+    public:
         /**Run the node. can be overloaded to use the inputconnections.GetOutput functions to get data.*/
         virtual void Run() {}; 
 
-    public:
-         /**connection list*/    
-        std::vector<Connection> inputConnection; 
+        /**Gets a pointer to a generic value at the output index of the node. */
+        virtual Data GetOutput(int inx) { return Data(NullData, NULL); }
 
-        /**id of node*/
-        std::string id; 
+        virtual void Serialize(SerializedObject* sObj){}
+        
+        virtual void Deserialize(SerializedObject* sObj){}
 
         /** Gets the input value at a particular index. fromt the output of an input connection*/
         inline Data GetInputData(int inx)
@@ -151,18 +171,41 @@ class Node
             return inputConnection[inx].node->GetOutput(inputConnection[inx].outputInx); 
         }
 
-        /**Gets a pointer to a generic value at the output index of the node. */
-        virtual Data GetOutput(int inx) { return Data(NullData, NULL); }
-
         /**Setup and input to this node.*/
-        inline void AddInput(Node* innode, int outinx=0)
+        inline void AddInputConnection(Node* innode, int outinx=0)
         {
-            inputConnection.push_back({innode, outinx});
+            inputConnection.push_back(Connection(innode, outinx));
         }
-        
-        virtual void Serialize(SerializedObject* sObj){}
-        
-        virtual void Deserialize(SerializedObject* sObj){}
+
+        inline void ClearInputConnections()
+        {
+            inputConnection.clear(); 
+        }
+
+        inline int GetInputConnectionNumber()
+        {
+            return inputConnection.size();
+        }
+
+        inline Connection GetInputConnection(int inx)
+        {
+            if(inx < 0 || inx >= inputConnection.size()) //range check on input array
+            {
+                return Connection(); 
+            }
+
+            return inputConnection[inx]; 
+        }
+
+        void SetId(std::string idstr)
+        {
+            id = idstr;
+        }
+
+        std::string GetId()
+        {
+            return id; 
+        }
 };
 
 std::map<std::string, Node*>  Node::nodeTypes; 

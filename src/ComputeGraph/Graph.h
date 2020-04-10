@@ -23,21 +23,34 @@ class Graph: public Node
     VISI_CLONEABLE_MACRO(Graph) 
 
     protected:
-        void Run()
-        {
-            
-        }
-
-	public:
         std::vector<Node*> nodes; 
         std::vector<Connection> graphOutputMapping;
-        Nodes::InputCopySource graphInputSource;         
+        Nodes::InputCopySource graphInputSource;    
 
+	public:
         Graph(): graphInputSource(this) {}
+
+        inline void Destroy()
+        {
+            graphOutputMapping.clear(); 
+            for(int i = 0; i < nodes.size(); i++)
+            {
+                delete nodes[i]; 
+            }
+            nodes.clear();
+        }
 
         inline void AddOutputMapping(Node* n, int outinx=0)
         {
-            graphOutputMapping.push_back({n, outinx});
+            Connection c;  
+            c.outputInx = outinx; 
+            c.node = n; 
+            graphOutputMapping.push_back(c);
+        }
+
+        inline void ClearOutputMappings()
+        {
+            graphOutputMapping.clear(); 
         }
 
         Data GetOutput(int inx)
@@ -48,6 +61,11 @@ class Graph: public Node
             }
 
             return graphOutputMapping[inx].node->GetOutput(graphOutputMapping[inx].outputInx); 
+        }
+
+        void Run()
+        {
+            
         }
 
         virtual void Serialize(SerializedObject* sObj)
@@ -84,12 +102,12 @@ class Graph: public Node
 
                 //create the connections array for each object
                 std::vector<SerializedObject*> connectionsArraySObj;
-                for(int c = 0; c < nodes[i]->inputConnection.size(); c++)
+                for(int c = 0; c < nodes[i]->GetInputConnectionNumber(); c++)
                 {
                     SerializedObject* connectionSObj = new SerializedObject();
-                    int outInx = nodes[i]->inputConnection[c].outputInx;
+                    int outInx = nodes[i]->GetInputConnection(c).outputInx;
                     connectionSObj->SetInt("outinx", outInx);
-                    std::string connectionId = idmap[nodes[i]->inputConnection[c].node];
+                    std::string connectionId = idmap[nodes[i]->GetInputConnection(c).node];
                     connectionSObj->SetString("id", connectionId);
                     connectionsArraySObj.push_back(connectionSObj); 
                 }
@@ -120,6 +138,10 @@ class Graph: public Node
 
         virtual void Deserialize(SerializedObject* sObj)
         {
+            //Destroy whole current graph 
+            Destroy(); 
+
+            //
             std::map<std::string, Node*> ptrmap; 
             ptrmap["GraphInputSource"] = &graphInputSource;
 
@@ -137,7 +159,7 @@ class Graph: public Node
                     ptrmap[id] = n; 
                     if(n != NULL)
                     {
-                        n->id = id; 
+                        n->SetId( id ); 
                     }
                    
                     SerializedObject* params = nodessobj[i]->GetSerializedObject("params"); 
@@ -156,16 +178,13 @@ class Graph: public Node
                     
                     Node* n = nodes[i]; 
                     
-                    n->inputConnection.reserve(connectionsArraySObj.size()); 
+                    n->ClearInputConnections(); 
 
                     for (int c = 0; c < connectionsArraySObj.size(); c++)
                     {
                         std::string connectionId = connectionsArraySObj[c]->GetString("id"); 
-                        int outInx = connectionsArraySObj[c]->GetInt("outinx"); 
-                        Connection conec;
-                        conec.node = ptrmap[connectionId]; 
-                        conec.outputInx = outInx; 
-                        n->inputConnection.push_back(conec); 
+                        int outInx = connectionsArraySObj[c]->GetInt("outinx");  
+                        n->AddInputConnection(ptrmap[connectionId], outInx); 
                     }
                 }
 
