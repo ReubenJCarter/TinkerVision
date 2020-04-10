@@ -109,3 +109,18 @@ if(CREATE_JAVA_SUPPORT)
 	add_jar(${CMAKE_PROJECT_NAME}_JAVAPACKAGE SOURCES ${JAVA_BINDING_SRC})
     install_jar(${CMAKE_PROJECT_NAME}_JAVAPACKAGE DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 endif()
+
+
+#Building the GUI 
+if(BUILD_GUI)
+	set(GUISRCFILES
+		GUI/Main.cpp
+		GUI/MainWindow.cpp
+		GUI/NodeEditor.cpp
+	)
+
+	add_executable(${CMAKE_PROJECT_NAME}_GUI ${GUISRCFILES})
+	target_link_libraries(${CMAKE_PROJECT_NAME}_GUI Qt5::Core Qt5::Widgets)
+	target_link_libraries(${CMAKE_PROJECT_NAME}_GUI debug Debug/nodes optimized Release/nodes)
+	install(TARGETS ${CMAKE_PROJECT_NAME}_GUI RUNTIME DESTINATION bin)
+endif()

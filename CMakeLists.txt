@@ -10,12 +10,6 @@ set(SoftwareVersion 0.1)
 add_definitions(-DSOFTWAREVERSION=${SoftwareVersion})
 
 
-set(CMAKE_BUILD_TYPE RELEASE)
-set(GCC_COMPILE_FLAGS "-std=c++11 -Wall -O3 -g -static")
-set(GCC_LINK_FLAGS "")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_LINK_FLAGS}")
-
 #defs
 option(USE_FFMPEG "link against FFMPEG" ON)
 if (USE_FFMPEG)
@@ -28,10 +22,27 @@ endif()
 option(CREATE_JAVA_SUPPORT "Create java support" ON)
 option(CREATE_CSHARP_SUPPORT "Create CSHARP support" OFF)
 
+
+#compiler options
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_BUILD_TYPE RELEASE)
+set(GCC_COMPILE_FLAGS "-std=c++11 -Wall -O3 -g -static")
+set(GCC_LINK_FLAGS "")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_LINK_FLAGS}")
+
+
+
+
+
 #doxygen custom target 
 add_custom_target(doc doxygen ${CMAKE_SOURCE_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} 
 COMMENT "Generating documentation with Doxygen" VERBATIM
 )
+
+
+
+
 
 #glm
 set(GLM_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/glm CACHE PATH "Path to GLM")
@@ -108,8 +119,6 @@ if (USE_FFMPEG)
 	)
 endif()
 
-
-
 #Swig and other languages support 
 if (CREATE_JAVA_SUPPORT) #OR CREATE_CSHARP_SUPPORT)
 	find_package(SWIG REQUIRED)
@@ -178,6 +187,10 @@ if(BUILD_GUI)
 	)
 endif()
 
+
+
+
+
 #cmake dirs
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(src)
@@ -188,7 +201,7 @@ install(FILES ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}_export.h
 		DESTINATION include
 )
 
-
+#copy header files to include install path
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/ DESTINATION include/${CMAKE_PROJECT_NAME}
 		FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
 )
