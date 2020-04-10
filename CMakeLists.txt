@@ -56,6 +56,10 @@ include_directories(${EIGEN_INC_DIR})
 set(CTPL_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/ctpl CACHE PATH "Path to CTPL")
 include_directories(${CTPL_INC_DIR})
 
+#exprtk
+set(EXPRTK_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/exprtk CACHE PATH "Path to exprtk")
+include_directories(${EXPRTK_INC_DIR})
+
 #FreeImage
 set(FREEIMAGE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/FreeImage/Dist/x64 CACHE PATH "Path to Free Image")
 set(FREEIMAGE_INC_DIR ${FREEIMAGE_DIR})

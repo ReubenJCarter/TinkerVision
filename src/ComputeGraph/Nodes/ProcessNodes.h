@@ -28,8 +28,15 @@ class BaseProcess1In1OutCPUOnly: public Node
     public: 
         Data GetOutput(int inx){ return outImageData; }
 
+        inline virtual void SetParams()
+        {
+            
+        }
+
         void Run()
         {
+            SetParams(); 
+            
             Image* inDstAsimage = GetInputData(0).AsType<Image>(ImageData);  
 
             Image* inSrcAsimage = GetInputData(1).AsType<Image>(ImageData);  
@@ -56,13 +63,15 @@ class BaseProcess1In1Out: public Node
     public: 
         Data GetOutput(int inx){ return outImageData; }
 
-        void SetParams()
+        inline virtual void SetParams()
         {
             
         }
 
         void Run()
         {
+            SetParams(); 
+
             Image* inDstAsimage = GetInputData(0).AsType<Image>(ImageData);
             ImageGPU* inDstAsimageGPU = GetInputData(0).AsType<ImageGPU>(ImageGPUData);  
 
