@@ -14,6 +14,9 @@ namespace Visi
 {
 namespace GUI
 {
+namespace NodeEditor
+{
+
 class NodeEditorWidget: public QWidget
 {
 	Q_OBJECT 
@@ -22,11 +25,12 @@ class NodeEditorWidget: public QWidget
 		QtNodes::FlowScene* flowScene;
 		QtNodes::FlowView* flowView;
 		QGridLayout* layout;
-		void SetStyle();
+		void SetStyle(bool darkMode);
 		
 	public:
 		NodeEditorWidget(); 
 };
-	
+
+}	
 }
 }

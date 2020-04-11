@@ -10,7 +10,16 @@ namespace Visi
 namespace GUI
 {
 
-class NodeEditor;
+
+namespace NodeEditor
+{
+class NodeEditorWidget;
+}
+
+namespace ProjectHierarchy
+{
+class ProjectHierarchyWidget; 
+}
 
 class MainWindow: public QMainWindow
 {
@@ -19,7 +28,8 @@ class MainWindow: public QMainWindow
 		QMenu* fileMenu;
 		QAction* saveAction;
 		QAction* loadAction;
-		NodeEditor* nodeEditor; 
+		NodeEditor::NodeEditorWidget* nodeEditorWidegt; 
+		ProjectHierarchy::ProjectHierarchyWidget* projectHierarchyWidget; 
 		
 		MainWindow();
 		void ExpandToFitScreen();

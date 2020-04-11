@@ -114,9 +114,12 @@ endif()
 #Building the GUI 
 if(BUILD_GUI)
 	set(GUISRCFILES
+		
+		GUI/NodeEditor/NodeEditorWidget.cpp
+		GUI/ProjectHierarchy/ProjectHierarchyWidget.cpp
+
 		GUI/Main.cpp
 		GUI/MainWindow.cpp
-		GUI/NodeEditor/NodeEditorWidget.cpp
 	)
 
 	add_executable(${CMAKE_PROJECT_NAME}_GUI ${GUISRCFILES})

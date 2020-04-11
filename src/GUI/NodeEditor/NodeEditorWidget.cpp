@@ -15,61 +15,66 @@ namespace Visi
 {
 namespace GUI
 {
-	
-void NodeEditorWidget::SetStyle()
+namespace NodeEditor
 {
-	QtNodes::FlowViewStyle::setStyle(
-	R"(
+	
+void NodeEditorWidget::SetStyle(bool darkMode)
+{
+	if(!darkMode)
 	{
-	"FlowViewStyle": {
-	"BackgroundColor": [255, 255, 240],
-	"FineGridColor": [245, 245, 230],
-	"CoarseGridColor": [235, 235, 220]
-	}
-	}
-	)");
+		QtNodes::FlowViewStyle::setStyle(
+		R"(
+		{
+		"FlowViewStyle": {
+		"BackgroundColor": [255, 255, 240],
+		"FineGridColor": [245, 245, 230],
+		"CoarseGridColor": [235, 235, 220]
+		}
+		}
+		)");
 
-	QtNodes::NodeStyle::setNodeStyle(
-	R"(
-	{
-	"NodeStyle": {
-	"NormalBoundaryColor": "darkgray",
-	"SelectedBoundaryColor": "deepskyblue",
-	"GradientColor0": "mintcream",
-	"GradientColor1": "mintcream",
-	"GradientColor2": "mintcream",
-	"GradientColor3": "mintcream",
-	"ShadowColor": [255, 255, 255],
-	"FontColor": [10, 10, 10],
-	"FontColorFaded": [100, 100, 100],
-	"ConnectionPointColor": "white",
-	"ErrorColor": "white",
-	"PenWidth": 2.0,
-	"HoveredPenWidth": 2.5,
-	"ConnectionPointDiameter": 10.0,
-	"Opacity": 1.0
-	}
-	}
-	)");
+		QtNodes::NodeStyle::setNodeStyle(
+		R"(
+		{
+		"NodeStyle": {
+		"NormalBoundaryColor": "darkgray",
+		"SelectedBoundaryColor": "deepskyblue",
+		"GradientColor0": "mintcream",
+		"GradientColor1": "mintcream",
+		"GradientColor2": "mintcream",
+		"GradientColor3": "mintcream",
+		"ShadowColor": [255, 255, 255],
+		"FontColor": [10, 10, 10],
+		"FontColorFaded": [100, 100, 100],
+		"ConnectionPointColor": "white",
+		"ErrorColor": "white",
+		"PenWidth": 2.0,
+		"HoveredPenWidth": 2.5,
+		"ConnectionPointDiameter": 10.0,
+		"Opacity": 1.0
+		}
+		}
+		)");
 
-	QtNodes::ConnectionStyle::setConnectionStyle(
-	R"(
-	{
-	"ConnectionStyle": {
-	"ConstructionColor": "gray",
-	"NormalColor": "black",
-	"SelectedColor": "gray",
-	"SelectedHaloColor": "deepskyblue",
-	"HoveredColor": "deepskyblue",
+		QtNodes::ConnectionStyle::setConnectionStyle(
+		R"(
+		{
+		"ConnectionStyle": {
+		"ConstructionColor": "gray",
+		"NormalColor": "black",
+		"SelectedColor": "gray",
+		"SelectedHaloColor": "deepskyblue",
+		"HoveredColor": "deepskyblue",
 
-	"LineWidth": 3.0,
-	"ConstructionLineWidth": 2.0,
-	"PointDiameter": 10.0,
+		"LineWidth": 3.0,
+		"ConstructionLineWidth": 2.0,
+		"PointDiameter": 10.0,
 
-	"UseDataDefinedColors": true
+		"UseDataDefinedColors": true
+		}
+		}
+		)");
 	}
-	}
-	)");
 }
 
 NodeEditorWidget::NodeEditorWidget()
@@ -101,7 +106,7 @@ NodeEditorWidget::NodeEditorWidget()
 		*/					 
 		return ret; 
 	};
-	SetStyle();
+	SetStyle(true);
 	flowScene = new QtNodes::FlowScene(RegisterDataModels());
 	flowView = new QtNodes::FlowView(flowScene);
 	
@@ -109,5 +114,6 @@ NodeEditorWidget::NodeEditorWidget()
 	layout->addWidget(flowView);
 }
 
+}
 }
 }

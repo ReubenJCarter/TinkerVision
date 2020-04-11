@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 
 #include "NodeEditor/NodeEditorWidget.h"
+#include "ProjectHierarchy/ProjectHierarchyWidget.h"
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMenu>
@@ -27,12 +28,13 @@ MainWindow::MainWindow()
 	connect(loadAction, &QAction::triggered, this, &MainWindow::Load);
 	
 	//central
-	nodeEditor = new NodeEditor(); 
-	setCentralWidget(nodeEditor);
+	nodeEditorWidegt = new NodeEditor::NodeEditorWidget(); 
+	setCentralWidget(nodeEditorWidegt);
 
 	//dockables
+	projectHierarchyWidget = new ProjectHierarchy::ProjectHierarchyWidget(); 
+	addDockWidget(Qt::LeftDockWidgetArea, projectHierarchyWidget);
 
-	
 	//Show
 	showNormal();
 	ExpandToFitScreen();
