@@ -1,4 +1,4 @@
-#include "NodeEditor.h"
+#include "NodeEditorWidget.h"
 
 #include <QGridLayout.h>
 
@@ -16,7 +16,7 @@ namespace Visi
 namespace GUI
 {
 	
-void NodeEditor::SetStyle()
+void NodeEditorWidget::SetStyle()
 {
 	QtNodes::FlowViewStyle::setStyle(
 	R"(
@@ -72,7 +72,7 @@ void NodeEditor::SetStyle()
 	)");
 }
 
-NodeEditor::NodeEditor()
+NodeEditorWidget::NodeEditorWidget()
 {	
 	auto RegisterDataModels = []() -> std::shared_ptr<QtNodes::DataModelRegistry> 
 	{

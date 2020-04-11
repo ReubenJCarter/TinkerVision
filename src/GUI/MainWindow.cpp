@@ -1,6 +1,6 @@
 #include "MainWindow.h"
 
-#include "NodeEditor.h"
+#include "NodeEditor/NodeEditorWidget.h"
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMenu>
@@ -33,7 +33,7 @@ MainWindow::MainWindow()
 	//dockables
 
 	
-	
+	//Show
 	showNormal();
 	ExpandToFitScreen();
 }

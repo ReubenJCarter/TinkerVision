@@ -14,7 +14,7 @@ namespace Visi
 {
 namespace GUI
 {
-class NodeEditor: public QWidget
+class NodeEditorWidget: public QWidget
 {
 	Q_OBJECT 
 	
@@ -25,7 +25,7 @@ class NodeEditor: public QWidget
 		void SetStyle();
 		
 	public:
-		NodeEditor(); 
+		NodeEditorWidget(); 
 };
 	
 }

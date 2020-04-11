@@ -116,7 +116,7 @@ if(BUILD_GUI)
 	set(GUISRCFILES
 		GUI/Main.cpp
 		GUI/MainWindow.cpp
-		GUI/NodeEditor.cpp
+		GUI/NodeEditor/NodeEditorWidget.cpp
 	)
 
 	add_executable(${CMAKE_PROJECT_NAME}_GUI ${GUISRCFILES})
