@@ -24,7 +24,10 @@ option(CREATE_CSHARP_SUPPORT "Create CSHARP support" OFF)
 
 
 #compiler options
-set(CMAKE_AUTOMOC ON)
+if(BUILD_GUI)
+	set(CMAKE_AUTOMOC ON)
+	set(CMAKE_AUTORCC ON)
+endif()
 set(CMAKE_BUILD_TYPE RELEASE)
 set(GCC_COMPILE_FLAGS "-std=c++11 -Wall -O3 -g -static")
 set(GCC_LINK_FLAGS "")
@@ -192,6 +195,11 @@ if(BUILD_GUI)
 	)
 endif()
 
+#QDarkStyleSheet
+if(BUILD_GUI)
+	set(Q_DARK_STYLE_SHEET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/QDarkStyleSheet-2.8.1 CACHE PATH "Path to QDarkStyleSheet")
+	set(Q_DARK_STYLE_SHEET_QRC_FILE ${Q_DARK_STYLE_SHEET_DIR}/qdarkstyle/style.qrc)	
+endif()
 
 
 

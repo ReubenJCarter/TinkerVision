@@ -115,6 +115,8 @@ endif()
 if(BUILD_GUI)
 	set(GUISRCFILES
 		
+		${Q_DARK_STYLE_SHEET_QRC_FILE}
+		
 		GUI/NodeEditor/NodeEditorWidget.cpp
 		GUI/ProjectHierarchy/ProjectHierarchyWidget.cpp
 
