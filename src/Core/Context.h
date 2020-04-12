@@ -25,6 +25,8 @@ class VISI_EXPORT Context
         
         /**Makes this context current. Subsequent OpenGL related calls will use this context*/
         void MakeCurrent();
+		
+		void* GetUnderlyingWindow();
         
 };
 	

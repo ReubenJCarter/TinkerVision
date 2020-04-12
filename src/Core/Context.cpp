@@ -19,6 +19,8 @@ class Context::ContextInternal
         void Destroy(); 
         static void GLErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
         static void GLFWErrorMessageCallback(int errorCode, const char* message); 
+		
+		void* GetUnderlyingWindow(); 
 
 };
 
@@ -85,6 +87,12 @@ void Context::ContextInternal::GLFWErrorMessageCallback(int errorCode, const cha
         "\n"; 
 }
 
+void* Context::ContextInternal::GetUnderlyingWindow()
+{
+	return window; 
+}
+	
+
 
 Context::Context()
 {
@@ -103,6 +111,10 @@ void Context::MakeCurrent()
     contextInternal->MakeCurrent(); 
 }
 
+void* Context::GetUnderlyingWindow()
+{
+    return contextInternal->GetUnderlyingWindow(); 
+}
 
 
 	

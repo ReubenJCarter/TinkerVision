@@ -613,7 +613,7 @@ int main(int argc, char *argv[])
 			std::cout << "Starting video test\n"; 
 			Visi::IO::VideoHelper videoHelper; 
 			videoHelper.Open(argv[2]); 
-			Visi::Window visiWindow(videoHelper.GetFrameWidth(), videoHelper.GetFrameHeight());
+			Visi::Window visiWindow(videoHelper.GetFrameWidth(), videoHelper.GetFrameHeight(), &context);
 			while(!visiWindow.ShouldClose())
 			{
 				videoHelper.NextFrame([&](Visi::ImageGPU* imageGPU, Visi::Image* image)

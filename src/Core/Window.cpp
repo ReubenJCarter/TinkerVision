@@ -17,6 +17,7 @@ namespace Visi
 class Window::Internal
 {
     private:
+		Context* originContext; 
         GLFWwindow* window;
         int width;
         int height;
@@ -37,7 +38,7 @@ class Window::Internal
 
     public:
         Internal(); 
-        void Create(int w, int h);
+        void Create(int w, int h, Context* shareContext, std::string title="");
         void MakeCurrent(); 
         void Destroy(); 
         void Clear(float r, float g, float b, float a); 
@@ -181,7 +182,7 @@ Window::Internal::Internal()
     window = NULL; 
 }
 
-void Window::Internal::Create(int w, int h) 
+void Window::Internal::Create(int w, int h, Context* shareContext, std::string title) 
 {    
     glfwInit();
 
@@ -191,8 +192,8 @@ void Window::Internal::Create(int w, int h)
     
     width = w; 
     height = h; 
-	window = glfwCreateWindow(w, h, "", NULL, NULL);
-	
+	window = glfwCreateWindow(w, h, title.c_str(), NULL, (GLFWwindow*)(shareContext->GetUnderlyingWindow()) );
+	originContext = shareContext; 
     if(window == NULL)
     {
         std::cerr << "Visi:Window:Error creating window\n"; 
@@ -209,6 +210,8 @@ void Window::Internal::Create(int w, int h)
     CreateBuffers();
 
     glViewport(0, 0, width, height);
+	
+	originContext->MakeCurrent(); 
 }
 
 void Window::Internal::MakeCurrent()
@@ -226,6 +229,7 @@ void Window::Internal::Clear(float r, float g, float b, float a)
     MakeCurrent(); 
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	originContext->MakeCurrent(); 
 }
 
 void Window::Internal::DrawImage(Image* image)
@@ -238,6 +242,7 @@ void Window::Internal::DrawImage(Image* image)
                               false, 
                               glm::value_ptr(mvpMat));
     DrawVAO(); 
+	originContext->MakeCurrent(); 
 }
 
 void Window::Internal::DrawImage(ImageGPU* image)
@@ -255,6 +260,7 @@ void Window::Internal::DrawImage(ImageGPU* image)
                               false, 
                               glm::value_ptr(mvpMat));
     DrawVAO(); 
+	originContext->MakeCurrent(); 
 }
 
 bool Window::Internal::ShouldClose()
@@ -268,13 +274,14 @@ void Window::Internal::Refresh()
     glViewport(0, 0, width, height);
     glfwSwapBuffers(window);
     glfwPollEvents();
+	originContext->MakeCurrent(); 
 }
 
 
-Window::Window(int w, int h)
+Window::Window(int w, int h, Context* shareContext, std::string title)
 {
     internal = new Internal(); 
-    internal->Create(w, h); 
+    internal->Create(w, h, shareContext); 
 }
 
 Window::~Window()

@@ -4,12 +4,15 @@
 
 #include "Image.h"
 #include "ImageGPU.h"
+#include "Context.h"
+
+#include <string>
 
 namespace Visi
 {
 	
 /*
- *Context
+ *Window
  *
  */
 	
@@ -20,7 +23,7 @@ class VISI_EXPORT Window
         Internal* internal;
 
 	public:
-        Window(int w, int h); 
+        Window(int w, int h, Context* shareContext, std::string title=""); 
         ~Window(); 
         void DrawImage(Image* image);
         void DrawImage(ImageGPU* image);
