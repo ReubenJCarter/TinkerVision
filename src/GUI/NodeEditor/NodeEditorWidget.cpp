@@ -11,6 +11,9 @@
 #include <nodes/Node>
 #include <nodes/NodeData>
 
+#include "Nodes/ImageNodes.h"
+#include "Nodes/SourceNodes.h"
+
 namespace Visi
 {
 namespace GUI
@@ -75,6 +78,25 @@ void NodeEditorWidget::SetStyle(bool darkMode)
 		}
 		)");
 	}
+	else
+	{
+		//Darkest 19232d [7, 17, 26] //put this in paleton...
+		//Geryish 2b343c [43, 52, 60]
+		//CoarseGridColor0: [43, 52, 60]
+		//CoarseGridColor1: [50, 65, 70]
+		//CoarseGridColor2: [25, 35, 45]
+		QtNodes::FlowViewStyle::setStyle(
+		R"(
+		{
+		"FlowViewStyle": {
+		"BackgroundColor": [7, 17, 26],
+		"FineGridColor": [9, 22, 33],
+		"CoarseGridColor": [25, 35, 45]
+		}
+		}
+		)");
+		
+	}
 }
 
 NodeEditorWidget::NodeEditorWidget()
@@ -82,8 +104,9 @@ NodeEditorWidget::NodeEditorWidget()
 	auto RegisterDataModels = []() -> std::shared_ptr<QtNodes::DataModelRegistry> 
 	{
 		auto ret = std::make_shared<QtNodes::DataModelRegistry>();
+		
+		ret->registerModel<Nodes::IntSource>("Sources");
 		/*
-		ret->registerModel<NumberSource>("Sources");
 		ret->registerModel<TextSource>("Sources");
 		
 		ret->registerModel<TextDisplay>("Sinks");
@@ -108,7 +131,12 @@ NodeEditorWidget::NodeEditorWidget()
 	};
 	SetStyle(true);
 	flowScene = new QtNodes::FlowScene(RegisterDataModels());
+
 	flowView = new QtNodes::FlowView(flowScene);
+
+	//flow view speed improvments
+	flowView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+	flowView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 	
 	layout = new QGridLayout(this); 
 	layout->addWidget(flowView);

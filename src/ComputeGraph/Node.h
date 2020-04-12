@@ -150,6 +150,8 @@ class Node
         std::vector<Connection> inputConnection; 
 
     public:
+        virtual ~Node() {}
+
         /**Run the node. can be overloaded to use the inputconnections.GetOutput functions to get data.*/
         virtual void Run() {}; 
 

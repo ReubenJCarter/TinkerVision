@@ -117,7 +117,9 @@ if(BUILD_GUI)
 		
 		${Q_DARK_STYLE_SHEET_QRC_FILE}
 		
+		GUI/NodeEditor/BaseNode.cpp
 		GUI/NodeEditor/NodeEditorWidget.cpp
+
 		GUI/ProjectHierarchy/ProjectHierarchyWidget.cpp
 
 		GUI/Main.cpp
