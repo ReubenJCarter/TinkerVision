@@ -23,6 +23,7 @@ namespace Nodes
 class IntSource: public BaseNode
 {
 	private:
+        int sourceValue; 
 		std::shared_ptr<IntData> data;
 		QLineEdit* lineEdit;
 	 
@@ -45,12 +46,14 @@ class IntSource: public BaseNode
                 int n = lineEdit->text().toInt(&ok);
                 if (ok)
                 {
-                    data = std::make_shared<IntData>(n);
+                    data = std::make_shared<IntData>();
+                    sourceValue = n;
                     SetValidationState(QtNodes::NodeValidationState::Valid, ""); 
                     Q_EMIT dataUpdated(0);
                 }
                 else
                 {
+                    sourceValue = 0; 
                     data = nullptr; 
                     SetValidationState(QtNodes::NodeValidationState::Error, "value error"); 
                     Q_EMIT dataUpdated(0);
@@ -58,7 +61,7 @@ class IntSource: public BaseNode
                 }
             });
             
-            data = std::make_shared<IntData>(0);
+            data = std::make_shared<IntData>();
         }
 
 		virtual ~IntSource(){}
@@ -66,7 +69,7 @@ class IntSource: public BaseNode
         QJsonObject save() const 
         {
             QJsonObject modelJson = QtNodes::NodeDataModel::save();
-            if(data) modelJson["data"] = QString::number(data->Data());
+            if(data) modelJson["data"] = QString::number(sourceValue);
             return modelJson;
         }
 
@@ -80,7 +83,8 @@ class IntSource: public BaseNode
                 int d = strNum.toInt(&ok);
                 if (ok)
                 {
-                    data = std::make_shared<IntData>(d);
+                    data = std::make_shared<IntData>();
+                    sourceValue = d; 
                     lineEdit->setText(strNum);
                 }
             }
@@ -93,6 +97,7 @@ class IntSource: public BaseNode
 class FloatSource: public BaseNode
 {
 	private:
+        float sourceValue; 
 		std::shared_ptr<FloatData> data;
 		QLineEdit* lineEdit;
 	 
@@ -115,12 +120,14 @@ class FloatSource: public BaseNode
                 float n = (float)lineEdit->text().toDouble(&ok);
                 if (ok)
                 {
-                    data = std::make_shared<FloatData>(n);
+                    data = std::make_shared<FloatData>();
+                    sourceValue = n;
                     SetValidationState(QtNodes::NodeValidationState::Valid, ""); 
                     Q_EMIT dataUpdated(0);
                 }
                 else
                 {
+                    sourceValue = 0; 
                     data = nullptr; 
                     SetValidationState(QtNodes::NodeValidationState::Error, "value error"); 
                     Q_EMIT dataUpdated(0);
@@ -128,7 +135,7 @@ class FloatSource: public BaseNode
                 }
             });
             
-            data = std::make_shared<FloatData>(0);
+            data = std::make_shared<FloatData>();
         }
 
 		virtual ~FloatSource(){}
@@ -136,7 +143,7 @@ class FloatSource: public BaseNode
         QJsonObject save() const 
         {
             QJsonObject modelJson = QtNodes::NodeDataModel::save();
-            if(data) modelJson["data"] = QString::number(data->Data());
+            if(data) modelJson["data"] = QString::number(sourceValue);
             return modelJson;
         }
 
@@ -150,7 +157,8 @@ class FloatSource: public BaseNode
                 float d = (float)strNum.toDouble(&ok);
                 if (ok)
                 {
-                    data = std::make_shared<FloatData>(d);
+                    data = std::make_shared<FloatData>();
+                    sourceValue = d; 
                     lineEdit->setText(strNum);
                 }
             }
@@ -163,6 +171,7 @@ class FloatSource: public BaseNode
 class BoolSource: public BaseNode
 {
 	private:
+        bool sourceValue; 
 		std::shared_ptr<BoolData> data;
 		QCheckBox* checkEdit;
 	 
@@ -175,16 +184,19 @@ class BoolSource: public BaseNode
             Init("BoolSource", inputPorts, outputPorts, true, "Bool Source", false); 
             
             checkEdit = new QCheckBox(); 
+            checkEdit->setCheckState(Qt::Unchecked); 
             connect(checkEdit, &QCheckBox::stateChanged, [this](int state)
             {
 	            Q_UNUSED(state);
                 bool checked = checkEdit->checkState() == Qt::Checked; 
-                data = std::make_shared<BoolData>(checked);
+                sourceValue = checked; 
+                data = std::make_shared<BoolData>();
                 SetValidationState(QtNodes::NodeValidationState::Valid, ""); 
                 Q_EMIT dataUpdated(0);
             });
             
-            data = std::make_shared<BoolData>(0);
+            sourceValue = false; 
+            data = std::make_shared<BoolData>();
         }
 
 		virtual ~BoolSource(){}
@@ -192,7 +204,7 @@ class BoolSource: public BaseNode
         QJsonObject save() const 
         {
             QJsonObject modelJson = QtNodes::NodeDataModel::save();
-            if(data) modelJson["data"] = QString::number(data->Data());
+            if(data) modelJson["data"] = QString::number(sourceValue);
             return modelJson;
         }
 
@@ -206,7 +218,8 @@ class BoolSource: public BaseNode
                 bool d = strNum.toInt(&ok) != 0;
                 if (ok)
                 {
-                    data = std::make_shared<BoolData>(d);
+                    data = std::make_shared<BoolData>();
+                    sourceValue = d;
                     if(d)
                         checkEdit->setCheckState(Qt::Checked);
                     else
@@ -222,6 +235,7 @@ class BoolSource: public BaseNode
 class StringSource: public BaseNode
 {
 	private:
+        std::string sourceValue; 
 		std::shared_ptr<StringData> data;
 		QLineEdit* lineEdit;
 	 
@@ -240,12 +254,14 @@ class StringSource: public BaseNode
             {
 	            Q_UNUSED(string);
                 std::string n = lineEdit->text().toStdString();
-                data = std::make_shared<StringData>(n);
+                data = std::make_shared<StringData>();
+                sourceValue = n; 
                 SetValidationState(QtNodes::NodeValidationState::Valid, ""); 
                 Q_EMIT dataUpdated(0);
             });
             
-            data = std::make_shared<StringData>("");
+            data = std::make_shared<StringData>();
+            sourceValue = ""; 
         }
 
 		virtual ~StringSource(){}
@@ -253,7 +269,7 @@ class StringSource: public BaseNode
         QJsonObject save() const 
         {
             QJsonObject modelJson = QtNodes::NodeDataModel::save();
-            if(data) modelJson["data"] = QString( data->Data().c_str() );
+            if(data) modelJson["data"] = QString( sourceValue.c_str() );
             return modelJson;
         }
 
@@ -264,7 +280,8 @@ class StringSource: public BaseNode
             {
                 QString str = v.toString();
                 std::string d = str.toStdString();
-                data = std::make_shared<StringData>(d);
+                data = std::make_shared<StringData>();
+                sourceValue = d; 
                 lineEdit->setText(str);
             }
         }
@@ -316,6 +333,7 @@ class ImageGPUSource: public BaseNode
 class ImageTypeSource: public BaseNode
 {
 	private:
+        std::string sourceValue; 
 		std::shared_ptr<ImageTypeData> data;
 		QComboBox* comboEdit;
 	 
@@ -343,12 +361,14 @@ class ImageTypeSource: public BaseNode
             connect(comboEdit, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](int inx)
             {
                 Q_UNUSED(inx);
-                data = std::make_shared<ImageTypeData>( comboEdit->currentText().toStdString() );
+                data = std::make_shared<ImageTypeData>();
+                sourceValue = comboEdit->currentText().toStdString(); 
                 SetValidationState(QtNodes::NodeValidationState::Valid, ""); 
                 Q_EMIT dataUpdated(0);
             });
             
-            data = std::make_shared<ImageTypeData>("RGB8");
+            data = std::make_shared<ImageTypeData>();
+            sourceValue = "RGB8"; 
         }
 
 		virtual ~ImageTypeSource(){}
@@ -356,7 +376,7 @@ class ImageTypeSource: public BaseNode
         QJsonObject save() const 
         {
             QJsonObject modelJson = QtNodes::NodeDataModel::save();
-            if(data) modelJson["data"] = QString( data->Data().c_str() );
+            if(data) modelJson["data"] = QString( sourceValue.c_str() );
             return modelJson;
         }
 
@@ -367,7 +387,8 @@ class ImageTypeSource: public BaseNode
             {
                 QString str = v.toString();
                 std::string d = str.toStdString();
-                data = std::make_shared<ImageTypeData>(d);
+                data = std::make_shared<ImageTypeData>();
+                sourceValue = d; 
                 comboEdit->setCurrentText(str); 
             }
         }

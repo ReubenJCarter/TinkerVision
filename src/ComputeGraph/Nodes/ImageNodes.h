@@ -81,13 +81,24 @@ class ImageGetDims: public Node
 {
     VISI_CLONEABLE_MACRO(ImageGetDims) 
     private:
-        Data outIntData; 
+        Data outWidth; 
+        Data outHeight; 
+        Data outType; 
+        
         int width;
         int height;  
         ImageType imtype;
         
 	public:
-        Data GetOutput(int inx){ return outIntData; }
+        Data GetOutput(int inx)
+        { 
+            if(inx == 0)
+                return outWidth; 
+            else if(inx == 1)
+                return outHeight;
+            else if(inx == 2)
+                return outType; 
+        }
 
         void Run()
         {
@@ -99,18 +110,24 @@ class ImageGetDims: public Node
                 width = inAsimage->GetWidth(); 
                 height = inAsimage->GetHeight(); 
                 imtype = inAsimage->GetType(); 
-                outIntData = Data(IntData, &width);
+                outWidth = Data(IntData, &width);
+                outHeight = Data(IntData, &height);
+                outType = Data(ImageTypeData, &imtype);
             }
             else if(inAsimageGPU != NULL)
             {
                 width = inAsimageGPU->GetWidth();
                 height = inAsimage->GetHeight(); 
                 imtype = inAsimage->GetType();  
-                outIntData = Data(IntData, &width);
+                outWidth = Data(IntData, &width);
+                outHeight = Data(IntData, &height);
+                outType = Data(ImageTypeData, &imtype);
             }
             else
             {
-                outIntData = Data(NullData, NULL);
+                outWidth = Data(NullData, NULL);
+                outHeight = Data(NullData, NULL);
+                outType = Data(NullData, NULL);
             }
         }
 };

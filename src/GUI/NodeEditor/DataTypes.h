@@ -32,67 +32,37 @@ class ImageGPUData: public BaseNodeData
 
 class ImageTypeData: public BaseNodeData
 {
-    private:
-        std::string data; 
-
 	public:
-        ImageTypeData(){ data = ""; }
-        ImageTypeData(std::string d){ data = d; }
 		QtNodes::NodeDataType type() const {return QtNodes::NodeDataType {"imageTypeData", "ImageTypeData"};};
-        std::string Data(){ return data; }
-		std::string ToString(){ return data; }
+		std::string ToString(){ return "ImageTypeData"; }
 };
 
 class IntData: public BaseNodeData
 {
-    private:
-        int data; 
-
 	public:
-        IntData(){ data = 0; }
-        IntData(int d){ data = d; }
 		QtNodes::NodeDataType type() const {return QtNodes::NodeDataType {"intData", "IntData"};};
-        int Data(){ return data; }
-		std::string ToString(){ return std::to_string(data); }
+		std::string ToString(){ return "IntData"; }
 };
 
 class FloatData: public BaseNodeData
 {
-    private:
-        float data; 
-
 	public:
-        FloatData(){ data = 0; }
-        FloatData(float d){ data = d; }
 		QtNodes::NodeDataType type() const {return QtNodes::NodeDataType {"floatData", "FloatData"};};
-        float Data(){ return data; }
-		std::string ToString(){ return std::to_string(data); }
+		std::string ToString(){ return "FloatData"; }
 };
 
 class BoolData: public BaseNodeData
 {
-    private:
-        bool data; 
-        
 	public:
-        BoolData(){ data = 0; }
-        BoolData(bool d){ data = d; }
 		QtNodes::NodeDataType type() const {return QtNodes::NodeDataType {"boolData", "BoolData"};};
-        bool Data(){ return data; }
-		std::string ToString(){ return std::to_string(data); }
+		std::string ToString(){ return "BoolData"; }
 };
 
 class StringData: public BaseNodeData
 {
-    private:
-        std::string data; 
-        
 	public:
-        StringData(){ data = ""; }
-        StringData(std::string d){ data = d; }
 		QtNodes::NodeDataType type() const {return QtNodes::NodeDataType {"stringData", "StringData"};};
-        std::string Data(){ return data; }
-		std::string ToString(){ return data; }
+		std::string ToString(){ return "StringData"; }
 };
 
 }	

@@ -14,7 +14,6 @@
 #include <nodes/Node>
 #include <nodes/NodeData>
 
-#include "Converters.h"
 #include "Nodes/ImageNodes.h"
 #include "Nodes/SourceNodes.h"
 #include "Nodes/MiscNodes.h"
@@ -137,6 +136,7 @@ NodeEditorWidget::NodeEditorWidget()
 	{
 		auto ret = std::make_shared<QtNodes::DataModelRegistry>();
 		
+		//Register Nodes
 		ret->registerModel<Nodes::IntSource>("Sources");
 		ret->registerModel<Nodes::FloatSource>("Sources");
 		ret->registerModel<Nodes::BoolSource>("Sources");
@@ -144,17 +144,11 @@ NodeEditorWidget::NodeEditorWidget()
 		ret->registerModel<Nodes::ImageSource>("Sources");
 		ret->registerModel<Nodes::ImageGPUSource>("Sources");
 		ret->registerModel<Nodes::ImageTypeSource>("Sources");
+			 
+		ret->registerModel<Nodes::ImageAllocate>("Image");
+		ret->registerModel<Nodes::ImageDeallocate>("Image");
+		ret->registerModel<Nodes::ImageGetDims>("Image");
 
-		ret->registerModel<Nodes::TextDisplay>("Misc");
-
-		//Register convertors
-		ret->registerTypeConverter(std::make_pair(ImageData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<ImageData>()});
-		ret->registerTypeConverter(std::make_pair(ImageGPUData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<ImageGPUData>()});
-		ret->registerTypeConverter(std::make_pair(ImageTypeData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<ImageTypeData>()});
-		ret->registerTypeConverter(std::make_pair(IntData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<IntData>()});
-		ret->registerTypeConverter(std::make_pair(FloatData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<FloatData>()});
-		ret->registerTypeConverter(std::make_pair(BoolData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<BoolData>()});
-						 
 		return ret; 
 	};
 	SetStyle(true);
