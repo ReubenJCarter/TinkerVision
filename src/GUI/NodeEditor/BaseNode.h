@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nodes/NodeDataModel>
+#include <nodes/NodeData>
 
 namespace Visi
 {
@@ -14,11 +15,19 @@ class BaseNode: public QtNodes::NodeDataModel
 	Q_OBJECT
 	
 	protected:
-		struct PortInfo
+		struct InputPortInfo
 		{
 			std::string caption; 
 			bool captionVisible; 
 			QtNodes::NodeDataType type; 
+			std::weak_ptr<QtNodes::NodeData> data; 
+		};
+		struct OutputPortInfo
+		{
+			std::string caption; 
+			bool captionVisible; 
+			QtNodes::NodeDataType type; 
+			std::shared_ptr<QtNodes::NodeData> data; 
 		};
 		
 		void SetValidationState(QtNodes::NodeValidationState s, std::string mes); 
@@ -29,8 +38,8 @@ class BaseNode: public QtNodes::NodeDataModel
 		bool _captionVisible; 
 		
 		
-		std::vector<PortInfo> _inputPorts;
-		std::vector<PortInfo> _outputPorts; 
+		std::vector<InputPortInfo> _inputPorts;
+		std::vector<OutputPortInfo> _outputPorts; 
 		bool _resizeable; 
 		
 		QtNodes::NodeValidationState _validationState;
@@ -40,7 +49,7 @@ class BaseNode: public QtNodes::NodeDataModel
 		BaseNode();
 		virtual ~BaseNode();
 		
-		void Init(std::string nm, std::vector<PortInfo>& inPorts, std::vector<PortInfo>& outPorts, bool capVis=false, std::string cap="", bool resz=false);
+		void Init(std::string nm, std::vector<InputPortInfo>& inPorts, std::vector<OutputPortInfo>& outPorts, bool capVis=false, std::string cap="", bool resz=false);
 		
 		QString caption() const override;
 		bool captionVisible() const override;

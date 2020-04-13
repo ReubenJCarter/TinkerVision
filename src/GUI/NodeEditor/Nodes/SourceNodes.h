@@ -30,9 +30,8 @@ class IntSource: public BaseNode
 	public:
 		IntSource()
         {
-            BaseNode::PortInfo outPort = {"out", true, IntData().type()};
-            std::vector<BaseNode::PortInfo> outputPorts( {outPort} );
-            std::vector<BaseNode::PortInfo> inputPorts;
+            std::vector<BaseNode::OutputPortInfo> outputPorts( { {"out", true, IntData().type()} } );
+            std::vector<BaseNode::InputPortInfo> inputPorts;
             Init("IntSource", inputPorts, outputPorts, true, "Int Source", false); 
             
             lineEdit = new QLineEdit(); 
@@ -104,9 +103,8 @@ class FloatSource: public BaseNode
 	public:
 		FloatSource()
         {
-            BaseNode::PortInfo outPort = {"out", true, FloatData().type()};
-            std::vector<BaseNode::PortInfo> outputPorts( {outPort} );
-            std::vector<BaseNode::PortInfo> inputPorts;
+            std::vector<BaseNode::OutputPortInfo> outputPorts( { {"out", true, FloatData().type()} } );
+            std::vector<BaseNode::InputPortInfo> inputPorts;
             Init("FloatSource", inputPorts, outputPorts, true, "Float Source", false); 
             
             lineEdit = new QLineEdit(); 
@@ -178,9 +176,8 @@ class BoolSource: public BaseNode
 	public:
 		BoolSource()
         {
-            BaseNode::PortInfo outPort = {"out", true, BoolData().type()};
-            std::vector<BaseNode::PortInfo> outputPorts( {outPort} );
-            std::vector<BaseNode::PortInfo> inputPorts;
+            std::vector<BaseNode::OutputPortInfo> outputPorts( { {"out", true, BoolData().type()} } );
+            std::vector<BaseNode::InputPortInfo> inputPorts;
             Init("BoolSource", inputPorts, outputPorts, true, "Bool Source", false); 
             
             checkEdit = new QCheckBox(); 
@@ -242,9 +239,8 @@ class StringSource: public BaseNode
 	public:
 		StringSource()
         {
-            BaseNode::PortInfo outPort = {"out", true, StringData().type()};
-            std::vector<BaseNode::PortInfo> outputPorts( {outPort} );
-            std::vector<BaseNode::PortInfo> inputPorts;
+            std::vector<BaseNode::OutputPortInfo> outputPorts( { {"out", true, StringData().type()} } );
+            std::vector<BaseNode::InputPortInfo> inputPorts;
             Init("StringSource", inputPorts, outputPorts, true, "String Source", false); 
             
             lineEdit = new QLineEdit(); 
@@ -298,9 +294,8 @@ class ImageSource: public BaseNode
 	public:
 		ImageSource()
         {
-            BaseNode::PortInfo outPort = {"out", true, ImageData().type()};
-            std::vector<BaseNode::PortInfo> outputPorts( {outPort} );
-            std::vector<BaseNode::PortInfo> inputPorts;
+            std::vector<BaseNode::OutputPortInfo> outputPorts( { {"out", true, ImageData().type()} } );
+            std::vector<BaseNode::InputPortInfo> inputPorts;
             Init("ImageSource", inputPorts, outputPorts, true, "Image Source", false); 
             data = std::make_shared<ImageData>();
         }
@@ -318,9 +313,8 @@ class ImageGPUSource: public BaseNode
 	public:
 		ImageGPUSource()
         {
-            BaseNode::PortInfo outPort = {"out", true, ImageGPUData().type()};
-            std::vector<BaseNode::PortInfo> outputPorts( {outPort} );
-            std::vector<BaseNode::PortInfo> inputPorts;
+            std::vector<BaseNode::OutputPortInfo> outputPorts( { {"out", true, ImageGPUData().type()} } );
+            std::vector<BaseNode::InputPortInfo> inputPorts;
             Init("ImageGPUSource", inputPorts, outputPorts, true, "ImageGPU Source", false); 
             data = std::make_shared<ImageGPUData>();
         }
@@ -340,9 +334,8 @@ class ImageTypeSource: public BaseNode
 	public:
 		ImageTypeSource()
         {
-            BaseNode::PortInfo outPort = {"out", true, ImageTypeData().type()};
-            std::vector<BaseNode::PortInfo> outputPorts( {outPort} );
-            std::vector<BaseNode::PortInfo> inputPorts;
+            std::vector<BaseNode::OutputPortInfo> outputPorts( { {"out", true, ImageTypeData().type()} } );
+            std::vector<BaseNode::InputPortInfo> inputPorts;
             Init("ImageTypeSource", inputPorts, outputPorts, true, "ImageType Source", false); 
             
             comboEdit = new QComboBox(); 

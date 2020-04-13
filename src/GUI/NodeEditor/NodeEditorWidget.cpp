@@ -17,6 +17,7 @@
 #include "Nodes/ImageNodes.h"
 #include "Nodes/SourceNodes.h"
 #include "Nodes/MiscNodes.h"
+#include "Nodes/ProcessNodes.h"
 
 namespace Visi
 {
@@ -100,8 +101,6 @@ void NodeEditorWidget::SetStyle(bool darkMode)
 		}
 		)");
 
-
-
 		QtNodes::NodeStyle::setNodeStyle(
 		R"(
 		{
@@ -123,6 +122,25 @@ void NodeEditorWidget::SetStyle(bool darkMode)
 		"HoveredPenWidth": 1.5,
 		"ConnectionPointDiameter": 8.0,
 		"Opacity": 1.0
+		}
+		}
+		)");
+
+		QtNodes::ConnectionStyle::setConnectionStyle(
+		R"(
+		{
+		"ConnectionStyle": {
+		"ConstructionColor": "gray",
+		"NormalColor": "darkcyan",
+		"SelectedColor": [100, 100, 100],
+		"SelectedHaloColor": "orange",
+		"HoveredColor": "lightcyan",
+
+		"LineWidth": 3.0,
+		"ConstructionLineWidth": 2.0,
+		"PointDiameter": 10.0,
+
+		"UseDataDefinedColors": false
 		}
 		}
 		)");
@@ -148,6 +166,14 @@ NodeEditorWidget::NodeEditorWidget()
 		ret->registerModel<Nodes::ImageAllocate>("Image");
 		ret->registerModel<Nodes::ImageDeallocate>("Image");
 		ret->registerModel<Nodes::ImageGetDims>("Image");
+
+		ret->registerModel<Nodes::AdaptiveThreshold>("Processes"); 
+		ret->registerModel<Nodes::ApproxDistanceTransform>("Processes"); 
+		ret->registerModel<Nodes::AverageFilter>("Processes"); 
+		ret->registerModel<Nodes::BrightnessContrast>("Processes"); 
+		ret->registerModel<Nodes::CameraDistortion>("Processes"); 
+		ret->registerModel<Nodes::ChannelMapper>("Processes"); 
+		ret->registerModel<Nodes::ClearColor>("Processes"); 
 
 		return ret; 
 	};

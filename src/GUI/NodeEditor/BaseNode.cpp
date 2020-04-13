@@ -1,5 +1,7 @@
 #include "BaseNode.h"
 
+#include "DataTypes.h"
+
 namespace Visi
 {
 namespace GUI
@@ -26,7 +28,7 @@ BaseNode::~BaseNode()
 	
 }
 
-void BaseNode::Init(std::string nm, std::vector<PortInfo>& inPorts, std::vector<PortInfo>& outPorts, bool capVis, std::string cap, bool resz)
+void BaseNode::Init(std::string nm, std::vector<InputPortInfo>& inPorts, std::vector<OutputPortInfo>& outPorts, bool capVis, std::string cap, bool resz)
 {
 	_name = nm;
 	_caption = cap; 
@@ -121,11 +123,51 @@ bool BaseNode::resizable() const
 
 std::shared_ptr<QtNodes::NodeData> BaseNode::outData(QtNodes::PortIndex portIndex)
 {
-	return nullptr;
+	return std::static_pointer_cast<QtNodes::NodeData>(_outputPorts[portIndex].data); 
 }
 
 void BaseNode::setInData(std::shared_ptr<QtNodes::NodeData> portData, int portIndex)
 {
+	_inputPorts[portIndex].data = portData;
+
+	bool typeValid = true; 
+	for(int i = 0; i < _inputPorts.size(); i++)
+	{
+		auto _inputPortDataL = _inputPorts[i].data.lock();
+		if(_inputPortDataL)
+		{
+			if(_inputPortDataL->type().id != _inputPorts[i].type.id)
+			{
+				typeValid = false; 
+			}
+		}
+		else
+		{
+			typeValid = false; 
+		}
+	}
+
+	if(typeValid)
+	{
+		SetValidationState(QtNodes::NodeValidationState::Valid, ""); 
+		for(int i = 0; i < _outputPorts.size(); i++)
+		{
+			_outputPorts[i].data = std::make_shared<BaseNodeData>(_outputPorts[i].type);
+		}
+	}
+	else
+	{
+		SetValidationState(QtNodes::NodeValidationState::Error, "input error");
+		for(int i = 0; i < _outputPorts.size(); i++)
+		{
+			_outputPorts[i].data.reset(); 
+		}
+	}
+
+	for(int i = 0; i < _outputPorts.size(); i++)
+	{
+		Q_EMIT dataUpdated(i);
+	}
 }
 
 QWidget* BaseNode::embeddedWidget()  

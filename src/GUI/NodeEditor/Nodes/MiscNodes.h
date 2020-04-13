@@ -4,8 +4,6 @@
 
 #include "../DataTypes.h"
 
-#include <QScrollArea>
-#include <QLabel>
 
 namespace Visi
 {

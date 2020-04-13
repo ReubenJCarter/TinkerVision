@@ -11,9 +11,16 @@ namespace NodeEditor
     
 class BaseNodeData : public QtNodes::NodeData
 {
+	private: 
+		QtNodes::NodeDataType _type; 
+
     public:
+		BaseNodeData(QtNodes::NodeDataType t ){_type = t;}
+		BaseNodeData(std::string id, std::string name){_type = {id.c_str(), name.c_str()};}
+		BaseNodeData(){_type = {"BaseNodeData", "BaseNodeData"};}
         virtual std::string ToString(){ return ""; }
-        virtual QtNodes::NodeDataType type() const {return QtNodes::NodeDataType {"baseNodeData", "BaseNodeData"};};
+        virtual QtNodes::NodeDataType type() const {return _type;};
+		std::string TypeId(); 
 };
 
 class ImageData: public BaseNodeData
