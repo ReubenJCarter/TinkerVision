@@ -127,7 +127,7 @@ if(BUILD_GUI)
 	)
 
 	add_executable(${CMAKE_PROJECT_NAME}_GUI ${GUISRCFILES})
-	target_link_libraries(${CMAKE_PROJECT_NAME}_GUI Qt5::Core Qt5::Widgets)
+	target_link_libraries(${CMAKE_PROJECT_NAME}_GUI Qt5::Core Qt5::Widgets Qt5::OpenGL)
 	target_link_libraries(${CMAKE_PROJECT_NAME}_GUI debug Debug/nodes optimized Release/nodes)
 	install(TARGETS ${CMAKE_PROJECT_NAME}_GUI RUNTIME DESTINATION bin)
 endif()

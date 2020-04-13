@@ -2,6 +2,9 @@
 
 #include <QGridLayout.h>
 
+#include <QOpenGLWidget>
+#include <QtOpenGL/QGL>
+
 #include <nodes/FlowScene>
 #include <nodes/FlowView>
 #include <nodes/FlowViewStyle>
@@ -11,8 +14,10 @@
 #include <nodes/Node>
 #include <nodes/NodeData>
 
+#include "Converters.h"
 #include "Nodes/ImageNodes.h"
 #include "Nodes/SourceNodes.h"
+#include "Nodes/MiscNodes.h"
 
 namespace Visi
 {
@@ -95,6 +100,33 @@ void NodeEditorWidget::SetStyle(bool darkMode)
 		}
 		}
 		)");
+
+
+
+		QtNodes::NodeStyle::setNodeStyle(
+		R"(
+		{
+		"NodeStyle": {
+		"NormalBoundaryColor": [50, 65, 75],
+		"SelectedBoundaryColor": "deepskyblue",
+		"GradientColor0": [50, 65, 75],
+		"GradientColor1": [50, 65, 75],
+		"GradientColor2": [50, 65, 75],
+		"GradientColor3": [50, 65, 75],
+		"ShadowColor": [0, 0, 0, 0],
+		"FontColor": "white",
+		"FontColorFaded": "gray",
+		"ConnectionPointColor": [169, 169, 169],
+		"FilledConnectionPointColor": "cyan",
+		"ErrorColor": [232, 76, 61],
+		"WarningColor": [128, 128, 0],
+		"PenWidth": 1.0,
+		"HoveredPenWidth": 1.5,
+		"ConnectionPointDiameter": 8.0,
+		"Opacity": 1.0
+		}
+		}
+		)");
 		
 	}
 }
@@ -106,27 +138,23 @@ NodeEditorWidget::NodeEditorWidget()
 		auto ret = std::make_shared<QtNodes::DataModelRegistry>();
 		
 		ret->registerModel<Nodes::IntSource>("Sources");
-		/*
-		ret->registerModel<TextSource>("Sources");
-		
-		ret->registerModel<TextDisplay>("Sinks");
-		
-		ret->registerModel<Add>("Arithmetic"); 
-		ret->registerModel<Subtract>("Arithmetic"); 
-		ret->registerModel<Multiply>("Arithmetic"); 
-		ret->registerModel<Divide>("Arithmetic"); 
-		
-		ret->registerModel<Sqrt>("Maths"); 
-		
-		ret->registerModel<AdaptiveThreshold>("ImageProcess"); 
-		ret->registerModel<Blend>("ImageProcess"); 
-		ret->registerModel<BrightnessContrast>("ImageProcess"); 
-		ret->registerModel<ChannelDemux>("ImageProcess"); 
-		ret->registerModel<GaussianBlur>("ImageProcess"); 
-		ret->registerModel<GrayScale>("ImageProcess"); 
-		
-		ret->registerTypeConverter(std::make_pair(NumberData().type(), TextData().type()), QtNodes::TypeConverter{NumberToTextConverter()});
-		*/					 
+		ret->registerModel<Nodes::FloatSource>("Sources");
+		ret->registerModel<Nodes::BoolSource>("Sources");
+		ret->registerModel<Nodes::StringSource>("Sources");
+		ret->registerModel<Nodes::ImageSource>("Sources");
+		ret->registerModel<Nodes::ImageGPUSource>("Sources");
+		ret->registerModel<Nodes::ImageTypeSource>("Sources");
+
+		ret->registerModel<Nodes::TextDisplay>("Misc");
+
+		//Register convertors
+		ret->registerTypeConverter(std::make_pair(ImageData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<ImageData>()});
+		ret->registerTypeConverter(std::make_pair(ImageGPUData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<ImageGPUData>()});
+		ret->registerTypeConverter(std::make_pair(ImageTypeData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<ImageTypeData>()});
+		ret->registerTypeConverter(std::make_pair(IntData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<IntData>()});
+		ret->registerTypeConverter(std::make_pair(FloatData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<FloatData>()});
+		ret->registerTypeConverter(std::make_pair(BoolData().type(), StringData().type()),  QtNodes::TypeConverter{ToTextConverter<BoolData>()});
+						 
 		return ret; 
 	};
 	SetStyle(true);
@@ -134,10 +162,14 @@ NodeEditorWidget::NodeEditorWidget()
 
 	flowView = new QtNodes::FlowView(flowScene);
 
-	//flow view speed improvments
+	//flow view update and rendering modes
 	flowView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-	flowView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+	flowView->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+
+	//remove shadows on all nodes created to speed up node editor 
+	connect(flowScene, &QtNodes::FlowScene::nodeCreated, [](QtNodes::Node &n){ n.nodeGraphicsObject().setGraphicsEffect(nullptr); }); 
 	
+
 	layout = new QGridLayout(this); 
 	layout->addWidget(flowView);
 }

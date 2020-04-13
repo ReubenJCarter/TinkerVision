@@ -200,6 +200,8 @@ class ImageTypeSource: public BaseSource<ImageType>
     VISI_CLONEABLE_MACRO(ImageTypeSource)  
 	public:
         ImageTypeSource(): BaseSource<ImageType>(ImageTypeData){}
+        virtual void Serialize(SerializedObject* sObj){sObj->SetString("val", ImageTypehelper::ImageTypeToString(value) );}
+        virtual void Deserialize(SerializedObject* sObj){value = ImageTypehelper::ImageTypeFromString( sObj->GetString("val") );}
 };
 
 /**
