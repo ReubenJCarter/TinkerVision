@@ -27,10 +27,10 @@ class ImageAllocate: public BaseNode
 	public:
 		ImageAllocate()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts( { {"im", true, ImageData().type()}, 
-                                                          {"W", true, IntData().type()}, 
-                                                          {"H", true, IntData().type()}, 
-                                                          {"T", true, ImageTypeData().type()}} );
+            std::vector<BaseNode::InputPortInfo> inputPorts( { {"im", true, ImageData().type(), true}, 
+                                                          {"W", true, IntData().type(), true}, 
+                                                          {"H", true, IntData().type(), true}, 
+                                                          {"T", true, ImageTypeData().type(), true}} );
 
             std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
             
@@ -51,7 +51,7 @@ class ImageDeallocate: public BaseNode
 	public:
 		ImageDeallocate()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts( { {"im", true, ImageData().type()} } );
+            std::vector<BaseNode::InputPortInfo> inputPorts( { {"im", true, ImageData().type(), true} } );
             std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
             
             Init("ImageDeallocate", inputPorts, outputPorts, true, "Image Deallocate", false); 
@@ -73,7 +73,7 @@ class ImageGetDims: public BaseNode
 	public:
 		ImageGetDims()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts( { {"im", true, ImageData().type()} } );
+            std::vector<BaseNode::InputPortInfo> inputPorts( { {"im", true, ImageData().type(), true} } );
             std::vector<BaseNode::OutputPortInfo> outputPorts({ {"W", true, IntData().type()}, 
                                                                 {"H", true, IntData().type()}, 
                                                                 {"T", true, ImageTypeData().type()} }); 

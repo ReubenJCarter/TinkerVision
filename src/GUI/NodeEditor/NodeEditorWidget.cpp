@@ -170,6 +170,7 @@ NodeEditorWidget::NodeEditorWidget()
 		ret->registerModel<Nodes::AdaptiveThreshold>("Processes"); 
 		ret->registerModel<Nodes::ApproxDistanceTransform>("Processes"); 
 		ret->registerModel<Nodes::AverageFilter>("Processes"); 
+		ret->registerModel<Nodes::Blend>("Processes"); 
 		ret->registerModel<Nodes::BrightnessContrast>("Processes"); 
 		ret->registerModel<Nodes::CameraDistortion>("Processes"); 
 		ret->registerModel<Nodes::ChannelMapper>("Processes"); 

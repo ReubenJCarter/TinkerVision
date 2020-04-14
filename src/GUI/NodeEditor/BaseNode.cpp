@@ -141,7 +141,7 @@ void BaseNode::setInData(std::shared_ptr<QtNodes::NodeData> portData, int portIn
 				typeValid = false; 
 			}
 		}
-		else
+		else if(_inputPorts[i].required)
 		{
 			typeValid = false; 
 		}

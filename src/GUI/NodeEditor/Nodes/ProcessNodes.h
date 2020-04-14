@@ -19,10 +19,10 @@ class AdaptiveThreshold: public BaseNode
 	public:
 		AdaptiveThreshold()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type()},
-                                                        {"src", true, ImageData().type()},
-                                                        {"thresh", true, FloatData().type()},
-                                                        {"size", true, IntData().type()} });
+            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
+                                                        {"src", true, ImageData().type(), true},
+                                                        {"thresh", true, FloatData().type(), true},
+                                                        {"size", true, IntData().type(), true} });
 
             std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
             
@@ -37,10 +37,10 @@ class ApproxDistanceTransform: public BaseNode
 	public:
 		ApproxDistanceTransform()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type()},
-                                                        {"src", true, ImageData().type()},
-                                                        {"thresh", true, FloatData().type()},
-                                                        {"size", true, IntData().type()} });
+            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
+                                                        {"src", true, ImageData().type(), true},
+                                                        {"thresh", true, FloatData().type(), true},
+                                                        {"size", true, IntData().type(), true} });
 
             std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
             
@@ -55,9 +55,9 @@ class AverageFilter: public BaseNode
 	public:
 		AverageFilter()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type()},
-                                                        {"src", true, ImageData().type()},
-                                                        {"size", true, IntData().type()} });
+            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
+                                                        {"src", true, ImageData().type(), true},
+                                                        {"size", true, IntData().type(), true} });
 
             std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
             
@@ -67,15 +67,34 @@ class AverageFilter: public BaseNode
 		virtual ~AverageFilter(){}	
 };
 
+class Blend: public BaseNode
+{
+	public:
+		Blend()
+        {
+            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
+                                                        {"bottom", true, ImageData().type(), true},
+                                                        {"top", true, ImageData().type(), true},
+                                                        {"mask", true, ImageData().type(), false},
+                                                        {"mode", true, IntData().type(), true} });
+
+            std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
+            
+            Init("Blend", inputPorts, outputPorts, true, "Blend", false); 
+            SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
+        }
+		virtual ~Blend(){}	
+};
+
 class BrightnessContrast: public BaseNode
 {
 	public:
 		BrightnessContrast()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type()},
-                                                        {"src", true, ImageData().type()},
-                                                        {"brightness", true, IntData().type()},
-                                                        {"contrast", true, IntData().type()} });
+            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
+                                                        {"src", true, ImageData().type(), true},
+                                                        {"brightness", true, IntData().type(), true},
+                                                        {"contrast", true, IntData().type(), true} });
 
             std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
             
@@ -90,14 +109,14 @@ class CameraDistortion: public BaseNode
 	public:
 		CameraDistortion()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type()},
-                                                        {"src", true, ImageData().type()},
-                                                        {"k0", true, FloatData().type()},
-                                                        {"k1", true, FloatData().type()},
-                                                        {"k2", true, FloatData().type()},
-                                                        {"p0", true, FloatData().type()},
-                                                        {"p1", true, FloatData().type()},
-                                                        {"fl", true, FloatData().type()} });
+            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
+                                                        {"src", true, ImageData().type(), true},
+                                                        {"k0", true, FloatData().type(), true},
+                                                        {"k1", true, FloatData().type(), true},
+                                                        {"k2", true, FloatData().type(), true},
+                                                        {"p0", true, FloatData().type(), true},
+                                                        {"p1", true, FloatData().type(), true},
+                                                        {"fl", true, FloatData().type(), true} });
 
             std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
             
@@ -112,12 +131,12 @@ class ChannelMapper: public BaseNode
 	public:
 		ChannelMapper()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type()},
-                                                        {"src", true, ImageData().type()},
-                                                        {"rSrc", true, IntData().type()},
-                                                        {"gSrc", true, IntData().type()},
-                                                        {"bSrc", true, IntData().type()},
-                                                        {"aSrc", true, IntData().type()} });
+            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
+                                                        {"src", true, ImageData().type(), true},
+                                                        {"rSrc", true, IntData().type(), true},
+                                                        {"gSrc", true, IntData().type(), true},
+                                                        {"bSrc", true, IntData().type(), true},
+                                                        {"aSrc", true, IntData().type(), true} });
 
             std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
             
@@ -132,9 +151,9 @@ class ClearColor: public BaseNode
 	public:
 		ClearColor()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type()},
-                                                        {"src", true, ImageData().type()},
-                                                        {"color", true, IntData().type()} });
+            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
+                                                        {"src", true, ImageData().type(), true},
+                                                        {"color", true, IntData().type(), true} });
 
             std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
             

@@ -20,6 +20,7 @@ class BaseNode: public QtNodes::NodeDataModel
 			std::string caption; 
 			bool captionVisible; 
 			QtNodes::NodeDataType type; 
+			bool required; 
 			std::weak_ptr<QtNodes::NodeData> data; 
 		};
 		struct OutputPortInfo
