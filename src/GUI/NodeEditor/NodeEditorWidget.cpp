@@ -175,6 +175,7 @@ NodeEditorWidget::NodeEditorWidget()
 		ret->registerModel<Nodes::CameraDistortion>("Processes"); 
 		ret->registerModel<Nodes::ChannelMapper>("Processes"); 
 		ret->registerModel<Nodes::ClearColor>("Processes"); 
+		ret->registerModel<Nodes::CopyImage>("Processes"); 
 
 		return ret; 
 	};

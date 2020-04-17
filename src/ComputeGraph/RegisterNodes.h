@@ -28,6 +28,7 @@ void RegisterNodes()
     Node::RegisterType<Nodes::AdaptiveThresholdNode>(); 
     Node::RegisterType<Nodes::ApproxDistanceTransformNode>();
     Node::RegisterType<Nodes::BrightnessContrastNode>();
+    Node::RegisterType<Nodes::CameraDistortionNode>();
 
     //Source nodes
     Node::RegisterType<Nodes::StringSource>(); 
@@ -43,10 +44,6 @@ void RegisterNodes()
     Node::RegisterType<Nodes::ImageTypeSource>(); 
     Node::RegisterType<Nodes::ImageSource>(); 
     Node::RegisterType<Nodes::ImageGPUSource>(); 
-
-    //IONodes
-    Node::RegisterType<Nodes::ImageFileRead>(); 
-    Node::RegisterType<Nodes::ImageFileWrite>();  
 }
 
 }

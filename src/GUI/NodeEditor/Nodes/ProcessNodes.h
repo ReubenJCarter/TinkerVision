@@ -163,6 +163,26 @@ class ClearColor: public BaseNode
 		virtual ~ClearColor(){}	
 };
 
+class CopyImage: public BaseNode
+{
+	public:
+		CopyImage()
+        {
+            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
+                                                        {"src", true, ImageData().type(), true},
+                                                        {"format translate", true, BoolData().type(), true}, 
+                                                        {"offsetX", true, IntData().type(), false}, 
+                                                        {"offsetY", true, IntData().type(), false}, 
+                                                        });
+
+            std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
+            
+            Init("CopyImage", inputPorts, outputPorts, true, "Copy Image", false); 
+            SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
+        }
+		virtual ~CopyImage(){}	
+};
+
 }
 }
 }

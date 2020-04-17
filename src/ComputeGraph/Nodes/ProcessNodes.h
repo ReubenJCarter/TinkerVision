@@ -10,6 +10,7 @@
 #include "../../Process/ApproxDistanceTransform.h"
 #include "../../Process/Blend.h"
 #include "../../Process/BrightnessContrast.h"
+#include "../../Process/CameraDistortion.h"
 
 namespace Visi
 {
@@ -95,9 +96,21 @@ class BaseProcess1In1Out: public Node
         }
 }; 
 
+
+
+
+
+
+
 class AdaptiveThresholdNode: public BaseProcess1In1Out<Process::AdaptiveThreshold>
 {
     VISI_CLONEABLE_MACRO(AdaptiveThresholdNode) 
+    public:
+        void SetParams() 
+        {
+            proc.SetThreshold( GetInputData(2).DerefAsType<float>(FloatData, 0.5f) );
+            proc.SetSize( GetInputData(3).DerefAsType<int>(IntData, 7) );
+        }
 };
 
 class ApproxDistanceTransformNode: public BaseProcess1In1OutCPUOnly<Process::ApproxDistanceTransform>
@@ -108,7 +121,31 @@ class ApproxDistanceTransformNode: public BaseProcess1In1OutCPUOnly<Process::App
 class BrightnessContrastNode: public BaseProcess1In1OutCPUOnly<Process::BrightnessContrast>
 {
     VISI_CLONEABLE_MACRO(BrightnessContrastNode) 
+    public:
+        void SetParams() 
+        {
+            proc.SetBrightness( GetInputData(2).DerefAsType<float>(FloatData, 0) );
+            proc.SetContrast( GetInputData(3).DerefAsType<float>(FloatData, 1) );
+        }
 }; 
+
+class CameraDistortionNode: public BaseProcess1In1OutCPUOnly<Process::CameraDistortion>
+{
+    VISI_CLONEABLE_MACRO(CameraDistortionNode) 
+    public:
+        void SetParams() 
+        {
+            proc.SetRadialCoefs( GetInputData(2).DerefAsType<float>(FloatData, 0), 
+                                 GetInputData(3).DerefAsType<float>(FloatData, 0), 
+                                 GetInputData(4).DerefAsType<float>(FloatData, 0) );
+            proc.SetTangentialCoefs( GetInputData(5).DerefAsType<float>(FloatData, 0),
+                                     GetInputData(6).DerefAsType<float>(FloatData, 0) );
+            proc.SetFocalLength( GetInputData(7).DerefAsType<float>(FloatData, 1) );
+        }
+}; 
+
+
+
 
 
 }
