@@ -51,7 +51,7 @@ set(LIBRARYSRCFILES
 	Process/MarkerDictionary.cpp
 	Process/MedianFilter.cpp
 	Process/Mipmaps.cpp
-	Process/Morph.cpp
+	Process/MorphRect.cpp
 	Process/NonMaximumEdgeSuppression.cpp
 	Process/Normalize.cpp
 	Process/OtsuThreshold.cpp
@@ -92,9 +92,7 @@ if(CREATE_JAVA_SUPPORT)
 	#set(CMAKE_SWIG_FLAGS -package ${CMAKE_PROJECT_NAME})	
 	#SET_SOURCE_FILES_PROPERTIES(SwigInterface.i PROPERTIES SWIG_FLAGS "-includeall")
 	SET_SOURCE_FILES_PROPERTIES(SwigInterface.i PROPERTIES SWIG_FLAGS "-package \"VisiJava\"")
-	SET_SOURCE_FILES_PROPERTIES(SwigInterfaceIO.i PROPERTIES CPLUSPLUS ON)
-	SET_SOURCE_FILES_PROPERTIES(SwigInterfaceIO.i PROPERTIES SWIG_FLAGS "-package \"VisiJava.IO\"")
-	SWIG_ADD_LIBRARY(${CMAKE_PROJECT_NAME}_Java TYPE SHARED LANGUAGE java OUTPUT_DIR java/ SOURCES SwigInterface.i )#SwigInterfaceIO.i)
+	SWIG_ADD_LIBRARY(${CMAKE_PROJECT_NAME}_Java TYPE SHARED LANGUAGE java OUTPUT_DIR java/ SOURCES SwigInterface.i )
 	SWIG_LINK_LIBRARIES(${CMAKE_PROJECT_NAME}_Java ${CMAKE_PROJECT_NAME} )
 	install(TARGETS ${CMAKE_PROJECT_NAME}_Java 
 		ARCHIVE DESTINATION lib

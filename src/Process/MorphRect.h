@@ -11,7 +11,7 @@ namespace Visi
 namespace Process
 {
 	
-class VISI_EXPORT Morph
+class VISI_EXPORT MorphRect
 {
     private: 
         class Internal;
@@ -19,15 +19,14 @@ class VISI_EXPORT Morph
 
 	public:
         enum Mode{ERODE, DILATE};
-        enum Shape{SQUARE, CROSS, DIAMOND};
 
-		Morph(); 
-        ~Morph(); 
+		MorphRect(); 
+        ~MorphRect(); 
 		void Run(ImageGPU* input, ImageGPU* output); 
         void Run(Image* input, Image* output); 
 
         void SetMode(Mode mode);
-        void SetKernel(int size, Shape shape);  
+        void SetKernel(int w, int h);  
 };
 	
 }

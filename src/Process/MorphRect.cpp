@@ -1,4 +1,4 @@
-#include "Morph.h"
+#include "MorphRect.h"
 
 #include "../Core/ComputeShader.h"
 #include "../Core/ProcessHelper.h"
@@ -14,15 +14,15 @@ namespace Visi
 namespace Process
 {
 
-class Morph::Internal
+class MorphRect::Internal
 {
     private:
         static std::map<ImageType, ComputeShader> computeShaders; 
         static std::string shaderSrc; 
         static bool shaderCompiled; 
         
-        Shape shape; 
-        int size; 
+        int width;
+        int height;  
         Mode mode; 
 
     public:
@@ -31,16 +31,12 @@ class Morph::Internal
         void Run(Image* input, Image* output);
 
         void SetMode(Mode m);
-        void SetKernel(int si, Shape sh);  
+        void SetKernel(int w, int h);  
 };
 
-std::map<ImageType, ComputeShader> Morph::Internal::computeShaders;
+std::map<ImageType, ComputeShader> MorphRect::Internal::computeShaders;
 
-std::string Morph::Internal::shaderSrc = R"(
-
-#define SQUARE 0
-#define CROSS 1
-#define DIAMOND 2
+std::string MorphRect::Internal::shaderSrc = R"(
 
 #define ERODE 0
 #define DILATE 1
@@ -50,7 +46,6 @@ layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 
 uniform int mode;
 uniform int size; 
-uniform int shape; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
@@ -70,8 +65,6 @@ void main()
             for(int j = 0; j < size; j++)
             {
                 int X = j - halfSize; 
-
-                ivec2 kernalId = ivec2(j, i);
 
                 ivec2 imageId = id + ivec2(X, Y); 
                 vec4 imageIn = imageLoad(inputImage, imageId);
@@ -99,8 +92,6 @@ void main()
             {
                 int X = j - halfSize; 
 
-                ivec2 kernalId = ivec2(j, i);
-
                 ivec2 imageId = id + ivec2(X, Y); 
                 vec4 imageIn = imageLoad(inputImage, imageId);
                 if(imageIn.r >= 0.5)
@@ -123,17 +114,17 @@ void main()
 
 )";
 
-bool Morph::Internal::shaderCompiled = false; 
+bool MorphRect::Internal::shaderCompiled = false; 
 
-Morph::Internal::Internal()
+MorphRect::Internal::Internal()
 {
-    size =3;
-    shape = Shape::SQUARE;
+    width =3;
+    height = 3; 
     mode = Mode::DILATE;
 }
 
 
-void Morph::Internal::Run(ImageGPU* input, ImageGPU* output)
+void MorphRect::Internal::Run(ImageGPU* input, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
@@ -152,15 +143,15 @@ void Morph::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
 
-    computeShader.SetInt("size", size);
-    computeShader.SetInt("shape", (int)shape);
+    computeShader.SetInt("width", width);
+    computeShader.SetInt("height", height);
     computeShader.SetInt("mode", (int)mode);
 
     computeShader.Dispatch(groupCount.x, groupCount.y, 1); 
     computeShader.Block();
 }
 
-void Morph::Internal::Run(Image* input, Image* output)
+void MorphRect::Internal::Run(Image* input, Image* output)
 {
     if(output->GetWidth() != input->GetWidth() || 
        output->GetHeight() != input->GetHeight() || 
@@ -174,48 +165,48 @@ void Morph::Internal::Run(Image* input, Image* output)
     
 }
 
-void Morph::Internal::SetMode(Mode m)
+void MorphRect::Internal::SetMode(Mode m)
 {
     mode = m;
 }
 
-void Morph::Internal::SetKernel(int si, Shape sh)
+void MorphRect::Internal::SetKernel(int w, int h)
 {
-    shape = sh;
-    size = si;
+    width = w;
+    height = h; 
 }
 
 
 
 
-Morph::Morph()
+MorphRect::MorphRect()
 {
     internal = new Internal(); 
 }
 
-Morph::~Morph()
+MorphRect::~MorphRect()
 {
     delete internal; 
 }
 
-void Morph::Run(ImageGPU* input, ImageGPU* output)
+void MorphRect::Run(ImageGPU* input, ImageGPU* output)
 {
     internal->Run(input, output); 
 }
 
-void Morph::Run(Image* input, Image* output)
+void MorphRect::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
 }
 
-void Morph::SetMode(Mode mode)
+void MorphRect::SetMode(Mode mode)
 {
     internal->SetMode(mode); 
 }
 
-void Morph::SetKernel(int size, Shape shape)
+void MorphRect::SetKernel(int w, int h)
 {
-    internal->SetKernel(size, shape); 
+    internal->SetKernel(w, h); 
 }
 
 }
