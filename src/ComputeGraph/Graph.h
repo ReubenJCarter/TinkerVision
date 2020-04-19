@@ -9,6 +9,7 @@
 #include "SerializedObject.h"
 
 #include <iostream>
+#include <functional>
 
 namespace Visi
 {
@@ -27,10 +28,14 @@ class Graph: public Node
         std::vector<Connection> graphOutputMapping;
         Nodes::InputCopySource graphInputSource;    
 
+        bool dirty; 
+        bool circularDependency;
+        std::vector<int> callOrder; 
+
 	public:
         Graph(): graphInputSource(this) 
         {
-
+            dirty = true; 
         }
         
         ~Graph()
@@ -46,6 +51,7 @@ class Graph: public Node
                 delete nodes[i]; 
             }
             nodes.clear();
+            dirty = true; 
         }
 
         inline void AddOutputMapping(Node* n, int outinx=0)
@@ -71,9 +77,92 @@ class Graph: public Node
             return graphOutputMapping[inx].node->GetOutput(graphOutputMapping[inx].outputInx); 
         }
 
+        bool RecalculateCallOrder()
+        {
+            // node pointer to index in nodes
+            std::map<Node*, int> nodeInxMap; 
+            std::vector<bool> nodeIsOutput(nodes.size(), true );
+            for(int i = 0; i < nodes.size(); i++)
+                nodeInxMap[nodes[i]] = i; 
+
+            //find the output nodes search all nodes input connections (if a node is an input it cannot be edge)
+            for(int i = 0; i < nodes.size(); i++)
+            {
+                for(int c = 0; c < nodes[i]->GetInputConnectionNumber(); c++)
+                {
+                    Connection conec = nodes[i]->GetInputConnection(c); 
+                    nodeIsOutput[ nodeInxMap[conec.node] ] = false; //isoutput
+                }
+            }
+            std::vector<int> outputNodes;
+            for(int i = 0; i < nodeIsOutput.size(); i++)
+            {
+                if(nodeIsOutput[i])
+                    outputNodes.push_back(i);
+            }
+
+            //recursivly traverse graph from outputs
+            bool circularDependency = false; 
+            std::vector<bool> nodeTouched(nodes.size(), false );
+            std::vector<bool> nodeAdded (nodes.size(), false );
+            std::function<void(Node*)> recureTrav;
+			recureTrav = [this, &recureTrav, &nodeInxMap, &nodeAdded, &nodeTouched, &circularDependency](Node* n)
+			{
+                int inx = nodeInxMap[n];
+
+                //check for circular dep(if node has been touched before but not yet added )
+                if(nodeTouched[inx] && !nodeAdded[inx])
+                {
+                    circularDependency = true; 
+                    return; 
+                }
+                //we have been down this path before so just return 
+                if(nodeAdded[inx])
+                {
+                    return; 
+                }
+
+                nodeTouched[inx] = true;
+                
+                //recure on all nbs
+                for(int c = 0; c < n->GetInputConnectionNumber(); c++)
+                {
+                    Connection conec = n->GetInputConnection(c);  
+                    recureTrav(conec.node);
+                }
+                
+                //add node
+                nodeAdded[inx] = true; 
+                callOrder.push_back(inx); 
+			};
+            for(int i = 0; i < outputNodes.size(); i++)
+            {
+                recureTrav( nodes[ outputNodes[i] ] );      
+            }
+            
+            //Done
+            dirty = false;
+
+            //return if there is a circular deependency or not 
+            return circularDependency; 
+        }
+
         void Run()
         {
-            
+            if(dirty)
+                circularDependency = RecalculateCallOrder(); 
+
+            if(!circularDependency)
+            {
+                for(int i = 0; i < callOrder.size(); i++)
+                {
+                    nodes[ callOrder[i] ]->Run();
+                }
+            }
+            else
+            {
+                std::cout << "Visi:ComputeGraph:Graph: Circular deppendency! FAIL\n"; 
+            }
         }
 
         virtual void Serialize(SerializedObject* sObj)
@@ -147,6 +236,8 @@ class Graph: public Node
 
         virtual void Deserialize(SerializedObject* sObj)
         {
+            dirty = true; 
+
             //Destroy whole current graph 
             Destroy(); 
 

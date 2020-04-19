@@ -684,12 +684,12 @@ int main(int argc, char *argv[])
 					{
 						"type":"StringSource", 
 						"id":"StringSource1", 
-						"params":{"value":"aruco.png"}
+						"params":{"val":"aruco.png"}
 					}, 
 					{
 						"type":"StringSource", 
 						"id":"StringSource2", 
-						"params":{"value":"aruco_NODETEST.png"}
+						"params":{"val":"aruco_NODETEST.png"}
 					}, 
 					{
 						"type":"ImageFileRead", 
@@ -719,8 +719,7 @@ int main(int argc, char *argv[])
 			graph.Serialize(&outJson); 
 			std::cout << outJson.ToString() << "\n"; 
 
-			
-
+			graph.Run();
 		}
 		
 	}

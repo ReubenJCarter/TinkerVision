@@ -32,6 +32,7 @@ set(LIBRARYSRCFILES
 	Process/ChannelDemux.cpp
 	Process/ChannelMapper.cpp
 	Process/ClearColor.cpp
+	Process/Convolution.cpp
 	Process/CopyImage.cpp
 	Process/Crop.cpp
 	Process/Downsample.cpp
