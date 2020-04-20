@@ -30,6 +30,7 @@ class Graph: public Node
 
         bool dirty; 
         bool circularDependency;
+        bool externalDependency;
         std::vector<int> callOrder; 
 
 	public:
@@ -77,7 +78,7 @@ class Graph: public Node
             return graphOutputMapping[inx].node->GetOutput(graphOutputMapping[inx].outputInx); 
         }
 
-        bool RecalculateCallOrder()
+        void RecalculateCallOrder()
         {
             // node pointer to index in nodes
             std::map<Node*, int> nodeInxMap; 
@@ -85,7 +86,27 @@ class Graph: public Node
             for(int i = 0; i < nodes.size(); i++)
                 nodeInxMap[nodes[i]] = i; 
 
-            //find the output nodes search all nodes input connections (if a node is an input it cannot be edge)
+            //add extra element for graph input source 
+            nodeInxMap[&graphInputSource] = nodes.size(); 
+
+            //check for connected nodes outside the graph
+            externalDependency = false; 
+            for(int i = 0; i < nodes.size(); i++)
+            {
+                for(int c = 0; c < nodes[i]->GetInputConnectionNumber(); c++)
+                {
+                    Connection conec = nodes[i]->GetInputConnection(c); 
+                    //if one of the connections is not present in the graph there is externalDependency
+                    if(!nodeInxMap.count(conec.node))
+                    {
+                        externalDependency = true; 
+                        dirty = false; 
+                        return;
+                    }
+                }
+            }
+
+            //find the output nodes search all nodes input connections (if a node is an input it cannot be edge output)
             for(int i = 0; i < nodes.size(); i++)
             {
                 for(int c = 0; c < nodes[i]->GetInputConnectionNumber(); c++)
@@ -102,13 +123,17 @@ class Graph: public Node
             }
 
             //recursivly traverse graph from outputs
-            bool circularDependency = false; 
+            circularDependency = false; 
             std::vector<bool> nodeTouched(nodes.size(), false );
             std::vector<bool> nodeAdded (nodes.size(), false );
             std::function<void(Node*)> recureTrav;
-			recureTrav = [this, &recureTrav, &nodeInxMap, &nodeAdded, &nodeTouched, &circularDependency](Node* n)
+			recureTrav = [this, &recureTrav, &nodeInxMap, &nodeAdded, &nodeTouched](Node* n)
 			{
                 int inx = nodeInxMap[n];
+
+                //check if the node is the graphinputsource node and return
+                if(inx == nodes.size())
+                    return; 
 
                 //check for circular dep(if node has been touched before but not yet added )
                 if(nodeTouched[inx] && !nodeAdded[inx])
@@ -121,6 +146,7 @@ class Graph: public Node
                 {
                     return; 
                 }
+
 
                 nodeTouched[inx] = true;
                 
@@ -135,6 +161,7 @@ class Graph: public Node
                 nodeAdded[inx] = true; 
                 callOrder.push_back(inx); 
 			};
+            //start recursion on all output nodes
             for(int i = 0; i < outputNodes.size(); i++)
             {
                 recureTrav( nodes[ outputNodes[i] ] );      
@@ -143,16 +170,14 @@ class Graph: public Node
             //Done
             dirty = false;
 
-            //return if there is a circular deependency or not 
-            return circularDependency; 
         }
 
         void Run()
         {
             if(dirty)
-                circularDependency = RecalculateCallOrder(); 
+                RecalculateCallOrder(); 
 
-            if(!circularDependency)
+            if(!(circularDependency || externalDependency))
             {
                 for(int i = 0; i < callOrder.size(); i++)
                 {
@@ -161,7 +186,10 @@ class Graph: public Node
             }
             else
             {
-                std::cout << "Visi:ComputeGraph:Graph: Circular deppendency! FAIL\n"; 
+                if(circularDependency)
+                    std::cerr << "Visi:ComputeGraph:Graph: Circular deppendency! FAIL\n"; 
+                if(externalDependency)
+                    std::cerr << "Visi:ComputeGraph:Graph: External deppendency! FAIL\n"; 
             }
         }
 
