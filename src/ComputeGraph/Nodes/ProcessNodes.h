@@ -8,6 +8,7 @@
 
 #include "../../Process/AdaptiveThreshold.h"
 #include "../../Process/ApproxDistanceTransform.h"
+#include "../../Process/AverageFilter.h"
 #include "../../Process/Blend.h"
 #include "../../Process/BrightnessContrast.h"
 #include "../../Process/CameraDistortion.h"
@@ -118,7 +119,17 @@ class ApproxDistanceTransformNode: public BaseProcess1In1OutCPUOnly<Process::App
     VISI_CLONEABLE_MACRO(ApproxDistanceTransformNode) 
 }; 
 
-class BrightnessContrastNode: public BaseProcess1In1OutCPUOnly<Process::BrightnessContrast>
+class AverageFilterNode: public BaseProcess1In1Out<Process::AverageFilter>
+{
+    VISI_CLONEABLE_MACRO(AverageFilterNode) 
+    public:
+        void SetParams() 
+        {
+            proc.SetSize( GetInputData(2).DerefAsType<int>(IntData, 0) );
+        }
+}; 
+
+class BrightnessContrastNode: public BaseProcess1In1Out<Process::BrightnessContrast>
 {
     VISI_CLONEABLE_MACRO(BrightnessContrastNode) 
     public:
@@ -129,7 +140,7 @@ class BrightnessContrastNode: public BaseProcess1In1OutCPUOnly<Process::Brightne
         }
 }; 
 
-class CameraDistortionNode: public BaseProcess1In1OutCPUOnly<Process::CameraDistortion>
+class CameraDistortionNode: public BaseProcess1In1Out<Process::CameraDistortion>
 {
     VISI_CLONEABLE_MACRO(CameraDistortionNode) 
     public:

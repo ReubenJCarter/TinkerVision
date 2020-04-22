@@ -23,17 +23,24 @@ class BaseNodeData : public QtNodes::NodeData
 		std::string TypeId(); 
 };
 
-class ImageData: public BaseNodeData
+class BaseImageData: public BaseNodeData
 {
 	public:
-		QtNodes::NodeDataType type() const {return QtNodes::NodeDataType {"imageData", "ImageData"};};
+		QtNodes::NodeDataType type() const {return QtNodes::NodeDataType {"baseImageData", "BaseImageData"};};
+        std::string ToString(){ return "BaseImageData"; }
+};
+
+class ImageData: public BaseImageData
+{
+	public:
+		QtNodes::NodeDataType type() const {return QtNodes::NodeDataType {"baseImageData", "ImageData"};};
         std::string ToString(){ return "ImageData"; }
 };
 
-class ImageGPUData: public BaseNodeData
+class ImageGPUData: public BaseImageData
 {
 	public:
-		QtNodes::NodeDataType type() const {return QtNodes::NodeDataType {"imageGPUData", "ImageGPUData"};};
+		QtNodes::NodeDataType type() const {return QtNodes::NodeDataType {"baseImageData", "ImageGPUData"};};
         std::string ToString(){ return "ImageGPUData"; }
 };
 

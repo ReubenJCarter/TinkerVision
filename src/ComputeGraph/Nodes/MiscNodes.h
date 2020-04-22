@@ -25,7 +25,6 @@ class MathExpression: public Node
         {
             std::string inFileName = GetInputData(0).DerefAsType<std::string>(StringData, "y=x");            
             
-            
             {
                 outData = Data(NullData, NULL); 
             }

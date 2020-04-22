@@ -2,9 +2,6 @@
 
 #include "../BaseNode.h"
 
-#include "../DataTypes.h"
-
-
 namespace Visi
 {
 namespace GUI
@@ -14,17 +11,14 @@ namespace NodeEditor
 namespace Nodes 
 {
 
-class AdaptiveThreshold: public BaseNode
+class AdaptiveThreshold: public BaseProcess1In1Out
 {
 	public:
 		AdaptiveThreshold()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
-                                                        {"src", true, ImageData().type(), true},
-                                                        {"thresh", true, FloatData().type(), true},
-                                                        {"size", true, IntData().type(), true} });
-
-            std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
+            
+            inputPorts.push_back( {"thresh", true, FloatData().type(), true} );
+            inputPorts.push_back( {"size", true, IntData().type(), true}  );
             
             Init("AdaptiveThreshold", inputPorts, outputPorts, true, "Adaptive Threshold", false); 
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 

@@ -3,6 +3,8 @@
 #include <nodes/NodeDataModel>
 #include <nodes/NodeData>
 
+#include "DataTypes.h"
+
 namespace Visi
 {
 namespace GUI
@@ -32,8 +34,7 @@ class BaseNode: public QtNodes::NodeDataModel
 		};
 		
 		void SetValidationState(QtNodes::NodeValidationState s, std::string mes); 
-		
-	private:
+	
 		std::string _name;
 		std::string _caption; 
 		bool _captionVisible; 
@@ -67,6 +68,83 @@ class BaseNode: public QtNodes::NodeDataModel
 		
 		QtNodes::NodeValidationState validationState() const override;
 		QString validationMessage() const override;
+};
+
+class BaseProcess1In1Out: public BaseNode
+{
+    protected:
+        std::vector<BaseNode::InputPortInfo> inputPorts; 
+        std::vector<BaseNode::OutputPortInfo> outputPorts;
+
+    public:
+        BaseProcess1In1Out()
+        {
+            inputPorts.push_back( {"dst", true, BaseImageData().type(), true} ); 
+            inputPorts.push_back( {"src", true, BaseImageData().type(), true} ); 
+            outputPorts.push_back( {"im", true, BaseImageData().type() }); 
+        }
+       
+		void setInData(std::shared_ptr<QtNodes::NodeData> portData, int portIndex) override
+        {
+            //Set the node data on te input
+            _inputPorts[portIndex].data = portData;
+
+            //first test the src and dst for likeness and valid type
+            auto _dstDataLk = _inputPorts[0].data.lock();
+            auto _srcDataLk = _inputPorts[1].data.lock(); 
+            bool typeValid = true;
+            if(_dstDataLk && _srcDataLk) //not null
+            {
+                if(_dstDataLk->type().id != _inputPorts[0].type.id ||
+                   _srcDataLk->type().id != _inputPorts[1].type.id ||
+                   _dstDataLk->type().name != _srcDataLk->type().name )//invalid types
+                {
+                    typeValid = false; 
+                } 
+                else 
+                {
+                    //set the correct output type 
+                    _outputPorts[0].type = _dstDataLk->type(); 
+                }           
+            }
+            else
+            {
+                typeValid = false;
+            }
+
+            //handle any other inputs
+            for(int i = 2; i < _inputPorts.size(); i++)
+            {
+                auto _inputPortDataL = _inputPorts[i].data.lock();
+                if(_inputPortDataL)
+                {
+                    if(_inputPortDataL->type().id != _inputPorts[i].type.id)
+                        typeValid = false; 
+                }
+                else if(_inputPorts[i].required)
+                {
+                    typeValid = false; 
+                }
+            }
+
+            //next create the correct data type for the output
+            if(typeValid)
+            {
+                SetValidationState(QtNodes::NodeValidationState::Valid, ""); 
+                for(int i = 0; i < _outputPorts.size(); i++)
+                {
+                    _outputPorts[i].data = std::make_shared<BaseNodeData>(_outputPorts[i].type);
+                }
+            }
+            else
+            {
+                SetValidationState(QtNodes::NodeValidationState::Error, "input error");
+                for(int i = 0; i < _outputPorts.size(); i++)
+                {
+                    _outputPorts[i].data.reset(); 
+                }
+            }
+        }
 };
 
 }
