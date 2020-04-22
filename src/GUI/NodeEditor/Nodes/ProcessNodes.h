@@ -15,8 +15,7 @@ class AdaptiveThreshold: public BaseProcess1In1Out
 {
 	public:
 		AdaptiveThreshold()
-        {
-            
+        {   
             inputPorts.push_back( {"thresh", true, FloatData().type(), true} );
             inputPorts.push_back( {"size", true, IntData().type(), true}  );
             
@@ -26,17 +25,14 @@ class AdaptiveThreshold: public BaseProcess1In1Out
 		virtual ~AdaptiveThreshold(){}	
 };
 
-class ApproxDistanceTransform: public BaseNode
+class ApproxDistanceTransform: public BaseProcess1In1Out
 {
 	public:
 		ApproxDistanceTransform()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
-                                                        {"src", true, ImageData().type(), true},
-                                                        {"thresh", true, FloatData().type(), true},
-                                                        {"size", true, IntData().type(), true} });
-
-            std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
+            cpuOnly = true;
+            inputPorts.push_back( {"thresh", true, FloatData().type(), true} );
+            inputPorts.push_back( {"size", true, IntData().type(), true} );
             
             Init("ApproxDistanceTransform", inputPorts, outputPorts, true, "Approx Distance Transform", false); 
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
@@ -44,16 +40,12 @@ class ApproxDistanceTransform: public BaseNode
 		virtual ~ApproxDistanceTransform(){}	
 };
 
-class AverageFilter: public BaseNode
+class AverageFilter: public BaseProcess1In1Out
 {
 	public:
 		AverageFilter()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
-                                                        {"src", true, ImageData().type(), true},
-                                                        {"size", true, IntData().type(), true} });
-
-            std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
+            inputPorts.push_back(  {"size", true, IntData().type(), true} );
             
             Init("AverageFilter", inputPorts, outputPorts, true, "Average Filter", false); 
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
@@ -80,17 +72,13 @@ class Blend: public BaseNode
 		virtual ~Blend(){}	
 };
 
-class BrightnessContrast: public BaseNode
+class BrightnessContrast: public BaseProcess1In1Out
 {
 	public:
 		BrightnessContrast()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
-                                                        {"src", true, ImageData().type(), true},
-                                                        {"brightness", true, IntData().type(), true},
-                                                        {"contrast", true, IntData().type(), true} });
-
-            std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
+            inputPorts.push_back( {"brightness", true, IntData().type(), true} );
+            inputPorts.push_back( {"contrast", true, IntData().type(), true} );
             
             Init("BrightnessContrast", inputPorts, outputPorts, true, "Brightness Contrast", false); 
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
@@ -98,21 +86,17 @@ class BrightnessContrast: public BaseNode
 		virtual ~BrightnessContrast(){}	
 };
 
-class CameraDistortion: public BaseNode
+class CameraDistortion: public BaseProcess1In1Out
 {
 	public:
 		CameraDistortion()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
-                                                        {"src", true, ImageData().type(), true},
-                                                        {"k0", true, FloatData().type(), true},
-                                                        {"k1", true, FloatData().type(), true},
-                                                        {"k2", true, FloatData().type(), true},
-                                                        {"p0", true, FloatData().type(), true},
-                                                        {"p1", true, FloatData().type(), true},
-                                                        {"fl", true, FloatData().type(), true} });
-
-            std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
+            inputPorts.push_back({"k0", true, FloatData().type(), true});
+            inputPorts.push_back({"k1", true, FloatData().type(), true});
+            inputPorts.push_back({"k2", true, FloatData().type(), true});
+            inputPorts.push_back({"p0", true, FloatData().type(), true});
+            inputPorts.push_back({"p1", true, FloatData().type(), true});
+            inputPorts.push_back({"fl", true, FloatData().type(), true});
             
             Init("CameraDistortion", inputPorts, outputPorts, true, "Camera Distortion", false); 
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
@@ -120,19 +104,15 @@ class CameraDistortion: public BaseNode
 		virtual ~CameraDistortion(){}	
 };
 
-class ChannelMapper: public BaseNode
+class ChannelMapper: public BaseProcess1In1Out
 {
 	public:
 		ChannelMapper()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
-                                                        {"src", true, ImageData().type(), true},
-                                                        {"rSrc", true, IntData().type(), true},
-                                                        {"gSrc", true, IntData().type(), true},
-                                                        {"bSrc", true, IntData().type(), true},
-                                                        {"aSrc", true, IntData().type(), true} });
-
-            std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
+            inputPorts.push_back({"rSrc", true, IntData().type(), true});
+            inputPorts.push_back({"gSrc", true, IntData().type(), true});
+            inputPorts.push_back({"bSrc", true, IntData().type(), true});
+            inputPorts.push_back({"aSrc", true, IntData().type(), true});
             
             Init("ChannelMapper", inputPorts, outputPorts, true, "Channel Mapper", false); 
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
@@ -140,16 +120,12 @@ class ChannelMapper: public BaseNode
 		virtual ~ChannelMapper(){}	
 };
 
-class ClearColor: public BaseNode
+class ClearColor: public BaseProcess1In1Out
 {
 	public:
 		ClearColor()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
-                                                        {"src", true, ImageData().type(), true},
-                                                        {"color", true, IntData().type(), true} });
-
-            std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
+            inputPorts.push_back({"color", true, IntData().type(), true});
             
             Init("ClearColor", inputPorts, outputPorts, true, "Clear Color", false); 
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 

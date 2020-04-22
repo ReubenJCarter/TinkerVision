@@ -75,6 +75,7 @@ class BaseProcess1In1Out: public BaseNode
     protected:
         std::vector<BaseNode::InputPortInfo> inputPorts; 
         std::vector<BaseNode::OutputPortInfo> outputPorts;
+		bool cpuOnly; 
 
     public:
         BaseProcess1In1Out()
@@ -82,6 +83,7 @@ class BaseProcess1In1Out: public BaseNode
             inputPorts.push_back( {"dst", true, BaseImageData().type(), true} ); 
             inputPorts.push_back( {"src", true, BaseImageData().type(), true} ); 
             outputPorts.push_back( {"im", true, BaseImageData().type() }); 
+			cpuOnly = false;
         }
        
 		void setInData(std::shared_ptr<QtNodes::NodeData> portData, int portIndex) override
@@ -97,7 +99,8 @@ class BaseProcess1In1Out: public BaseNode
             {
                 if(_dstDataLk->type().id != _inputPorts[0].type.id ||
                    _srcDataLk->type().id != _inputPorts[1].type.id ||
-                   _dstDataLk->type().name != _srcDataLk->type().name )//invalid types
+                   _dstDataLk->type().name != _srcDataLk->type().name ||
+				   cpuOnly && (_dstDataLk->type().name != "ImageData") )//invalidness on the types
                 {
                     typeValid = false; 
                 } 
@@ -144,6 +147,11 @@ class BaseProcess1In1Out: public BaseNode
                     _outputPorts[i].data.reset(); 
                 }
             }
+
+			for(int i = 0; i < _outputPorts.size(); i++)
+			{
+				Q_EMIT dataUpdated(i);
+			}
         }
 };
 

@@ -155,6 +155,7 @@ NodeEditorWidget::NodeEditorWidget()
 		auto ret = std::make_shared<QtNodes::DataModelRegistry>();
 		
 		//Register Nodes
+		ret->registerModel<Nodes::GraphInputNode>("Graph"); 
 		ret->registerModel<Nodes::IntSource>("Sources");
 		ret->registerModel<Nodes::FloatSource>("Sources");
 		ret->registerModel<Nodes::BoolSource>("Sources");
