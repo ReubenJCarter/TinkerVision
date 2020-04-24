@@ -2,6 +2,8 @@
 
 #include "DataTypes.h"
 
+#include <iostream>
+
 namespace Visi
 {
 namespace GUI
@@ -102,6 +104,7 @@ unsigned int BaseNode::nPorts(QtNodes::PortType portType) const
 
 QtNodes::NodeDataType BaseNode::dataType(QtNodes::PortType portType, QtNodes::PortIndex portIndex) const
 {
+	
 	QtNodes::NodeDataType result; 
 	
 	if(portType == QtNodes::PortType::In && portIndex < _inputPorts.size())

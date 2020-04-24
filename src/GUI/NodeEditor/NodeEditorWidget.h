@@ -29,6 +29,8 @@ class NodeEditorWidget: public QWidget
 		
 	public:
 		NodeEditorWidget(); 
+		void Load(QByteArray d);
+		QByteArray Save(); 
 };
 
 }	

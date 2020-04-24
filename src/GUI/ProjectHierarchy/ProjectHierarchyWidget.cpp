@@ -1,5 +1,7 @@
 #include "ProjectHierarchyWidget.h"
 
+#include "HierarchyListModel.h"
+
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QScrollArea>
@@ -27,6 +29,12 @@ ProjectHierarchyWidget::ProjectHierarchyWidget()
 	layoutBase->setAlignment(Qt::AlignTop);
 
     //
+	hierarchyList = new QListView(); 
+	hierarchyListModel = new HierarchyListModel(); 
+	hierarchyList->setModel(hierarchyListModel);
+	layoutBase->addWidget(hierarchyList); 
+	
+
 }
 
 }	

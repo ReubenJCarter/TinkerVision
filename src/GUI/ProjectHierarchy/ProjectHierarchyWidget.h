@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDockWidget>
+#include <QListView>
 
 
 class QScrollArea;
@@ -13,6 +14,8 @@ namespace GUI
 {
 namespace ProjectHierarchy
 {
+
+class HierarchyListModel; 
 	
 class ProjectHierarchyWidget: public QDockWidget
 {
@@ -22,6 +25,8 @@ class ProjectHierarchyWidget: public QDockWidget
 		QScrollArea* scrollAreaBase;
 		QWidget* widgetBase; 
 		QVBoxLayout* layoutBase;
+		QListView* hierarchyList; 
+		HierarchyListModel* hierarchyListModel; 
 		
 	public:
 		ProjectHierarchyWidget(); 

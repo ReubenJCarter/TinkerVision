@@ -156,6 +156,8 @@ NodeEditorWidget::NodeEditorWidget()
 		
 		//Register Nodes
 		ret->registerModel<Nodes::GraphInputNode>("Graph"); 
+		ret->registerModel<Nodes::GraphOutputNode>("Graph");
+
 		ret->registerModel<Nodes::IntSource>("Sources");
 		ret->registerModel<Nodes::FloatSource>("Sources");
 		ret->registerModel<Nodes::BoolSource>("Sources");
@@ -186,8 +188,8 @@ NodeEditorWidget::NodeEditorWidget()
 	flowView = new QtNodes::FlowView(flowScene);
 
 	//flow view update and rendering modes
-	flowView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-	flowView->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+	//flowView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+	//flowView->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 
 	//remove shadows on all nodes created to speed up node editor 
 	connect(flowScene, &QtNodes::FlowScene::nodeCreated, [](QtNodes::Node &n){ n.nodeGraphicsObject().setGraphicsEffect(nullptr); }); 
@@ -195,6 +197,17 @@ NodeEditorWidget::NodeEditorWidget()
 
 	layout = new QGridLayout(this); 
 	layout->addWidget(flowView);
+}
+
+void NodeEditorWidget::Load(QByteArray d)
+{
+	flowScene->clearScene();
+	flowScene->loadFromMemory(d); 
+}
+
+QByteArray NodeEditorWidget::Save()
+{
+	return flowScene->saveToMemory();
 }
 
 }

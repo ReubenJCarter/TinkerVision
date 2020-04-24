@@ -120,6 +120,7 @@ if(BUILD_GUI)
 		GUI/NodeEditor/NodeEditorWidget.cpp
 
 		GUI/ProjectHierarchy/ProjectHierarchyWidget.cpp
+		GUI/ProjectHierarchy/HierarchyListModel.cpp
 
 		GUI/Main.cpp
 		GUI/MainWindow.cpp
