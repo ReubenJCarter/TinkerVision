@@ -2,6 +2,8 @@
 
 #include <QAbstractListModel>
 
+#include "ComputeGraph/SerializedObject.h"
+
 
 class QScrollArea;
 class QWidget;
@@ -31,11 +33,19 @@ class HierarchyListModel: public QAbstractListModel
 	public:
         HierarchyListModel(); 
 		int rowCount(const QModelIndex& parent = QModelIndex()) const; 
-        int columnCount(const QModelIndex &parent) const;
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const; 
+        bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole); 
         QModelIndex parent(const QModelIndex &index) const;
+        Qt::ItemFlags flags(const QModelIndex &index) const;
+
+        bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+        bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+
+        Qt::DropActions supportedDragActions() const; 
+        bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+
         
-        void Add(QString name, QByteArray flowSceneData);
+        void AddNew(QString name);
         void ModifyData(int inx, QByteArray flowSceneData); 
         void Remove(int inx);
         void Clear(); 

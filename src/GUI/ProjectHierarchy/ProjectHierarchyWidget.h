@@ -2,6 +2,7 @@
 
 #include <QDockWidget>
 #include <QListView>
+#include <QPushButton>
 
 
 class QScrollArea;
@@ -25,6 +26,8 @@ class ProjectHierarchyWidget: public QDockWidget
 		QScrollArea* scrollAreaBase;
 		QWidget* widgetBase; 
 		QVBoxLayout* layoutBase;
+
+		QPushButton* pushButton; 
 		QListView* hierarchyList; 
 		HierarchyListModel* hierarchyListModel; 
 		
