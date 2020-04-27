@@ -281,7 +281,7 @@ void Window::Internal::Refresh()
 Window::Window(int w, int h, Context* shareContext, std::string title)
 {
     internal = new Internal(); 
-    internal->Create(w, h, shareContext); 
+    internal->Create(w, h, shareContext, title); 
 }
 
 Window::~Window()
