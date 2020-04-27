@@ -1,4 +1,4 @@
-#include "Threshold.h"
+#include "TemplateMatch.h"
 
 #include "../Core/ComputeShader.h"
 #include "../Core/ProcessHelper.h"
@@ -15,54 +15,77 @@ namespace Visi
 namespace Process
 {
 
-class Threshold::Internal
+class TemplateMatch::Internal
 {
     private:
         static std::map<ImageType, ComputeShader> computeShaders; 
         static std::string shaderSrc; 
         static bool shaderCompiled; 
+        MatchMode matchMode; 
 
-        glm::vec3 threshold; 
-       
     public:
         Internal(); 
-        void Run(ImageGPU* input, ImageGPU* output);
-        void Run(Image* input, Image* output);
-        void SetThreshold(float t);
-        void SetThreshold(glm::vec3 t);
+        void Run(ImageGPU* input, ImageGPU* match, ImageGPU* output);
+        void Run(Image* input, Image* match, Image* output);
+        void SetMatchMode(MatchMode mm); 
 };
 
-std::map<ImageType, ComputeShader> Threshold::Internal::computeShaders;
+std::map<ImageType, ComputeShader> TemplateMatch::Internal::computeShaders;
 
-std::string Threshold::Internal::shaderSrc = R"(
+std::string TemplateMatch::Internal::shaderSrc = R"(
 
 layout( binding=0) writeonly uniform image2D outputImage;
 layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
+layout(FORMAT_QUALIFIER, binding=2) uniform image2D matchImage;
 
-uniform vec3 threshold; 
+const uint MATCH_SAD = 0; 
+const uint MATCH_CORR = 1;
+
+uniform int matchImageWidth;
+uniform int matchImageHeight;
+uniform int mode; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
-    ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-    vec4 d = imageLoad(inputImage, id);
-    d.r = d.r <= threshold.r ? 0.0f : 1.0f; 
-    d.g = d.g <= threshold.g ? 0.0f : 1.0f; 
-    d.b = d.b <= threshold.b ? 0.0f : 1.0f; 
-    imageStore(outputImage, id, d); 
+    if( mode == int(MATCH_SAD) )
+    {
+        ivec2 id = ivec2(gl_GlobalInvocationID.xy);
+        vec4 sum = vec4(0, 0, 0, 0); 
+        for(int j = -matchImageHeight/2; j <= matchImageHeight/2; j++)
+        {
+            for(int i = -matchImageWidth/2; i <= matchImageWidth/2; i++)
+            {
+                sum += abs(imageLoad(matchImage, id) - imageLoad(inputImage, id));
+            }
+        }
+        imageStore(outputImage, id, sum); 
+    }
+    else if( mode == int(MATCH_CORR) )
+    {
+        ivec2 id = ivec2(gl_GlobalInvocationID.xy);
+        vec4 sum = vec4(0, 0, 0, 0); 
+        for(int j = -matchImageHeight/2; j <= matchImageHeight/2; j++)
+        {
+            for(int i = -matchImageWidth/2; i <= matchImageWidth/2; i++)
+            {
+                sum += abs(imageLoad(matchImage, id) * imageLoad(inputImage, id));
+            }
+        }
+        imageStore(outputImage, id, sum); 
+    }
 }
 
 )";
 
-bool Threshold::Internal::shaderCompiled = false; 
+bool TemplateMatch::Internal::shaderCompiled = false; 
 
-Threshold::Internal::Internal()
+TemplateMatch::Internal::Internal()
 {
-    threshold = glm::vec3(0.5, 0.5, 0.5);
+    matchMode = MatchMode::MATCH_SAD; 
 }
 
-
-void Threshold::Internal::Run(ImageGPU* input, ImageGPU* output)
+void TemplateMatch::Internal::Run(ImageGPU* input, ImageGPU* match, ImageGPU* output)
 {
     if(!shaderCompiled)
     {
@@ -76,8 +99,9 @@ void Threshold::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     ComputeShader& computeShader = computeShaders[inputType];
 
-    computeShader.SetFloat3("threshold", glm::value_ptr(threshold)); 
-
+    computeShader.SetInt("mode", matchMode); 
+    computeShader.SetInt("matchImageWidth", match->GetWidth() ); 
+    computeShader.SetInt("matchImageHeight", match->GetHeight() ); 
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
 
@@ -86,7 +110,7 @@ void Threshold::Internal::Run(ImageGPU* input, ImageGPU* output)
     computeShader.Block();
 }
 
-void Threshold::Internal::Run(Image* input, Image* output)
+void TemplateMatch::Internal::Run(Image* input, Image* match, Image* output)
 {
     ReallocateIfNotSameSize(output, input); 
     
@@ -95,55 +119,41 @@ void Threshold::Internal::Run(Image* input, Image* output)
     auto kernel = [this, input, output](int x, int y)
     {
         glm::vec4 pix = GetPixel(input, x, y); 
-        pix.r = pix.r <= threshold.r ? 0.0f : 1.0f; 
-        pix.g = pix.g <= threshold.g ? 0.0f : 1.0f; 
-        pix.b = pix.b <= threshold.b ? 0.0f : 1.0f; 
         SetPixel(output, x, y, pix); 
     };
 
     pf.Run(input->GetWidth(), input->GetHeight(), kernel);
 }
 
-void Threshold::Internal::SetThreshold(float t)
+void TemplateMatch::Internal::SetMatchMode(MatchMode mm)
 {
-    threshold = glm::vec3(t, t, t);
-}
-
-void Threshold::Internal::SetThreshold(glm::vec3 t)
-{
-    threshold = t;
+    matchMode = mm; 
 }
 
 
-
-Threshold::Threshold()
+TemplateMatch::TemplateMatch()
 {
     internal = new Internal(); 
 }
 
-Threshold::~Threshold()
+TemplateMatch::~TemplateMatch()
 {
     delete internal; 
 }
 
-void Threshold::SetThreshold(float t)
+void TemplateMatch::SetMatchMode(MatchMode mm)
 {
-    internal->SetThreshold(t);
+    internal->SetMatchMode(mm); 
 }
 
-void Threshold::SetThreshold(Color t)
+void TemplateMatch::Run(ImageGPU* input, ImageGPU* match, ImageGPU* output)
 {
-    internal->SetThreshold(glm::vec4(t.r, t.g, t.b, t.a));
+    internal->Run(input, match, output); 
 }
 
-void Threshold::Run(ImageGPU* input, ImageGPU* output)
+void TemplateMatch::Run(Image* input, Image* match, Image* output)
 {
-    internal->Run(input, output); 
-}
-
-void Threshold::Run(Image* input, Image* output)
-{
-    internal->Run(input, output); 
+    internal->Run(input, match, output); 
 }
 
 }

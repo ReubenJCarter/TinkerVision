@@ -13,19 +13,21 @@ namespace Visi
 namespace Process
 {
 	
-class VISI_EXPORT Threshold
+class VISI_EXPORT TemplateMatch
 {
+    public:
+        enum MatchMode{MATCH_SAD, MATCH_CORR};
+
     private: 
         class Internal;
         Internal* internal;
 
 	public:
-		Threshold(); 
-        ~Threshold(); 
-        void SetThreshold(float t);
-        void SetThreshold(Color t);
-		void Run(ImageGPU* input, ImageGPU* output); 
-        void Run(Image* input, Image* output); 
+		TemplateMatch(); 
+        ~TemplateMatch(); 
+        void SetMatchMode(MatchMode mm); 
+		void Run(ImageGPU* input, ImageGPU* match, ImageGPU* output); 
+        void Run(Image* input, Image* match, Image* output); 
 };
 	
 }

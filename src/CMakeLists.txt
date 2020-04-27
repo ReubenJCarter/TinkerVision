@@ -63,6 +63,7 @@ set(LIBRARYSRCFILES
 	Process/Sobel.cpp
 	Process/StereoMatchSAD.cpp
 	Process/StructureTensor.cpp
+	Process/TemplateMatch.cpp
 	Process/Thinning.cpp
 	Process/Threshold.cpp
 	Process/Translate.cpp
