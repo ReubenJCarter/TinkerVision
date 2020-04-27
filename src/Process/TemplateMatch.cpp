@@ -56,7 +56,8 @@ void main()
         {
             for(int i = -matchImageWidth/2; i <= matchImageWidth/2; i++)
             {
-                sum += abs(imageLoad(matchImage, id) - imageLoad(inputImage, id));
+                ivec2 offset = ivec2(i, j); 
+                sum += abs(imageLoad(matchImage, id + offset) - imageLoad(inputImage, id + offset));
             }
         }
         imageStore(outputImage, id, sum); 
@@ -69,7 +70,8 @@ void main()
         {
             for(int i = -matchImageWidth/2; i <= matchImageWidth/2; i++)
             {
-                sum += abs(imageLoad(matchImage, id) * imageLoad(inputImage, id));
+                ivec2 offset = ivec2(i, j); 
+                sum += abs(imageLoad(matchImage, id + offset) * imageLoad(inputImage, id + offset));
             }
         }
         imageStore(outputImage, id, sum); 
