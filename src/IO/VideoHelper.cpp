@@ -16,11 +16,10 @@ class VideoHelper::Internal
         VideoFile videoFile; 
         std::atomic<bool> videoDecodeRunning;
         std::atomic<bool> getFrameDataRunning;
-        std::atomic<bool> gpuCopyRunning;
         std::atomic<bool> running;
 
         Visi::Image image[2]; 
-        Visi::ImageGPU imageGPU[2];
+        Visi::ImageGPU imageGPU;
         int pingpong; 
 
     public:
@@ -40,7 +39,6 @@ VideoHelper::Internal::Internal()
     running = false; 
     videoDecodeRunning = false; 
     getFrameDataRunning = false; 
-    gpuCopyRunning = false; 
 }
 
 VideoHelper::Internal::~Internal()
@@ -93,24 +91,6 @@ bool VideoHelper::Internal::Open(std::string fileSrc)
     });
     getFrameDataThread.detach(); 
 
-    gpuCopyRunning = false; 
-    std::thread gpuCopyThread([&]()
-    {
-        while(running)
-        {
-            while(!gpuCopyRunning && running){}
-            if(!running)
-            {
-                gpuCopyRunning = false; 
-                break; 
-            }
-            imageGPU[pingpong].Copy(&image[ (pingpong+1)%2 ]);
-            gpuCopyRunning = false; 
-        }
-    });
-    gpuCopyThread.detach();
-
-    
 
     return true; 
 }
@@ -130,7 +110,6 @@ bool VideoHelper::Internal::Close()
     running = false;
     videoDecodeRunning = false; 
     getFrameDataRunning = false; 
-    gpuCopyRunning = false; 
     videoFile.Close(); 
     return false; 
 }
@@ -146,13 +125,13 @@ bool VideoHelper::Internal::NextFrame(std::function<void(Visi::ImageGPU*, Visi::
     
     getFrameDataRunning = true; 
 
-    imageGPU[pingpong].Copy(&image[ (pingpong+1)%2 ]);
-
-
-    useFrame( &(imageGPU[(pingpong+1)%2]), &(image[ (pingpong+1)%2 ]) ); 
-
+    if(image[ (pingpong+1)%2 ].GetWidth() != 0 && image[ (pingpong+1)%2 ].GetHeight() != 0)
+    {
+        imageGPU.Copy(&image[ (pingpong+1)%2 ]);
+        useFrame( &(imageGPU), &(image[ (pingpong+1)%2 ]) ); 
+    }
     //wait for all to finish before continue
-    while(videoDecodeRunning || getFrameDataRunning || gpuCopyRunning){}
+    while(videoDecodeRunning || getFrameDataRunning ){}
 
     videoFile.SwapBuffers(); 
     pingpong = (pingpong + 1) % 2;

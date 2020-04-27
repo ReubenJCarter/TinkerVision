@@ -157,16 +157,14 @@ void MedianFilter::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     ImageType inputType = input->GetType();
     
-    ComputeShader& computeShader = ComputeShader();
+    ComputeShader& computeShader = computeShaders3x3[inputType];
     if(size == 5)
         computeShader = computeShaders5x5[inputType];
-    else
-        computeShader = computeShaders3x3[inputType];
 
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
 
-    glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(input->GetWidth(), input->GetHeight()), glm::i32vec2(16, 16)); 
+    glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(output->GetWidth(), output->GetHeight()), glm::i32vec2(16, 16)); 
     computeShader.Dispatch(groupCount.x, groupCount.y, 1); 
     computeShader.Block();
 }
