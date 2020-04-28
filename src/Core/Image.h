@@ -41,6 +41,7 @@ class VISI_EXPORT Image
         bool IsSameSize(Image* image); 
         bool IsSameType(ImageGPU* image); 
         bool IsSameType(Image* image); 
+        int GetChannelCount(); 
 };
 	
 }

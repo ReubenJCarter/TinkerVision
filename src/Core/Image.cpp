@@ -230,7 +230,43 @@ bool Image::IsSameType(Image* image)
 {
     return image->GetType() == type; 
 }
-	
+
+
+
+
+int Image::GetChannelCount()
+{
+    if(type == GRAYSCALE8)
+    {
+        return 1; 
+    }
+    else if(type == GRAYSCALE16)
+    {
+        return 1; 
+    }
+    else if(type == GRAYSCALE32F)
+    {
+        return 1; 
+    }
+    else if(type == RGB8)
+    {
+        return 3; 
+    }
+    else if(type == RGB32F)
+    {
+        return 3; 
+    }
+	else if(type == RGBA8)
+    {
+        return 4; 
+    }
+    else if(type == RGBA32F)
+    {
+        return 4; 
+    }
+    
+    return 0; 
+}
 
 
     
