@@ -48,6 +48,7 @@ uniform int mode;
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
+    ivec2 mS = ivec2(matchImageWidth/2, matchImageHeight/2); 
     if( mode == int(MATCH_SAD) )
     {
         ivec2 id = ivec2(gl_GlobalInvocationID.xy);
@@ -57,7 +58,7 @@ void main()
             for(int i = -matchImageWidth/2; i <= matchImageWidth/2; i++)
             {
                 ivec2 offset = ivec2(i, j); 
-                sum += abs(imageLoad(matchImage, id + offset) - imageLoad(inputImage, id + offset));
+                sum += abs(imageLoad(matchImage, offset + mS) - imageLoad(inputImage, id + offset));
             }
         }
         imageStore(outputImage, id, sum); 
@@ -71,7 +72,7 @@ void main()
             for(int i = -matchImageWidth/2; i <= matchImageWidth/2; i++)
             {
                 ivec2 offset = ivec2(i, j); 
-                sum += abs(imageLoad(matchImage, id + offset) * imageLoad(inputImage, id + offset));
+                sum += abs(imageLoad(matchImage, offset + mS) * imageLoad(inputImage, id + offset));
             }
         }
         imageStore(outputImage, id, sum); 
@@ -118,10 +119,38 @@ void TemplateMatch::Internal::Run(Image* input, Image* match, Image* output)
     
     ParallelFor& pf = ParallelFor::GetInstance(); 
 
-    auto kernel = [this, input, output](int x, int y)
+    int matchImageWidth = match->GetWidth();
+    int matchImageHeight = match->GetHeight();
+    glm::ivec2 mS = glm::ivec2(matchImageWidth/2, matchImageHeight/2); 
+
+    auto kernel = [this, input, output, match, matchImageWidth, matchImageHeight, mS](int x, int y)
     {
-        glm::vec4 pix = GetPixel(input, x, y); 
-        SetPixel(output, x, y, pix); 
+        if( matchMode == MATCH_SAD )
+        {
+            glm::vec4 sum = glm::vec4(0, 0, 0, 0); 
+            for(int j = -mS.y; j <= mS.y; j++)
+            {
+                for(int i = -mS.x; i <= mS.x; i++)
+                {
+                    sum += abs( GetPixel(match, i + mS.x, j + mS.y) - GetPixel(input, x + i, y + j) );
+                }
+            }
+            SetPixel(output, x, y, sum); 
+        }
+        else if( matchMode == MATCH_CORR )
+        {
+            glm::vec4 sum = glm::vec4(0, 0, 0, 0); 
+            for(int j = -mS.y; j <= mS.y; j++)
+            {
+                for(int i = -mS.x; i <= mS.x; i++)
+                {
+                    sum += abs( GetPixel(match, i + mS.x, j + mS.y) * GetPixel(input, x + i, y + j) );
+                }
+            }
+            SetPixel(output, x, y, sum);  
+        }
+
+        
     };
 
     pf.Run(input->GetWidth(), input->GetHeight(), kernel);
