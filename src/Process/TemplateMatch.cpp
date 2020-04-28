@@ -53,9 +53,9 @@ void main()
     {
         ivec2 id = ivec2(gl_GlobalInvocationID.xy);
         vec4 sum = vec4(0, 0, 0, 0); 
-        for(int j = -matchImageHeight/2; j <= matchImageHeight/2; j++)
+        for(int j = -mS.y; j <= mS.y; j++)
         {
-            for(int i = -matchImageWidth/2; i <= matchImageWidth/2; i++)
+            for(int i = -mS.x; i <= mS.x; i++)
             {
                 ivec2 offset = ivec2(i, j); 
                 sum += abs(imageLoad(matchImage, offset + mS) - imageLoad(inputImage, id + offset));
@@ -67,9 +67,9 @@ void main()
     {
         ivec2 id = ivec2(gl_GlobalInvocationID.xy);
         vec4 sum = vec4(0, 0, 0, 0); 
-        for(int j = -matchImageHeight/2; j <= matchImageHeight/2; j++)
+        for(int j = -mS.y; j <= mS.y; j++)
         {
-            for(int i = -matchImageWidth/2; i <= matchImageWidth/2; i++)
+            for(int i = -mS.x; i <= mS.x; i++)
             {
                 ivec2 offset = ivec2(i, j); 
                 sum += abs(imageLoad(matchImage, offset + mS) * imageLoad(inputImage, id + offset));
