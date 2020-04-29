@@ -124,24 +124,8 @@ void TemplateMatch::Internal::Run(ImageGPU* input, ImageGPU* match, ImageGPU* ou
     //recompute kkernel sum if match image changed and normalize is on
     if(matchImageGPURef != match && normalized)
     {
-        std::cout << "copy temp Sum image texture\n";
         Image temp; 
-        temp.Copy(match); 
-        int w, h, t, sz; 
-        glGetTextureLevelParameteriv(match->GetTexture(), 0, GL_TEXTURE_WIDTH, &w); 
-        glGetTextureLevelParameteriv(match->GetTexture(), 0, GL_TEXTURE_HEIGHT, &h); 
-        glGetTextureLevelParameteriv(match->GetTexture(), 0, GL_TEXTURE_INTERNAL_FORMAT, &t); 
-        std::cout << "match texture " << match->GetWidth() << " " << match->GetHeight() << " " << w << " " << h << " " << t << "\n"; 
-        glGetTextureLevelParameteriv(input->GetTexture(), 0, GL_TEXTURE_WIDTH, &w); 
-        glGetTextureLevelParameteriv(input->GetTexture(), 0, GL_TEXTURE_HEIGHT, &h); 
-        glGetTextureLevelParameteriv(input->GetTexture(), 0, GL_TEXTURE_INTERNAL_FORMAT, &t); 
-        std::cout << "input texture " << input->GetWidth() << " " << input->GetHeight() << " " << w << " " << h << " " << t << "\n"; 
-        
-        std::cout << "tid " << input->GetTexture() << "  mtid" << match->GetTexture() << "\n"; 
-
-        std::cout << "temp" << temp.GetWidth() << " " << temp.GetHeight() << " " << temp.GetType() << "\n";
-
-        
+        temp.Copy(match);  
         glm::vec4 sum(0, 0, 0, 0);
         for(int j = 0; j < temp.GetHeight(); j++)
         {

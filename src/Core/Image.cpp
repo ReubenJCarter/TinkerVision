@@ -127,7 +127,6 @@ void Image::Copy(ImageGPU* image)
     }
     else if(type == RGB8)
     {
-        std::cout << "glGetTextureImage texture:" << texture << "\n"; 
         glGetTextureImage(texture, 0, GL_BGR, GL_UNSIGNED_BYTE, width * height * 3, data);
     }
     else if(type == RGB32F)

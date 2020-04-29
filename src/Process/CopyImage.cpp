@@ -100,7 +100,6 @@ void CopyImage::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     if(targetMax.x - targetMin.x <= 0 || targetMax.y -  targetMin.y <= 0)
         return; 
-    
 
     ComputeShader& computeShader = computeShaders[inputType];
 
