@@ -382,7 +382,7 @@ int main(int argc, char *argv[])
 		Visi::IO::ImageFile::Write("image10_5Test.png", &image2);
 
 		renderer.Clear();
-
+		/*
 		std::vector<Visi::Contour> conxHullContours;
 		conxHullContours.resize(contoursQuads.size()); 
 		for(int i = 0; i < contoursQuads.size(); i++)
@@ -400,7 +400,7 @@ int main(int argc, char *argv[])
 		renderer.AddContours(&contoursQuads, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
 		Visi::IO::ImageFile::Write("image10_6Test.png", &image2);
-
+		*/
 
 		Visi::Contour::ContoursToFile("image10_3Test.contours", &contoursFiltered); 
 

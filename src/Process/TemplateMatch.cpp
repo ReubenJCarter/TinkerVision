@@ -1,5 +1,8 @@
 #include "TemplateMatch.h"
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include "../Core/ComputeShader.h"
 #include "../Core/ProcessHelper.h"
 #include "../Core/ParallelFor.h"
@@ -23,7 +26,7 @@ class TemplateMatch::Internal
         static std::string shaderSrc; 
         static bool shaderCompiled; 
         MatchMode matchMode; 
-        bool normalize; 
+        bool normalized; 
         glm::vec4 kernelSum; 
         ImageGPU* matchImageGPURef; 
         Image* matchImageRef; 
@@ -33,7 +36,7 @@ class TemplateMatch::Internal
         void Run(ImageGPU* input, ImageGPU* match, ImageGPU* output);
         void Run(Image* input, Image* match, Image* output);
         void SetMatchMode(MatchMode mm); 
-        void SetNormalize(bool n); 
+        void SetNormalized(bool n); 
 };
 
 std::map<ImageType, ComputeShader> TemplateMatch::Internal::computeShaders;
@@ -50,8 +53,7 @@ const uint MATCH_CORR = 1;
 uniform int matchImageWidth;
 uniform int matchImageHeight;
 uniform int mode; 
-uniform float kernelSum; 
-uniform int normalize; 
+uniform vec4 kernelSum; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
@@ -69,7 +71,7 @@ void main()
                 sum += abs( imageLoad(matchImage, offset + mS) - imageLoad(inputImage, id + offset) );
             }
         }
-        sum /= normalize==1 ? kernelSum : 1.0f; 
+        sum /= kernelSum;
         imageStore(outputImage, id, sum); 
     }
     else if( mode == int(MATCH_CORR) )
@@ -84,7 +86,7 @@ void main()
                 sum += abs( imageLoad(matchImage, offset + mS) * imageLoad(inputImage, id + offset) );
             }
         }
-        sum /= normalize==1 ? kernelSum : 1.0f; 
+        sum /= kernelSum;
         imageStore(outputImage, id, sum); 
     }
 }
@@ -96,7 +98,7 @@ bool TemplateMatch::Internal::shaderCompiled = false;
 TemplateMatch::Internal::Internal()
 {
     matchMode = MatchMode::MATCH_SAD; 
-    normalize = true; 
+    normalized = true; 
     matchImageGPURef = NULL; 
 }
 
@@ -113,7 +115,6 @@ void TemplateMatch::Internal::Run(ImageGPU* input, ImageGPU* match, ImageGPU* ou
         std::cerr << "Visi:Process:TemplateMatch:input and match image type do not match FAIL\n"; 
         return;
     }
-
     ReallocateIfNotSameSize(output, input); 
 
     ImageType inputType = input->GetType();
@@ -121,10 +122,26 @@ void TemplateMatch::Internal::Run(ImageGPU* input, ImageGPU* match, ImageGPU* ou
     ComputeShader& computeShader = computeShaders[inputType];
 
     //recompute kkernel sum if match image changed and normalize is on
-    if(matchImageGPURef != match && normalize)
+    if(matchImageGPURef != match && normalized)
     {
+        std::cout << "copy temp Sum image texture\n";
         Image temp; 
         temp.Copy(match); 
+        int w, h, t, sz; 
+        glGetTextureLevelParameteriv(match->GetTexture(), 0, GL_TEXTURE_WIDTH, &w); 
+        glGetTextureLevelParameteriv(match->GetTexture(), 0, GL_TEXTURE_HEIGHT, &h); 
+        glGetTextureLevelParameteriv(match->GetTexture(), 0, GL_TEXTURE_INTERNAL_FORMAT, &t); 
+        std::cout << "match texture " << match->GetWidth() << " " << match->GetHeight() << " " << w << " " << h << " " << t << "\n"; 
+        glGetTextureLevelParameteriv(input->GetTexture(), 0, GL_TEXTURE_WIDTH, &w); 
+        glGetTextureLevelParameteriv(input->GetTexture(), 0, GL_TEXTURE_HEIGHT, &h); 
+        glGetTextureLevelParameteriv(input->GetTexture(), 0, GL_TEXTURE_INTERNAL_FORMAT, &t); 
+        std::cout << "input texture " << input->GetWidth() << " " << input->GetHeight() << " " << w << " " << h << " " << t << "\n"; 
+        
+        std::cout << "tid " << input->GetTexture() << "  mtid" << match->GetTexture() << "\n"; 
+
+        std::cout << "temp" << temp.GetWidth() << " " << temp.GetHeight() << " " << temp.GetType() << "\n";
+
+        
         glm::vec4 sum(0, 0, 0, 0);
         for(int j = 0; j < temp.GetHeight(); j++)
         {
@@ -136,17 +153,20 @@ void TemplateMatch::Internal::Run(ImageGPU* input, ImageGPU* match, ImageGPU* ou
         kernelSum = sum;
         matchImageGPURef = match; 
     }
+    else if(!normalized)
+    {
+        kernelSum = glm::vec4(1, 1, 1, 1);
+    }
 
     computeShader.SetInt("mode", matchMode); 
     computeShader.SetInt("matchImageWidth", match->GetWidth() ); 
     computeShader.SetInt("matchImageHeight", match->GetHeight() ); 
     computeShader.SetFloat4("kernelSum", glm::value_ptr(kernelSum)); 
-    computeShader.SetInt("normalize", normalize?1:0); 
     computeShader.SetImage("inputImage", input, ComputeShader::READ_ONLY);
     computeShader.SetImage("matchImage", match, ComputeShader::READ_ONLY); 
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
 
-    glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(input->GetWidth(), input->GetHeight()), glm::i32vec2(16, 16)); 
+    glm::ivec2 groupCount = ComputeWorkGroupCount(glm::ivec2(output->GetWidth(), output->GetHeight()), glm::i32vec2(16, 16)); 
     computeShader.Dispatch(groupCount.x, groupCount.y, 1); 
     computeShader.Block();
 }
@@ -156,22 +176,24 @@ void TemplateMatch::Internal::Run(Image* input, Image* match, Image* output)
     ReallocateIfNotSameSize(output, input); 
 
     //recompute kkernel sum if match image changed and normalize is on
-    if(matchImageRef != match && normalize)
+    if(matchImageRef != match && normalized)
     {
-        Image temp; 
-        temp.Copy(match); 
         glm::vec4 sum(0, 0, 0, 0);
-        for(int j = 0; j < temp.GetHeight(); j++)
+        for(int j = 0; j < match->GetHeight(); j++)
         {
-            for(int i = 0; i < temp.GetWidth(); i++)
+            for(int i = 0; i < match->GetWidth(); i++)
             {
-                sum += GetPixel(&temp, i, j);
+                sum += GetPixel(match, i, j);
             }
         }
         kernelSum = sum;
         matchImageRef = match; 
     }
-    
+    else if(!normalized)
+    {
+        kernelSum = glm::vec4(1, 1, 1, 1);
+    }
+
     ParallelFor& pf = ParallelFor::GetInstance(); 
 
     int matchImageWidth = match->GetWidth();
@@ -216,9 +238,9 @@ void TemplateMatch::Internal::SetMatchMode(MatchMode mm)
     matchMode = mm; 
 }
 
-void TemplateMatch::Internal::SetNormalize(bool n)
+void TemplateMatch::Internal::SetNormalized(bool n)
 {
-    normalize = n; 
+    normalized = n; 
 }
 
 
@@ -235,6 +257,11 @@ TemplateMatch::~TemplateMatch()
 void TemplateMatch::SetMatchMode(MatchMode mm)
 {
     internal->SetMatchMode(mm); 
+}
+
+void TemplateMatch::SetNormalized(bool n)
+{
+    internal->SetNormalized(n); 
 }
 
 void TemplateMatch::Run(ImageGPU* input, ImageGPU* match, ImageGPU* output)

@@ -26,7 +26,7 @@ class VISI_EXPORT TemplateMatch
 		TemplateMatch(); 
         ~TemplateMatch(); 
         void SetMatchMode(MatchMode mm); 
-        void SetNormalize(bool n); 
+        void SetNormalized(bool n); 
 		void Run(ImageGPU* input, ImageGPU* match, ImageGPU* output); 
         void Run(Image* input, Image* match, Image* output); 
 };

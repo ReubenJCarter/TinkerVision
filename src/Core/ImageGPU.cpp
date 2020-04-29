@@ -45,9 +45,14 @@ void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
 
     if(w == 0 || h == 0)
     {
+        glBindTexture(GL_TEXTURE_2D, 0);
         std::cerr << "Visi:ImageGPU:Allocate:w=0||h=0\n"; 
         return; 
     }
+
+    //set gl pixel alignment, does this affect perfromance??
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
 	if(type == GRAYSCALE8)
     {
@@ -95,6 +100,10 @@ void ImageGPU::Copy(void* data, int w, int h, int offX, int offY)
 {
     int wfinal = w;
 	int hfinal = h;
+
+    //set gl pixel alignment, does this affect perfromance??
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
     if(type == GRAYSCALE8)
     {

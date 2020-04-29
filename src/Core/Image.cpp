@@ -9,7 +9,16 @@
 
 namespace Visi 
 {
-	
+
+//Aligment issue
+//https://www.opengl.org/archives/resources/features/KilgardTechniques/oglpitfall/
+//https://www.khronos.org/opengl/wiki/Common_Mistakes
+//https://stackoverflow.com/questions/11042027/glpixelstoreigl-unpack-alignment-1-disadvantages
+
+//Need to set byte alignment to 1, from default of 4
+//Performance? if problem can pad all textures to 4 bytes. 
+
+
 Image::Image()
 {
     width = 0;
@@ -99,6 +108,10 @@ void Image::Copy(ImageGPU* image)
 
     unsigned int texture = image->GetTexture();
 
+    //set gl pixel alignment, does this affect perfromance??
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
     if(type == GRAYSCALE8)
     {
         //This seems to fail with some non standard image sizes. 
@@ -114,6 +127,7 @@ void Image::Copy(ImageGPU* image)
     }
     else if(type == RGB8)
     {
+        std::cout << "glGetTextureImage texture:" << texture << "\n"; 
         glGetTextureImage(texture, 0, GL_BGR, GL_UNSIGNED_BYTE, width * height * 3, data);
     }
     else if(type == RGB32F)
