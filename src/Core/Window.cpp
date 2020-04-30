@@ -184,8 +184,6 @@ Window::Internal::Internal()
 
 void Window::Internal::Create(int w, int h, Context* shareContext, std::string title) 
 {    
-    glfwInit();
-
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -203,9 +201,10 @@ void Window::Internal::Create(int w, int h, Context* shareContext, std::string t
     glfwShowWindow(window);
     glfwMakeContextCurrent(window);
 	glfwSwapInterval(0);
-    
-	glewInit();
 
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    
     CreateShaders(); 
     CreateBuffers();
 

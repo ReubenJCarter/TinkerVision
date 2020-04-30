@@ -27,14 +27,6 @@ class Renderer::Internal
             glm::vec3 pad;
         }; 
 
-        struct Line
-        {
-            glm::vec4 color; 
-            glm::vec2 start;
-            glm::vec2 end; 
-            float lineWidth; 
-        }; 
-
         struct PolyLine
         {
             glm::vec4 color; 
@@ -43,42 +35,21 @@ class Renderer::Internal
             int closed; 
         }; 
 
+        struct Particle
+        {
+            glm::vec4 color; 
+            glm::vec2 centre;
+            float radius;
+            int renderImagesInx; 
+        }; 
 
-        bool circlesDirty; 
+        std::vector<Image> renderImages; 
         std::vector<Circle> circles; 
-        bool polyLinesDirty;
         std::vector<PolyLine> polyLines; 
+        std::vector<Particle> particles; 
 
-    public:
-        Internal(); 
-        void Run(Image* input, Image* output);
-        void Clear(); 
-        void AddCircle(glm::vec2 centre, float radius, glm::vec4 color=glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), bool filled=false, float borderWidth=1); 
-        void AddPolyLine(std::vector<Vec2>* pl, glm::vec4 color, float lineWidth, bool closed);
-};
-
-Renderer::Internal::Internal()
-{
-    circlesDirty = true; 
-    polyLinesDirty = true; 
-}
-
-void Renderer::Internal::Run(Image* input, Image* output)
-{
-    
-    ReallocateIfNotSameSize(output, input); 
-    
-    //copy input image to output
-    output->Copy(input); 
-
-    unsigned char* data = output->GetData(); 
-    ImageType imageType = output->GetType();
-    int width = output->GetWidth();
-    int height = output->GetHeight();
-    
-    //Draw Lines
-    auto DrawLine = [data, imageType, width, height](int startX, int startY, int endX, int endY, glm::vec4 color)
-    {
+        inline void DrawLine(unsigned char* data, ImageType imageType, int width, int height, int startX, int startY, int endX, int endY, glm::vec4 color)
+        {
             int x2, y2, x1, y1; 
             if(startX <= endX)
             {
@@ -142,103 +113,156 @@ void Renderer::Internal::Run(Image* input, Image* output)
                     }
                 }
             }
-    };
+        }
+
+        inline void DrawPolyLine(unsigned char* data, ImageType imageType, int width, int height, PolyLine& pl)
+        {
+            if(pl.verts.size() <= 1)
+                return ;
+
+            for(int l = 1; l < pl.verts.size(); l++)
+            {
+                glm::vec2 lStart = pl.verts[l-1]; 
+                glm::vec2 lEnd = pl.verts[l]; 
+                DrawLine(data, imageType, width, height, lStart.x, lStart.y, lEnd.x, lEnd.y, pl.color); 
+            }
+
+            if(pl.closed != 0)
+            {
+                glm::vec2 lStart = pl.verts[0];
+                glm::vec2 lEnd = pl.verts[pl.verts.size()-1];
+                DrawLine(data, imageType, width, height, lStart.x, lStart.y, lEnd.x, lEnd.y, pl.color); 
+            }
+        }
+
+        inline void DrawCircle(unsigned char* data, ImageType imageType, int width, int height, Circle& c)
+        {
+            glm::vec2 centre = c.centre;
+            float radius = c.radius; 
+            int x = radius;
+            int y = 0; 
+            float r2 = radius * radius;
+
+            if(radius < 1)
+            {
+                //SetPixel(output, centre.x, centre.y, c.color);
+                SetPixel(data, imageType, width, height, centre.x, centre.y, c.color); 
+                return;
+            }
+
+            //Simple brute algo 
+            for(int i = -radius; i < radius; i++)
+            {
+                for(int j = -radius; j < radius; j++)
+                {
+                    glm::vec2 a = glm::vec2(i, j);
+                    float aLen = glm::length( a); 
+                
+                    if(c.filled == 0)
+                    {
+                        if((c.radius - aLen) <= c.borderWidth && aLen < c.radius)
+                        {
+                            int x = j + centre.x; 
+                            int y = i + centre.y;
+                            SetPixel(data, imageType, width, height, x, y, c.color); 
+                        }
+                    }
+                    else 
+                    {
+                        if(aLen <= c.radius)
+                        {
+                            int x = j + centre.x; 
+                            int y = i + centre.y;
+                            SetPixel(data, imageType, width, height, x, y, c.color); 
+                        }
+                    }
+                }
+            }
+        }
+
+        inline void DrawImage(unsigned char* data, ImageType imageType, int width, int height, Image& im, int x, int y)
+        {
+            int wh = im.GetWidth(); 
+            int hh = im.GetHeight(); 
+            for(int i = 0; i < im.GetWidth(); i++)
+            {
+                for(int j = 0; j < im.GetHeight(); j++)
+                {
+                    glm::vec4 c = GetPixel(&im, i, j); 
+                    SetPixel(data, imageType, width, height, i + x - wh, j + y - hh, c); 
+                }
+            }
+        }
+
+    public:
+        Internal(); 
+        void Run(Image* input, Image* output);
+        void Run(Image* dst);
+        void Clear(); 
+        void AddCircle(glm::vec2 centre, float radius, glm::vec4 color=glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), bool filled=false, float borderWidth=1); 
+        void AddPolyLine(std::vector<Vec2>* pl, glm::vec4 color, float lineWidth, bool closed);
+        int AddRenderImage(Image* image);
+        void AddParticle(glm::vec2 centre, glm::vec4 color, float radius); 
+};
+
+Renderer::Internal::Internal()
+{
+}
+
+void Renderer::Internal::Run(Image* input, Image* output)
+{
+    
+    ReallocateIfNotSameSize(output, input); 
+    
+    //copy input image to output
+    output->Copy(input); 
+
+    unsigned char* data = output->GetData(); 
+    ImageType imageType = output->GetType();
+    int width = output->GetWidth();
+    int height = output->GetHeight();
+    
     for(int inx = 0; inx < polyLines.size(); inx++)
     {
         PolyLine& pl = polyLines[inx]; 
-        if(pl.verts.size() <= 1)
-            continue;
-
-        for(int l = 1; l < pl.verts.size(); l++)
-        {
-            glm::vec2 lStart = pl.verts[l-1]; 
-            glm::vec2 lEnd = pl.verts[l]; 
-            DrawLine(lStart.x, lStart.y, lEnd.x, lEnd.y, pl.color); 
-        }
-
-        if(pl.closed != 0)
-        {
-            glm::vec2 lStart = pl.verts[0];
-            glm::vec2 lEnd = pl.verts[pl.verts.size()-1];
-            DrawLine(lStart.x, lStart.y, lEnd.x, lEnd.y, pl.color); 
-        }
+        DrawPolyLine(data, imageType, width, height, pl); 
     }
 
     //Draw circles
     for(int inx = 0; inx < circles.size(); inx++)
     {
         Circle c = circles[inx];
-        glm::vec2 centre = c.centre;
-        float radius = c.radius; 
-        int x = radius;
-        int y = 0; 
-        float r2 = radius * radius;
+        DrawCircle(data, imageType, width, height, c); 
+    }
+}
 
-        if(radius < 1)
-        {
-            //SetPixel(output, centre.x, centre.y, c.color);
-            SetPixel(data, imageType, width, height, centre.x, centre.y, c.color); 
-            continue;
-        }
+void Renderer::Internal::Run(Image* dst)
+{
+    unsigned char* data = dst->GetData(); 
+    ImageType imageType = dst->GetType();
+    int width = dst->GetWidth();
+    int height = dst->GetHeight();
+    
+    for(int inx = 0; inx < polyLines.size(); inx++)
+    {
+        PolyLine& pl = polyLines[inx]; 
+        DrawPolyLine(data, imageType, width, height, pl); 
+    }
 
-        //Simple brute algo 
-        for(int i = -radius; i < radius; i++)
-        {
-            for(int j = -radius; j < radius; j++)
-            {
-                glm::vec2 a = glm::vec2(i, j);
-                float aLen = glm::length( a); 
-             
-                if(c.filled == 0)
-                {
-                    if((c.radius - aLen) <= c.borderWidth && aLen < c.radius)
-                    {
-                        int x = j + centre.x; 
-                        int y = i + centre.y;
-                        SetPixel(data, imageType, width, height, x, y, c.color); 
-                    }
-                }
-                else 
-                {
-                    if(aLen <= c.radius)
-                    {
-                        int x = j + centre.x; 
-                        int y = i + centre.y;
-                        SetPixel(data, imageType, width, height, x, y, c.color); 
-                    }
-                }
-            }
-        }
-
-
-        /*
-        //B  algo
-        while(x > y)
-        {
-            //Draw Pixel
-            glm::vec4 p = GetPixel(output, x, y);
-            SetPixel(output, centre.x + x, centre.y + y, c.color);
-
-            //SetPixel(output, centre.x - x, centre.y + y, c.color);
-            
-            //SetPixel(output, centre.x + x, centre.y - y, c.color);
-
-            //Advance
-            int x2 = x * x;
-            x = sqrt(x2 - 2 * y - 1);
-            y++;
-        }*/
+    //Draw circles
+    for(int inx = 0; inx < circles.size(); inx++)
+    {
+        Circle c = circles[inx];
+        DrawCircle(data, imageType, width, height, c); 
     }
 }
 
 void Renderer::Internal::Clear()
 {
-    circlesDirty = true; 
     circles.clear(); 
     circles.resize(0); 
 
     polyLines.clear(); 
-    polyLinesDirty= true;
     polyLines.resize(0);
 }
 
@@ -251,7 +275,6 @@ void Renderer::Internal::AddCircle(glm::vec2 centre, float radius, glm::vec4 col
     c.filled = filled ? 1:0;
     c.radius = radius; 
     circles.push_back(c); 
-    circlesDirty = true;
 }
 
 void Renderer::Internal::AddPolyLine(std::vector<Vec2>* pl, glm::vec4 color, float lineWidth, bool closed)
@@ -266,6 +289,16 @@ void Renderer::Internal::AddPolyLine(std::vector<Vec2>* pl, glm::vec4 color, flo
         polyLine.verts[i] = glm::vec2(pl->at(i).x, pl->at(i).y);
     
 }
+
+int Renderer::Internal::AddRenderImage(Image* image)
+{
+    return 0; 
+}
+
+void Renderer::Internal::AddParticle(glm::vec2 centre, glm::vec4 color, float radius)
+{
+    
+} 
 
 
 
@@ -287,6 +320,11 @@ void Renderer::Clear()
 void Renderer::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
+}
+
+void Renderer::Run(Image* dst)
+{
+    internal->Run(dst); 
 }
 
 void Renderer::AddPolyLine(std::vector<Vec2>* pl, Color color, float lineWidth, bool closed)
@@ -343,11 +381,7 @@ void Renderer::AddBoundingBox(BoundingBox* boundingBox, Color color)
     std::vector<Vec2> pl;
 
     Mat3 tr = boundingBox->GetTransform(); 
-    /*
-    std::cout << "bbTrans:\n" << tr.col[0].x << " " << tr.col[1].x << " " << tr.col[2].x << "\n" 
-                              << tr.col[0].y << " " << tr.col[1].y << " " << tr.col[2].y << "\n" 
-                              << tr.col[0].z << " " << tr.col[1].z << " " << tr.col[2].z << "\n" ;
-                              */
+ 
     glm::mat3 trG = glm::mat3(glm::vec3(tr.col[0].x, tr.col[0].y, tr.col[0].z), 
                               glm::vec3(tr.col[1].x, tr.col[1].y, tr.col[1].z),
                               glm::vec3(tr.col[2].x, tr.col[2].y, tr.col[2].z)); 
@@ -370,7 +404,7 @@ void Renderer::AddBoundingBox(BoundingBox* boundingBox, Color color)
 }
 
 void Renderer::Add3DAxis(float fovy, Vec3 pos)
-{
+{//TODO
     Vec3 orig = pos;
     Vec2 origTransformed; 
 

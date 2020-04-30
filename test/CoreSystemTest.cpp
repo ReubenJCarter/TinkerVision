@@ -39,6 +39,9 @@
 #include "Process/Mipmaps.h"
 #include "Process/Rotate.h"
 #include "Process/Translate.h"
+#include "Process/ClearColor.h"
+#include "Process/TemplateMatch.h"
+#include "Process/GaussianFunction.h"
 
 #include "CompositeProcess/CannyEdgeDetect.h"
 #include "CompositeProcess/CornerDetector.h"
@@ -603,6 +606,16 @@ int main(int argc, char *argv[])
 		image2.Copy(&imageGPU3);
 		Visi::IO::ImageFile::Write("image25_2Test.png", &image2);
 
+		//Template matching
+		Visi::ImageGPU templateImage;
+		Visi::Process::GaussianFunction gaussFunc; 
+		gaussFunc.SetGenerateMode(Visi::Process::GaussianFunction::SIZE_TO_SIGMA); 
+		gaussFunc.SetSigma(3); 
+		gaussFunc.Run(&templateImage); 
+		Visi::IO::ImageFile::Write("image26_1Test.png", &templateImage);
+		Visi::Process::TemplateMatch tmplMatch;
+		
+
 		std::cout << "DONE\n";
 
 	}
@@ -614,11 +627,16 @@ int main(int argc, char *argv[])
 			Visi::IO::VideoHelper videoHelper; 
 			videoHelper.Open(argv[2]); 
 			Visi::Window visiWindow(videoHelper.GetFrameWidth(), videoHelper.GetFrameHeight(), &context);
+			Visi::ImageGPU filterIm;
+
 			while(!visiWindow.ShouldClose())
 			{
 				videoHelper.NextFrame([&](Visi::ImageGPU* imageGPU, Visi::Image* image)
 				{
-					visiWindow.DrawImage(imageGPU); 
+					Visi::Process::MedianFilter medianFilter; 
+					medianFilter.SetSize(3); 
+					medianFilter.Run(imageGPU, &filterIm); 
+					visiWindow.DrawImage(&filterIm); 
 					visiWindow.Refresh();
 				}); 
 			}

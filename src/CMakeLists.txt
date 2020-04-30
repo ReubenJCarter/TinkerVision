@@ -1,5 +1,6 @@
 set(LIBRARYSRCFILES
 	CompositeProcess/ARUCODetector.cpp
+	CompositeProcess/BarcodeDetector.cpp
 	CompositeProcess/CannyEdgeDetect.cpp
 	CompositeProcess/CornerDetector.cpp
 	CompositeProcess/Resize.cpp
@@ -40,6 +41,7 @@ set(LIBRARYSRCFILES
 	Process/FixedRadiusNN.cpp
 	Process/GaussianBlur.cpp
 	Process/GaussianDerivative.cpp
+	Process/GaussianFunction.cpp
 	Process/GrayScale.cpp
 	Process/HarrisShiTomasiResponse.cpp
 	Process/HighLowThreshold.cpp

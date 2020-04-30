@@ -25,6 +25,7 @@ class VISI_EXPORT Renderer
         ~Renderer(); 
         void Clear();
         void Run(Image* input, Image* output); 
+        void Run(Image* dst); 
         void AddPolyLine(std::vector<Vec2>* pl, Color color=Color(1.0f, 0.0f, 0.0f, 1.0f), float lineWidth=1, bool closed=false); 
         void AddCircle(Vec2 centre, float radius, Color color=Color(1.0f, 0.0f, 0.0f, 1.0f), bool filled=false, float borderWidth=1); 
         void AddContour(Contour* contour, Color color=Color(1.0f, 0.0f, 0.0f, 1.0f), bool renderVerts=true, float vertRad=2, bool renderLines=true, bool closed=true); 
