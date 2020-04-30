@@ -610,11 +610,15 @@ int main(int argc, char *argv[])
 		Visi::ImageGPU templateImage;
 		Visi::Process::GaussianFunction gaussFunc; 
 		gaussFunc.SetGenerateMode(Visi::Process::GaussianFunction::SIZE_TO_SIGMA); 
-		gaussFunc.SetSigma(3); 
+		gaussFunc.SetSigma(20); 
+		templateImage.Allocate(0, 0, imageGPU1.GetType()); 
 		gaussFunc.Run(&templateImage); 
 		Visi::IO::ImageFile::Write("image26_1Test.png", &templateImage);
 		Visi::Process::TemplateMatch tmplMatch;
-		
+		tmplMatch.SetNormalized(true);
+		tmplMatch.SetMatchMode(Visi::Process::TemplateMatch::MATCH_CORR);
+		tmplMatch.Run(&imageGPU1, &templateImage, &imageGPU2);
+		Visi::IO::ImageFile::Write("image26_2Test.png", &imageGPU2);
 
 		std::cout << "DONE\n";
 

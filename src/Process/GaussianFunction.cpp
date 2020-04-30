@@ -148,8 +148,7 @@ void GaussianFunction::Internal::Run(Image* dst)
         outVec.b = av;
         outVec.a = 1;
 
-        SetPixel(dst, x, y, outVec); 
-        
+        SetPixel(dst, x, y, outVec);   
     };
 
     pf.Run(dst->GetWidth(), dst->GetHeight(), kernel); 
