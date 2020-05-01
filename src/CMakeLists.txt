@@ -124,6 +124,8 @@ if(BUILD_GUI)
 
 		GUI/ProjectHierarchy/ProjectHierarchyWidget.cpp
 		GUI/ProjectHierarchy/HierarchyListModel.cpp
+		GUI/ProjectHierarchy/AddGraphDialog.cpp
+		GUI/ProjectHierarchy/DeleteGraphDialog.cpp
 
 		GUI/Main.cpp
 		GUI/MainWindow.cpp

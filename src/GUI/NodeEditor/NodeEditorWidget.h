@@ -2,7 +2,9 @@
 
 #include <QWidget>
 
-class QGridLayout; 
+class QVBoxLayout; 
+class QHBoxLayout; 
+class QLabel; 
 
 namespace QtNodes
 {
@@ -24,13 +26,16 @@ class NodeEditorWidget: public QWidget
 	private:
 		QtNodes::FlowScene* flowScene;
 		QtNodes::FlowView* flowView;
-		QGridLayout* layout;
+		QLabel* nameLabel; 
+		QVBoxLayout* layout;
+		QHBoxLayout* topBarLayout;
 		void SetStyle(bool darkMode);
 		
 	public:
 		NodeEditorWidget(); 
-		void Load(QByteArray d);
+		void Load(QByteArray d, QString name);
 		QByteArray Save(); 
+		void Clear(); 
 };
 
 }	

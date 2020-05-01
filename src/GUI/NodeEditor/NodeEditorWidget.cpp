@@ -1,9 +1,12 @@
 #include "NodeEditorWidget.h"
 
-#include <QGridLayout.h>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
 
 #include <QOpenGLWidget>
 #include <QtOpenGL/QGL>
+
 
 #include <nodes/FlowScene>
 #include <nodes/FlowView>
@@ -194,20 +197,36 @@ NodeEditorWidget::NodeEditorWidget()
 	//remove shadows on all nodes created to speed up node editor 
 	connect(flowScene, &QtNodes::FlowScene::nodeCreated, [](QtNodes::Node &n){ n.nodeGraphicsObject().setGraphicsEffect(nullptr); }); 
 	
+	QFont font; 
+	font.setPointSize(16); 
+	font.setBold(true); 
+	nameLabel = new QLabel("Graph Name"); 
+  	nameLabel->setFont( font );
 
-	layout = new QGridLayout(this); 
+	layout = new QVBoxLayout(this); 
+
+	topBarLayout = new QHBoxLayout; 
+	layout->addLayout(topBarLayout); 
+	topBarLayout->addWidget(nameLabel); 
+	
 	layout->addWidget(flowView);
 }
 
-void NodeEditorWidget::Load(QByteArray d)
+void NodeEditorWidget::Load(QByteArray d, QString name)
 {
 	flowScene->clearScene();
 	flowScene->loadFromMemory(d); 
+	nameLabel->setText(name); 
 }
 
 QByteArray NodeEditorWidget::Save()
 {
 	return flowScene->saveToMemory();
+}
+
+void NodeEditorWidget::Clear()
+{
+	flowScene->clearScene();
 }
 
 }

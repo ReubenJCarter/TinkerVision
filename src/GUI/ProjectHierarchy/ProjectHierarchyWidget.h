@@ -1,13 +1,13 @@
 #pragma once
 
 #include <QDockWidget>
-#include <QListView>
-#include <QPushButton>
-
 
 class QScrollArea;
 class QWidget;
 class QVBoxLayout; 
+class QHBoxLayout; 
+class QListView;
+class QPushButton; 
 
 namespace Visi
 {
@@ -17,6 +17,8 @@ namespace ProjectHierarchy
 {
 
 class HierarchyListModel; 
+class AddGraphDialog; 
+class DeleteGraphDialog;
 	
 class ProjectHierarchyWidget: public QDockWidget
 {
@@ -27,9 +29,15 @@ class ProjectHierarchyWidget: public QDockWidget
 		QWidget* widgetBase; 
 		QVBoxLayout* layoutBase;
 
-		QPushButton* pushButton; 
+		QPushButton* addGraphButton; 
+		QPushButton* deleteGraphButton; 
+		QPushButton* renameGraphButton; 
 		QListView* hierarchyList; 
 		HierarchyListModel* hierarchyListModel; 
+
+		QHBoxLayout* buttonLayout; 
+		AddGraphDialog* addGraphDialog;
+		DeleteGraphDialog* deleteGraphDialog;
 		
 	public:
 		ProjectHierarchyWidget(); 

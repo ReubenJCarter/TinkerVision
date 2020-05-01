@@ -1,10 +1,15 @@
 #include "ProjectHierarchyWidget.h"
 
 #include "HierarchyListModel.h"
+#include "AddGraphDialog.h"
+#include "DeleteGraphDialog.h"
 
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QWidget>
 #include <QScrollArea>
+#include <QListView>
+#include <QPushButton>
 
 namespace Visi
 {
@@ -28,9 +33,13 @@ ProjectHierarchyWidget::ProjectHierarchyWidget()
 	setWidget(scrollAreaBase);
 	layoutBase->setAlignment(Qt::AlignTop);
 
-	//button
-	pushButton = new QPushButton("Add Graph");
-	layoutBase->addWidget(pushButton); 
+	//buttons
+	buttonLayout = new QHBoxLayout(); 
+	layoutBase->addLayout(buttonLayout); 
+	addGraphButton = new QPushButton("Add");
+	buttonLayout->addWidget(addGraphButton); 
+	deleteGraphButton = new QPushButton("Delete"); 
+	buttonLayout->addWidget(deleteGraphButton); 
 
     //List
 	hierarchyList = new QListView(); 
@@ -38,7 +47,6 @@ ProjectHierarchyWidget::ProjectHierarchyWidget()
 	hierarchyList->setSelectionMode(QAbstractItemView::SingleSelection); //SingleSelection
 	//hierarchyList->setSelectionBehavior(QAbstractItemView::SelectRows); 
 	//hierarchyList->setDefaultDropAction(Qt::TargetMoveAction);
-
 
 	hierarchyList->setDragEnabled(true);
 	hierarchyList->setAcceptDrops(true);
@@ -49,10 +57,32 @@ ProjectHierarchyWidget::ProjectHierarchyWidget()
 	hierarchyList->setModel(hierarchyListModel);
 	layoutBase->addWidget(hierarchyList); 
 	
+	//Add dialog
+	addGraphDialog = new AddGraphDialog(this); 
+	
+	//delete dialog
+	deleteGraphDialog = new DeleteGraphDialog(this);
+	
 	//Connections
-	connect(pushButton, &QPushButton::clicked, [this](bool checked)
+	connect(addGraphButton, &QPushButton::clicked, [this](bool checked)
 	{
-		hierarchyListModel->AddNew("new graph"); 
+		addGraphDialog->show(); 
+		addGraphDialog->move( QCursor::pos() );
+	});
+	connect(addGraphDialog, &AddGraphDialog::GraphAdded, [this](QString& name)
+	{
+		hierarchyListModel->AddNew(name); 
+	});
+
+
+	connect(deleteGraphButton, &QPushButton::clicked, [this](bool checked)
+	{
+		deleteGraphDialog->show(); 
+		deleteGraphDialog->move( QCursor::pos() );
+	});
+	connect(deleteGraphDialog, &DeleteGraphDialog::GraphDeleted, [this]()
+	{
+
 	});
 }
 
