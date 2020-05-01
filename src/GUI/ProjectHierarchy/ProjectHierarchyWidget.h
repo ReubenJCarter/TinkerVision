@@ -49,8 +49,14 @@ class ProjectHierarchyWidget: public QDockWidget
 
 		QString openGraphName; 
 		
+		void SaveCurrentNodeEditor(); 
+		void LoadNodeEditorFromIndex(int inx); 
+
 	public:
 		ProjectHierarchyWidget(NodeEditor::NodeEditorWidget* ne); 
+
+		void Load(); 
+		void Save(); 
 };
 
 }	

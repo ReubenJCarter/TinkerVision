@@ -113,32 +113,44 @@ ProjectHierarchyWidget::ProjectHierarchyWidget(NodeEditor::NodeEditorWidget* ne)
 		if(hierarchyListModel->GetCount() <= 0)
 		{
 			int newInx = hierarchyListModel->AddNew("New Graph"); 
-			nodeEditorWidget->Load( hierarchyListModel->GetData(newInx), hierarchyListModel->GetName(newInx)  ); 
-			openGraphName = hierarchyListModel->GetName(newInx);
+			LoadNodeEditorFromIndex(newInx); 
 		}
 		//else if we have deleted the currently open graph, open the first graph  in the list
 		else if(deletedGraphOpen)
 		{
 			int newInx = 0; 
-			nodeEditorWidget->Load( hierarchyListModel->GetData(newInx), hierarchyListModel->GetName(newInx)  ); 
-			openGraphName = hierarchyListModel->GetName(newInx);
+			LoadNodeEditorFromIndex(newInx); 
 		}
 	});
 
 	//Connection open
 	connect(hierarchyList, &QAbstractItemView::doubleClicked, [this](const QModelIndex &index)
 	{
-		int inx = index.row(); 
-		QByteArray data = hierarchyListModel->GetData(inx);
-		QString name = hierarchyListModel->GetName(inx); 
-		nodeEditorWidget->Load(data, name); 
-		openGraphName = name; 
+		SaveCurrentNodeEditor(); 
+		LoadNodeEditorFromIndex(index.row()); 
 	}); 
 
 	//Add default graph
-	int newInx = hierarchyListModel->AddNew("New Graph"); 
-	nodeEditorWidget->Load( hierarchyListModel->GetData(newInx), hierarchyListModel->GetName(newInx)  ); 
-	openGraphName = hierarchyListModel->GetName(newInx);
+	openGraphName = ""; 
+	LoadNodeEditorFromIndex( hierarchyListModel->AddNew("New Graph") ); 
+}
+
+void ProjectHierarchyWidget::SaveCurrentNodeEditor()
+{
+	if(openGraphName.length() > 0)
+	{
+		//save the current node editor scene to the correct thingy in the other thing 
+		int inx = hierarchyListModel->GetInxFromName(openGraphName); 
+		if(inx >= 0)
+			hierarchyListModel->ModifyData( inx, nodeEditorWidget->Save() ); 
+	}
+}
+
+void ProjectHierarchyWidget::LoadNodeEditorFromIndex(int inx)
+{
+	//Load new data into the node editor
+	nodeEditorWidget->Load( hierarchyListModel->GetData(inx), hierarchyListModel->GetName(inx)  ); 
+	openGraphName = hierarchyListModel->GetName(inx);
 }
 
 }	
