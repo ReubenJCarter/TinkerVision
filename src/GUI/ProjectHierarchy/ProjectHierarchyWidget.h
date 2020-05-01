@@ -13,6 +13,12 @@ namespace Visi
 {
 namespace GUI
 {
+
+namespace NodeEditor
+{
+class NodeEditorWidget; 
+}
+
 namespace ProjectHierarchy
 {
 
@@ -38,9 +44,13 @@ class ProjectHierarchyWidget: public QDockWidget
 		QHBoxLayout* buttonLayout; 
 		AddGraphDialog* addGraphDialog;
 		DeleteGraphDialog* deleteGraphDialog;
+
+		NodeEditor::NodeEditorWidget* nodeEditorWidget; 
+
+		QString openGraphName; 
 		
 	public:
-		ProjectHierarchyWidget(); 
+		ProjectHierarchyWidget(NodeEditor::NodeEditorWidget* ne); 
 };
 
 }	

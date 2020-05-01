@@ -112,29 +112,84 @@ bool HierarchyListModel::dropMimeData(const QMimeData *data, Qt::DropAction acti
     return false; 
 }   
 
-void HierarchyListModel::AddNew(QString name)
+int HierarchyListModel::AddNew(QString name)
 {
     Item it;
     it.name = name; 
     items.push_back(it); 
     emit dataChanged(QModelIndex(), QModelIndex(), { Qt::DisplayRole } ); 
+    return items.size()-1; 
 }
 
 void HierarchyListModel::ModifyData(int inx, QByteArray flowSceneData)
 {
+    if(inx < 0 || inx >= items.size())
+        return; 
     items[inx].flowSceneData = flowSceneData; 
+}
+
+int HierarchyListModel::GetInxFromName(QString name)
+{
+    for(int i = 0; i < items.size(); i++)
+    {
+        if(items[i].name == name)
+            return i;
+    }
+    return -1;
+}
+
+QByteArray HierarchyListModel::GetData(int inx)
+{
+    if(inx < 0 || inx >= items.size())
+        return QByteArray(); 
+    return items[inx].flowSceneData;
+}
+
+QString HierarchyListModel::GetName(int inx)
+{
+    if(inx < 0 || inx >= items.size())
+        return ""; 
+    return items[inx].name;
 }
 
 void HierarchyListModel::Remove(int inx)
 {
+    if(inx < 0 || inx >= items.size())
+        return; 
+
     items.erase(items.begin() + inx);
+    emit dataChanged(QModelIndex(), QModelIndex(), { Qt::DisplayRole } ); 
+}
+
+void HierarchyListModel::Remove(std::vector<int>& inxs)
+{
+    std::vector<int> inxCopy = inxs; 
+    std::sort(inxCopy.begin(), inxCopy.end()); 
+    bool dataDidChange = false; 
+    for(int i = inxCopy.size()-1; i>=0; i--)
+    {
+        if(i < 0 || i >= items.size())
+            continue; 
+        int inx = inxCopy[i]; 
+        items.erase(items.begin() + inx);
+        dataDidChange = true; 
+    }
+
+    if(dataDidChange)
+        emit dataChanged(QModelIndex(), QModelIndex(), { Qt::DisplayRole } ); 
+}
+
+int HierarchyListModel::GetCount()
+{
+    return items.size(); 
 }
 
 void HierarchyListModel::Clear()
 {
     items.clear(); 
-}
 
+    emit dataChanged(QModelIndex(), QModelIndex(), { Qt::DisplayRole } ); 
+}
 
 }	
 }

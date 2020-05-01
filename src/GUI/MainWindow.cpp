@@ -22,8 +22,9 @@ MainWindow::MainWindow()
 	
 	//Set the Top bar 
 	fileMenu = menuBar()->addMenu("File");
-	saveAction = fileMenu->addAction("Save");
-	loadAction = fileMenu->addAction("Load");
+	loadAction = fileMenu->addAction("New Project");
+	saveAction = fileMenu->addAction("Save Project");
+	loadAction = fileMenu->addAction("Load Project");
 	connect(saveAction, &QAction::triggered, this, &MainWindow::Save);
 	connect(loadAction, &QAction::triggered, this, &MainWindow::Load);
 	
@@ -32,7 +33,7 @@ MainWindow::MainWindow()
 	setCentralWidget(nodeEditorWidegt);
 
 	//dockables
-	projectHierarchyWidget = new ProjectHierarchy::ProjectHierarchyWidget(); 
+	projectHierarchyWidget = new ProjectHierarchy::ProjectHierarchyWidget(nodeEditorWidegt); 
 	addDockWidget(Qt::LeftDockWidgetArea, projectHierarchyWidget);
 
 	//Show

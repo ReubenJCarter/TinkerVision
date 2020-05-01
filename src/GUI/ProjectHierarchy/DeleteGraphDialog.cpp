@@ -14,7 +14,7 @@ namespace ProjectHierarchy
 	
 DeleteGraphDialog::DeleteGraphDialog(QWidget *parent): QWidget(parent)
 {
-    setWindowTitle("Delete Graph");
+    setWindowTitle("Delete");
 
     setWindowFlags(Qt::Dialog);
     setWindowModality(Qt::WindowModal);

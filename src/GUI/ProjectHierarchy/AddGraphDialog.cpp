@@ -15,7 +15,7 @@ namespace ProjectHierarchy
 	
 AddGraphDialog::AddGraphDialog(QWidget *parent): QWidget(parent)
 {
-    setWindowTitle("Add Graph");
+    setWindowTitle("Add");
 
     setWindowFlags(Qt::Dialog);
     setWindowModality(Qt::WindowModal);

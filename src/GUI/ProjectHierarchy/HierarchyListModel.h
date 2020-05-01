@@ -45,9 +45,14 @@ class HierarchyListModel: public QAbstractListModel
         bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
         
-        void AddNew(QString name);
+        int AddNew(QString name);
         void ModifyData(int inx, QByteArray flowSceneData); 
+        int GetInxFromName(QString name); 
+        QByteArray GetData(int inx); 
+        QString GetName(int inx); 
         void Remove(int inx);
+        void Remove(std::vector<int>& inxs);
+        int GetCount(); 
         void Clear(); 
 };
 
