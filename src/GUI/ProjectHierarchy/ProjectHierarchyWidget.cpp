@@ -12,6 +12,10 @@
 #include <QListView>
 #include <QPushButton>
 
+
+#include <QStringListModel>
+#include <QStringList>
+
 namespace Visi
 {
 namespace GUI
@@ -47,16 +51,15 @@ ProjectHierarchyWidget::ProjectHierarchyWidget(NodeEditor::NodeEditorWidget* ne)
     //List
 	hierarchyList = new QListView(); 
 
-	hierarchyList->setSelectionMode(QAbstractItemView::ExtendedSelection); //SingleSelection
 	//hierarchyList->setSelectionBehavior(QAbstractItemView::SelectRows); 
-	//hierarchyList->setDefaultDropAction(Qt::TargetMoveAction);
-
+	//hierarchyList->setDefaultDropAction(Qt::IgnoreAction);
+	//hierarchyList->setMovement(QListView::Free);
+	hierarchyList->setSelectionMode(QAbstractItemView::ExtendedSelection);
+	hierarchyList->setDragDropMode(QAbstractItemView::InternalMove);
+	hierarchyList->setEditTriggers(QAbstractItemView::EditKeyPressed); 
 	hierarchyList->setDragEnabled(true);
 	hierarchyList->setAcceptDrops(true);
 	hierarchyList->setDropIndicatorShown(true);
-	//hierarchyList->setMovement(QListView::Free);
-
-	hierarchyList->setEditTriggers(QAbstractItemView::EditKeyPressed); 
 
 	hierarchyListModel = new HierarchyListModel(); 
 	hierarchyList->setModel(hierarchyListModel);

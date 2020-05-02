@@ -3,8 +3,13 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QScrollArea>
+#include <QMimeData>
 
 #include <iostream> 
+
+//https://forum.qt.io/topic/104450/how-to-implement-simple-internal-drag-drop-for-reordering-items-in-qlistview-using-a-custom-model/6
+//https://forum.qt.io/topic/90560/qtreeview-qabstractitemmodel-and-internal-move/5
+//https://stackoverflow.com/questions/56819085/qt-how-to-implement-simple-internal-dragdrop-for-reordering-items-in-qlistview
 
 namespace Visi
 {
@@ -61,7 +66,7 @@ QModelIndex HierarchyListModel::parent(const QModelIndex &index) const
 Qt::ItemFlags HierarchyListModel::flags(const QModelIndex &index) const
 {
     if (index.isValid())
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled;
     else
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDropEnabled;
     
@@ -70,7 +75,7 @@ Qt::ItemFlags HierarchyListModel::flags(const QModelIndex &index) const
 bool HierarchyListModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     std::cout << "removeRows:" << row << " " << count << "\n"; 
-    if (row < 0 || row > items.size())
+    if (row < 0 || (row + count) > items.size())
         return false;
 
     beginRemoveRows(parent, row, row+count-1);
@@ -102,15 +107,74 @@ bool HierarchyListModel::insertRows(int row, int count, const QModelIndex &paren
     return true; 
 }
 
+
 Qt::DropActions HierarchyListModel::supportedDragActions() const
 {
-    return Qt::MoveAction; //Qt::CopyAction | 
+    return Qt::MoveAction;// | Qt::CopyAction; 
+}
+
+Qt::DropActions HierarchyListModel::supportedDropActions() const
+{
+    return Qt::MoveAction;// | Qt::CopyAction;
 }
 
 bool HierarchyListModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
-    return false; 
+    if (action == Qt::IgnoreAction)
+        return true;
+    else if (action  != Qt::MoveAction)
+        return false;
+
+    QByteArray encodedData = data->data("EditorGraphMimeData");
+    QDataStream stream(&encodedData, QIODevice::ReadOnly);
+
+    std::vector<Item> newItems; 
+    while (!stream.atEnd()) {
+        
+        Item it;
+        stream >> it.name;
+        stream >> it.flowSceneData;
+        newItems.push_back(it); 
+    }
+
+    insertRows(row, newItems.size(), QModelIndex());
+    for(int i = 0; i < newItems.size(); i++)
+    {
+        items[row + i] = newItems[i]; 
+    }
+    emit dataChanged(QModelIndex(), QModelIndex(), { Qt::DisplayRole } ); 
+    return true;
 }   
+
+QMimeData* HierarchyListModel::mimeData(const QModelIndexList &indexes) const
+{
+    QMimeData* mimeData = new QMimeData;
+    QByteArray encodedData;
+
+    QDataStream stream(&encodedData, QIODevice::WriteOnly);
+
+    for (const QModelIndex &index : indexes) 
+    {
+        if (index.isValid()) 
+        {
+            stream << items[ index.row() ].name << items[ index.row() ].flowSceneData;
+        }
+    }
+    mimeData->setData("EditorGraphMimeData", encodedData);
+    return mimeData;
+
+}
+
+QStringList HierarchyListModel::mimeTypes() const
+{
+    QStringList types;
+    types << "EditorGraphMimeData";
+    return types;
+}
+
+
+
+
 
 int HierarchyListModel::AddNew(QString name)
 {

@@ -42,7 +42,10 @@ class HierarchyListModel: public QAbstractListModel
         bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
         Qt::DropActions supportedDragActions() const; 
+        Qt::DropActions supportedDropActions() const;
         bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+        QMimeData* mimeData(const QModelIndexList &indexes) const;
+        QStringList mimeTypes() const;
 
         
         int AddNew(QString name);
