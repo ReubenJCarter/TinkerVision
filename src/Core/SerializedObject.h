@@ -9,8 +9,6 @@
 
 namespace Visi
 {
-namespace ComputeGraph
-{
 		
 /**
  */
@@ -78,5 +76,4 @@ class VISI_EXPORT SerializedObject
         bool GetSerializedObjectArray(std::string name, std::vector<SerializedObject*>& vec); 
 };
 	
-}
 }

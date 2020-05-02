@@ -2,15 +2,15 @@
 
 #include <QAbstractListModel>
 
-#include "ComputeGraph/SerializedObject.h"
-
-
 class QScrollArea;
 class QWidget;
 class QVBoxLayout; 
 
 namespace Visi
 {
+
+class SerializedObject; 
+
 namespace GUI
 {
 namespace ProjectHierarchy
@@ -57,6 +57,9 @@ class HierarchyListModel: public QAbstractListModel
         void Remove(std::vector<int>& inxs);
         int GetCount(); 
         void Clear(); 
+
+        void Serialize(SerializedObject* so); 
+		void Deserialize(SerializedObject* so); 
 };
 
 }	

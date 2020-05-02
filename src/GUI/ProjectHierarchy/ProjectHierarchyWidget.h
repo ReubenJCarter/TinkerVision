@@ -2,6 +2,8 @@
 
 #include <QDockWidget>
 
+#include "Core/SerializedObject.h"
+
 class QScrollArea;
 class QWidget;
 class QVBoxLayout; 
@@ -11,6 +13,9 @@ class QPushButton;
 
 namespace Visi
 {
+	
+class SerializedObject; 
+
 namespace GUI
 {
 
@@ -55,8 +60,8 @@ class ProjectHierarchyWidget: public QDockWidget
 	public:
 		ProjectHierarchyWidget(NodeEditor::NodeEditorWidget* ne); 
 
-		void Load(); 
-		void Save(); 
+		void Serialize(SerializedObject* so); 
+		void Deserialize(SerializedObject* so); 
 };
 
 }	

@@ -1,5 +1,7 @@
 #include "HierarchyListModel.h"
 
+#include "Core/SerializedObject.h"
+
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QScrollArea>
@@ -251,6 +253,39 @@ int HierarchyListModel::GetCount()
 void HierarchyListModel::Clear()
 {
     items.clear(); 
+
+    emit dataChanged(QModelIndex(), QModelIndex(), { Qt::DisplayRole } ); 
+}
+
+void HierarchyListModel::Serialize(SerializedObject* so)
+{
+    std::vector<SerializedObject*> graphsSOs; 
+    for(int i = 0 ; i < items.size(); i++)
+    {
+        std::string name = items[i].name.toStdString(); 
+        std::string flowSceneData = QString(items[i].flowSceneData).toStdString(); 
+
+        SerializedObject* so = new SerializedObject; 
+        so->SetString("name", name); 
+        so->SetString("graph", flowSceneData); 
+        graphsSOs.push_back(so); 
+    }
+    so->SetSerializedObjectArray("graphItems", graphsSOs);
+}
+
+void HierarchyListModel::Deserialize(SerializedObject* so)
+{
+    items.clear(); 
+
+    std::vector<SerializedObject*> graphsSOs; 
+    so->GetSerializedObjectArray("graphItems", graphsSOs); 
+    for(int i = 0; i < graphsSOs.size(); i++)
+    {
+        Item it; 
+        it.name = QString( graphsSOs[i]->GetString("name").c_str() ); 
+        it.flowSceneData = QByteArray( graphsSOs[i]->GetString("graph").c_str() ); 
+        items.push_back(it); 
+    }
 
     emit dataChanged(QModelIndex(), QModelIndex(), { Qt::DisplayRole } ); 
 }

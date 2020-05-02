@@ -6,8 +6,6 @@ set(LIBRARYSRCFILES
 	CompositeProcess/Resize.cpp
 	CompositeProcess/Sift.cpp
 
-	ComputeGraph/SerializedObject.cpp
-
 	Core/BoundingBox.cpp
 	Core/ComputeShader.cpp
 	Core/Context.cpp
@@ -15,6 +13,7 @@ set(LIBRARYSRCFILES
 	Core/Image.cpp
 	Core/ImageGPU.cpp
 	Core/ParallelFor.cpp
+	Core/SerializedObject.cpp
 	Core/ProcessHelper.cpp
 	Core/ShaderStorageBuffer.cpp
 	Core/Window.cpp

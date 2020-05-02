@@ -6,7 +6,7 @@
 
 #include "Nodes/SourceNodes.h"
 
-#include "SerializedObject.h"
+#include "../Core/SerializedObject.h"
 
 #include <iostream>
 #include <functional>

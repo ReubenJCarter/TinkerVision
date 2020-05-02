@@ -9,7 +9,7 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
-#include "SerializedObject.h"
+#include "Core/SerializedObject.h"
 
 #define VISI_CLONEABLE_MACRO(TYPE)\
 public:\

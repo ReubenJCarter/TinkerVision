@@ -2,14 +2,17 @@
 
 #include "NodeEditor/NodeEditorWidget.h"
 #include "ProjectHierarchy/ProjectHierarchyWidget.h"
+#include "Core/SerializedObject.h"
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QMenuBar>
+#include <QFileDialog>
 
 #include <iostream>
+#include <fstream>
 
 namespace Visi
 {
@@ -56,11 +59,43 @@ void MainWindow::ExpandToFitScreen()
 void MainWindow::Save()
 {
 	std::cout << "Save" << std::endl;
+
+	SerializedObject serializedObject; 
+	projectHierarchyWidget->Serialize(&serializedObject); 
+	
+	QString fileName = QFileDialog::getSaveFileName(this, tr("Save Project"), "", tr("vis (*.vis)"));
+	if(fileName.length() > 0)
+	{
+		std::ofstream fs(fileName.toStdString().c_str());
+		if(fs.is_open())
+		{
+			fs << serializedObject.ToString(); 
+			fs.close();
+		}
+	}
 }
 
 void MainWindow::Load()
 {
 	std::cout << "Load" << std::endl;
+	
+	SerializedObject serializedObject; 
+	QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("vis (*.vis)"));
+	if(fileName.length() > 0)
+	{
+		std::ifstream fs(fileName.toStdString().c_str());
+		if(fs.is_open())
+		{
+			std::string fStr; 
+			fs >> fStr; 
+			serializedObject.FromString(fStr); 
+			projectHierarchyWidget->Deserialize(&serializedObject); 
+			fs.close();
+		}
+	}
+
+
+	
 }
 
 }

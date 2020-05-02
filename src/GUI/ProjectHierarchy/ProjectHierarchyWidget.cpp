@@ -1,5 +1,6 @@
 #include "ProjectHierarchyWidget.h"
 #include "../NodeEditor/NodeEditorWidget.h"
+#include "Core/SerializedObject.h"
 
 #include "HierarchyListModel.h"
 #include "AddGraphDialog.h"
@@ -154,6 +155,16 @@ void ProjectHierarchyWidget::LoadNodeEditorFromIndex(int inx)
 	//Load new data into the node editor
 	nodeEditorWidget->Load( hierarchyListModel->GetData(inx), hierarchyListModel->GetName(inx)  ); 
 	openGraphName = hierarchyListModel->GetName(inx);
+}
+
+void ProjectHierarchyWidget::Serialize(SerializedObject* so)
+{
+	hierarchyListModel->Serialize(so); 
+}
+
+void ProjectHierarchyWidget::Deserialize(SerializedObject* so)
+{
+	hierarchyListModel->Deserialize(so); 
 }
 
 }	

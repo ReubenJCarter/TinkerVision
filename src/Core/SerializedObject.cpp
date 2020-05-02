@@ -9,8 +9,6 @@ using namespace rapidjson;
 
 namespace Visi
 {
-namespace ComputeGraph
-{
 
 class SerializedObject::Internal
 {
@@ -768,5 +766,4 @@ bool SerializedObject::GetSerializedObjectArray(std::string name, std::vector<Se
     return true;
 }
 
-}
 }

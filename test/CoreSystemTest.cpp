@@ -693,7 +693,7 @@ int main(int argc, char *argv[])
 		{
 			std::cout << "Starting ComputeGraph test\n\n"; 
 
-			Visi::ComputeGraph::SerializedObject graphJson; 
+			Visi::SerializedObject graphJson; 
 
 			graphJson.FromString(R"(
 			{
@@ -737,7 +737,7 @@ int main(int argc, char *argv[])
 
 			Visi::ComputeGraph::Graph graph;
 			graph.Deserialize(&graphJson); 
-			Visi::ComputeGraph::SerializedObject outJson; 
+			Visi::SerializedObject outJson; 
 			graph.Serialize(&outJson); 
 			std::cout << outJson.ToString() << "\n"; 
 
