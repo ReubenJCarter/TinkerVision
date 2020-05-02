@@ -24,14 +24,15 @@ YesNoDialog::YesNoDialog(QWidget *parent): QWidget(parent)
     setLayout(layoutBase);
 
     message = new QLabel("Are you sure you want to do this?"); 
+    layoutBase->addWidget(message); 
 
     buttonlayout = new QHBoxLayout(); 
     layoutBase->addLayout(buttonlayout); 
     
-    yesButton = new QPushButton("Delete"); 
+    yesButton = new QPushButton("Yes"); 
     buttonlayout->addWidget(yesButton); 
 
-    noButton = new QPushButton("Cancel"); 
+    noButton = new QPushButton("No"); 
     buttonlayout->addWidget(noButton); 
 
     //connections

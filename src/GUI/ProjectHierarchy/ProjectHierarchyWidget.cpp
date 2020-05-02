@@ -177,6 +177,7 @@ void ProjectHierarchyWidget::Serialize(SerializedObject* so)
 void ProjectHierarchyWidget::Deserialize(SerializedObject* so)
 {
 	hierarchyListModel->Deserialize(so); 
+	LoadNodeEditorFromIndex( 0 ); 
 }
 
 void ProjectHierarchyWidget::StartNewProject()
