@@ -25,11 +25,12 @@ MainWindow::MainWindow()
 	
 	//Set the Top bar 
 	fileMenu = menuBar()->addMenu("File");
-	loadAction = fileMenu->addAction("New Project");
 	saveAction = fileMenu->addAction("Save Project");
 	loadAction = fileMenu->addAction("Load Project");
+	newProjectAction = fileMenu->addAction("New Project");
 	connect(saveAction, &QAction::triggered, this, &MainWindow::Save);
 	connect(loadAction, &QAction::triggered, this, &MainWindow::Load);
+	connect(newProjectAction, &QAction::triggered, this, &MainWindow::NewProject);
 	
 	//central
 	nodeEditorWidegt = new NodeEditor::NodeEditorWidget(); 
@@ -105,6 +106,11 @@ void MainWindow::Load()
 
 
 	
+}
+
+void MainWindow::NewProject()
+{
+	projectHierarchyWidget->StartNewProject(); 
 }
 
 }

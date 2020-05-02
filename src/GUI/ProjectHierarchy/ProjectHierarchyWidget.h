@@ -30,6 +30,7 @@ namespace ProjectHierarchy
 class HierarchyListModel; 
 class AddGraphDialog; 
 class DeleteGraphDialog;
+class YesNoDialog; 
 	
 class ProjectHierarchyWidget: public QDockWidget
 {
@@ -49,6 +50,7 @@ class ProjectHierarchyWidget: public QDockWidget
 		QHBoxLayout* buttonLayout; 
 		AddGraphDialog* addGraphDialog;
 		DeleteGraphDialog* deleteGraphDialog;
+		YesNoDialog* startNewProjectDialog; 
 
 		NodeEditor::NodeEditorWidget* nodeEditorWidget; 
 
@@ -62,6 +64,7 @@ class ProjectHierarchyWidget: public QDockWidget
 
 		void Serialize(SerializedObject* so); 
 		void Deserialize(SerializedObject* so); 
+		void StartNewProject(); 
 };
 
 }	

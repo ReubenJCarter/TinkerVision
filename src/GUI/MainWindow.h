@@ -28,6 +28,7 @@ class MainWindow: public QMainWindow
 		QMenu* fileMenu;
 		QAction* saveAction;
 		QAction* loadAction;
+		QAction* newProjectAction; 
 		NodeEditor::NodeEditorWidget* nodeEditorWidegt; 
 		ProjectHierarchy::ProjectHierarchyWidget* projectHierarchyWidget; 
 		
@@ -37,6 +38,7 @@ class MainWindow: public QMainWindow
 	public slots:
 		void Save();
 		void Load();
+		void NewProject(); 
 };
 
 }

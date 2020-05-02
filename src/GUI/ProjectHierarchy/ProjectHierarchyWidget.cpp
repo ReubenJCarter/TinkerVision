@@ -5,6 +5,7 @@
 #include "HierarchyListModel.h"
 #include "AddGraphDialog.h"
 #include "DeleteGraphDialog.h"
+#include "YesNoDialog.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -71,6 +72,9 @@ ProjectHierarchyWidget::ProjectHierarchyWidget(NodeEditor::NodeEditorWidget* ne)
 	
 	//delete dialog
 	deleteGraphDialog = new DeleteGraphDialog(this);
+
+	//new project dialog
+	startNewProjectDialog = new YesNoDialog(this); 
 	
 	//Connection add
 	connect(addGraphButton, &QPushButton::clicked, [this](bool checked)
@@ -127,6 +131,14 @@ ProjectHierarchyWidget::ProjectHierarchyWidget(NodeEditor::NodeEditorWidget* ne)
 		}
 	});
 
+	//connect startNewProjectDialog
+	connect(startNewProjectDialog, &YesNoDialog::Yes, [this]()
+	{	
+		openGraphName = ""; 
+		hierarchyListModel->Clear(); 
+		LoadNodeEditorFromIndex( hierarchyListModel->AddNew("New Graph") ); 
+	});
+
 	//Connection open
 	connect(hierarchyList, &QAbstractItemView::doubleClicked, [this](const QModelIndex &index)
 	{
@@ -165,6 +177,12 @@ void ProjectHierarchyWidget::Serialize(SerializedObject* so)
 void ProjectHierarchyWidget::Deserialize(SerializedObject* so)
 {
 	hierarchyListModel->Deserialize(so); 
+}
+
+void ProjectHierarchyWidget::StartNewProject()
+{
+	startNewProjectDialog->show(); 
+	startNewProjectDialog->move( QCursor::pos() );
 }
 
 }	
