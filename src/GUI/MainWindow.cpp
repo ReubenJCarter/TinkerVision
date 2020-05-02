@@ -86,11 +86,20 @@ void MainWindow::Load()
 		std::ifstream fs(fileName.toStdString().c_str());
 		if(fs.is_open())
 		{
-			std::string fStr; 
-			fs >> fStr; 
+			//get length of file
+			fs.seekg(0, std::ios::end);
+			size_t length = fs.tellg();
+			fs.seekg(0, std::ios::beg);
+			char* buffer = new char[length];
+			fs.read(&buffer[0], length);
+			fs.close();
+
+			std::string fStr(buffer, length); 
+
 			serializedObject.FromString(fStr); 
 			projectHierarchyWidget->Deserialize(&serializedObject); 
-			fs.close();
+			
+			delete[] buffer; 
 		}
 	}
 

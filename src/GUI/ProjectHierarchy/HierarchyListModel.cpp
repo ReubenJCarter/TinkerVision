@@ -126,6 +126,8 @@ bool HierarchyListModel::dropMimeData(const QMimeData *data, Qt::DropAction acti
         return true;
     else if (action  != Qt::MoveAction)
         return false;
+    if(row > items.size() || row < 0)
+        return false; 
 
     QByteArray encodedData = data->data("EditorGraphMimeData");
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
@@ -284,7 +286,7 @@ void HierarchyListModel::Deserialize(SerializedObject* so)
         Item it; 
         it.name = QString( graphsSOs[i]->GetString("name").c_str() ); 
         it.flowSceneData = QByteArray( graphsSOs[i]->GetString("graph").c_str() ); 
-        items.push_back(it); 
+        items.push_back(it);
     }
 
     emit dataChanged(QModelIndex(), QModelIndex(), { Qt::DisplayRole } ); 
