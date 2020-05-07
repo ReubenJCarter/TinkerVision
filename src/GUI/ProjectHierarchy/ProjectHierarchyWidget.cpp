@@ -11,6 +11,7 @@
 #include <QHBoxLayout>
 #include <QWidget>
 #include <QScrollArea>
+#include <QLabel>
 #include <QListView>
 #include <QPushButton>
 
@@ -66,6 +67,17 @@ ProjectHierarchyWidget::ProjectHierarchyWidget(NodeEditor::NodeEditorWidget* ne)
 	hierarchyListModel = new HierarchyListModel(); 
 	hierarchyList->setModel(hierarchyListModel);
 	layoutBase->addWidget(hierarchyList); 
+
+	//Add compile text box and button
+	compileButton = new QPushButton("Compile"); 
+	layoutBase->addWidget(compileButton); 
+
+	compileJsonTextScrollArea = new QScrollArea();
+	compileJsonText = new QLabel(); 
+	compileJsonText->setTextInteractionFlags(Qt::TextSelectableByMouse);
+	compileJsonTextScrollArea->setWidget(compileJsonText);
+	layoutBase->addWidget(compileJsonTextScrollArea); 
+	
 	
 	//Add dialog
 	addGraphDialog = new AddGraphDialog(this); 

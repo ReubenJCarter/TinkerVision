@@ -7,6 +7,9 @@
 
 namespace Visi
 {
+
+class SerializedObject; 
+
 namespace GUI
 {
 namespace NodeEditor
@@ -68,6 +71,8 @@ class BaseNode: public QtNodes::NodeDataModel
 		
 		QtNodes::NodeValidationState validationState() const override;
 		QString validationMessage() const override;
+
+        virtual void SerializeToComputeGraph(SerializedObject* so) {}; 
 };
 
 class BaseProcess1In1Out: public BaseNode

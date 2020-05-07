@@ -229,6 +229,11 @@ void NodeEditorWidget::Clear()
 	flowScene->clearScene();
 }
 
+void NodeEditorWidget::SerializeToComputeGraph(SerializedObject* so)
+{
+
+}
+
 }
 }
 }

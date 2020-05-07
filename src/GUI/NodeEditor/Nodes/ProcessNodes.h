@@ -2,6 +2,8 @@
 
 #include "../BaseNode.h"
 
+#include "../../../ComputeGraph/Nodes/ProcessNodes.h"
+
 namespace Visi
 {
 namespace GUI

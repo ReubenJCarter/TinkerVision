@@ -2,6 +2,8 @@
 
 #include "DataTypes.h"
 
+#include "Core/SerializedObject.h"
+
 #include <iostream>
 
 namespace Visi

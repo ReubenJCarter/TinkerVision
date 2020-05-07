@@ -14,6 +14,9 @@ namespace QtNodes
 
 namespace Visi
 {
+
+class SerializedObject; 
+
 namespace GUI
 {
 namespace NodeEditor
@@ -36,6 +39,7 @@ class NodeEditorWidget: public QWidget
 		void Load(QByteArray d, QString name);
 		QByteArray Save(); 
 		void Clear(); 
+		void SerializeToComputeGraph(SerializedObject* so); 
 };
 
 }	
