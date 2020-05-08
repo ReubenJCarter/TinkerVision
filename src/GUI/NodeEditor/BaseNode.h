@@ -10,6 +10,11 @@ namespace Viso
 
 class SerializedObject; 
 
+namespace ComputeGraph 
+{
+    class Node; 
+}
+
 namespace GUI
 {
 namespace NodeEditor
@@ -72,7 +77,7 @@ class BaseNode: public QtNodes::NodeDataModel
 		QtNodes::NodeValidationState validationState() const override;
 		QString validationMessage() const override;
 
-        virtual void SerializeToComputeGraph(SerializedObject* so) {}; 
+        virtual ComputeGraph::Node* GetComputeNode() {return NULL; }; 
 };
 
 class BaseProcess1In1Out: public BaseNode

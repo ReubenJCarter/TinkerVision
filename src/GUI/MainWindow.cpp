@@ -41,7 +41,7 @@ MainWindow::MainWindow()
 	projectHierarchyWidget = new ProjectHierarchy::ProjectHierarchyWidget(nodeEditorWidegt); 
 	addDockWidget(Qt::LeftDockWidgetArea, projectHierarchyWidget);
 
-	buildEditorWidget = new BuildEditor::BuildEditorWidget(nodeEditorWidegt); 
+	buildEditorWidget = new BuildEditor::BuildEditorWidget(nodeEditorWidegt, projectHierarchyWidget); 
 	addDockWidget(Qt::LeftDockWidgetArea, buildEditorWidget);
 
 	//Show

@@ -4,6 +4,8 @@
 
 #include "../DataTypes.h"
 
+#include "../../../ComputeGraph/Nodes/SourceNodes.h"
+
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QComboBox>
@@ -25,6 +27,7 @@ class IntSource: public BaseNode
         int sourceValue; 
 		std::shared_ptr<IntData> data;
 		QLineEdit* lineEdit;
+        ComputeGraph::Nodes::IntSource cgNode; 
 	 
 	public:
 		IntSource()
@@ -90,6 +93,12 @@ class IntSource: public BaseNode
 
 		std::shared_ptr<QtNodes::NodeData> outData(QtNodes::PortIndex portIndex) { return std::static_pointer_cast<QtNodes::NodeData>(data);}
 		QWidget* embeddedWidget() { return lineEdit; };
+
+        ComputeGraph::Node* GetComputeNode() 
+        {
+            cgNode.value = sourceValue; 
+            return &cgNode; 
+        }
 };
 
 class FloatSource: public BaseNode
@@ -98,6 +107,7 @@ class FloatSource: public BaseNode
         float sourceValue; 
 		std::shared_ptr<FloatData> data;
 		QLineEdit* lineEdit;
+        ComputeGraph::Nodes::FloatSource cgNode; 
 	 
 	public:
 		FloatSource()
@@ -163,6 +173,12 @@ class FloatSource: public BaseNode
         
 		std::shared_ptr<QtNodes::NodeData> outData(QtNodes::PortIndex portIndex) { return std::static_pointer_cast<QtNodes::NodeData>(data);}
 		QWidget* embeddedWidget() { return lineEdit; };
+
+        ComputeGraph::Node* GetComputeNode() 
+        {
+            cgNode.value = sourceValue; 
+            return &cgNode; 
+        }
 };
 
 class BoolSource: public BaseNode
@@ -171,6 +187,7 @@ class BoolSource: public BaseNode
         bool sourceValue; 
 		std::shared_ptr<BoolData> data;
 		QCheckBox* checkEdit;
+        ComputeGraph::Nodes::BoolSource cgNode; 
 	 
 	public:
 		BoolSource()
@@ -226,6 +243,12 @@ class BoolSource: public BaseNode
         
 		std::shared_ptr<QtNodes::NodeData> outData(QtNodes::PortIndex portIndex) { return std::static_pointer_cast<QtNodes::NodeData>(data);}
 		QWidget* embeddedWidget() { return checkEdit; };
+
+        ComputeGraph::Node* GetComputeNode() 
+        {
+            cgNode.value = sourceValue; 
+            return &cgNode; 
+        }
 };
 
 class StringSource: public BaseNode
@@ -234,6 +257,7 @@ class StringSource: public BaseNode
         std::string sourceValue; 
 		std::shared_ptr<StringData> data;
 		QLineEdit* lineEdit;
+        ComputeGraph::Nodes::StringSource cgNode; 
 	 
 	public:
 		StringSource()
@@ -283,12 +307,19 @@ class StringSource: public BaseNode
         
 		std::shared_ptr<QtNodes::NodeData> outData(QtNodes::PortIndex portIndex) { return std::static_pointer_cast<QtNodes::NodeData>(data);}
 		QWidget* embeddedWidget() { return lineEdit; };
+
+        ComputeGraph::Node* GetComputeNode() 
+        {
+            cgNode.value = sourceValue; 
+            return &cgNode; 
+        }
 };
 
 class ImageSource: public BaseNode
 {
 	private:
 		std::shared_ptr<ImageData> data;
+        ComputeGraph::Nodes::ImageSource cgNode; 
 	 
 	public:
 		ImageSource()
@@ -302,12 +333,18 @@ class ImageSource: public BaseNode
 		virtual ~ImageSource(){}
 	
 		std::shared_ptr<QtNodes::NodeData> outData(QtNodes::PortIndex portIndex) { return std::static_pointer_cast<QtNodes::NodeData>(data);}
+
+        ComputeGraph::Node* GetComputeNode() 
+        {
+            return &cgNode; 
+        }
 };
 
 class ImageGPUSource: public BaseNode
 {
 	private:
 		std::shared_ptr<ImageGPUData> data;
+        ComputeGraph::Nodes::ImageGPUSource cgNode; 
 	 
 	public:
 		ImageGPUSource()
@@ -321,6 +358,11 @@ class ImageGPUSource: public BaseNode
 		virtual ~ImageGPUSource(){}
 	
 		std::shared_ptr<QtNodes::NodeData> outData(QtNodes::PortIndex portIndex) { return std::static_pointer_cast<QtNodes::NodeData>(data);}
+
+        ComputeGraph::Node* GetComputeNode() 
+        {
+            return &cgNode; 
+        }
 };
 
 class ImageTypeSource: public BaseNode
@@ -330,6 +372,8 @@ class ImageTypeSource: public BaseNode
 		std::shared_ptr<ImageTypeData> data;
 		QComboBox* comboEdit;
 	 
+        ComputeGraph::Nodes::ImageTypeSource cgNode; 
+
 	public:
 		ImageTypeSource()
         {
@@ -387,6 +431,12 @@ class ImageTypeSource: public BaseNode
         
 		std::shared_ptr<QtNodes::NodeData> outData(QtNodes::PortIndex portIndex) { return std::static_pointer_cast<QtNodes::NodeData>(data);}
 		QWidget* embeddedWidget() { return comboEdit; };
+
+        ComputeGraph::Node* GetComputeNode() 
+        {
+            cgNode.value = ImageTypehelper::ImageTypeFromString( comboEdit->currentText().toStdString() ); 
+            return &cgNode; 
+        }
 };
 
 }

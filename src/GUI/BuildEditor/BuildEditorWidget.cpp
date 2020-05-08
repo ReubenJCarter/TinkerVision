@@ -1,6 +1,5 @@
 #include "BuildEditorWidget.h"
 #include "../NodeEditor/NodeEditorWidget.h"
-#include "Core/SerializedObject.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -17,9 +16,10 @@ namespace GUI
 namespace BuildEditor
 {
 	
-BuildEditorWidget::BuildEditorWidget(NodeEditor::NodeEditorWidget* ne)
+BuildEditorWidget::BuildEditorWidget(NodeEditor::NodeEditorWidget* ne, ProjectHierarchy::ProjectHierarchyWidget* phw)
 {
 	nodeEditorWidget = ne;
+	projectHierarchyWidget = phw; 
 
     //Set up panel
     setWindowTitle("Build And Run"); 
@@ -48,6 +48,13 @@ BuildEditorWidget::BuildEditorWidget(NodeEditor::NodeEditorWidget* ne)
 	compileJsonTextScrollArea->setWidget(compileJsonText);
 	layoutBase->addWidget(compileJsonTextScrollArea); 
 	
+	//Connections
+	connect(compileButton, &QPushButton::clicked, [this](){
+
+		nodeEditorWidget->SerializeToComputeGraph(&serializedComputeGraph);
+		std::string str = serializedComputeGraph.ToString(); 
+		compileJsonText->setText( str.c_str() ); 
+	});
 }
 
 }	

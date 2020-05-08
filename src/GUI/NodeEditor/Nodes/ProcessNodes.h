@@ -15,6 +15,9 @@ namespace Nodes
 
 class AdaptiveThreshold: public BaseProcess1In1Out
 {
+    private:
+        ComputeGraph::Nodes::AdaptiveThresholdNode cgNode; 
+
 	public:
 		AdaptiveThreshold()
         {   
@@ -25,10 +28,14 @@ class AdaptiveThreshold: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~AdaptiveThreshold(){}	
+        ComputeGraph::Node* GetComputeNode() { return &cgNode; }
 };
 
 class ApproxDistanceTransform: public BaseProcess1In1Out
 {
+    private:
+        ComputeGraph::Nodes::ApproxDistanceTransformNode cgNode; 
+
 	public:
 		ApproxDistanceTransform()
         {
@@ -40,10 +47,14 @@ class ApproxDistanceTransform: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~ApproxDistanceTransform(){}	
+        ComputeGraph::Node* GetComputeNode() { return &cgNode; }
 };
 
 class AverageFilter: public BaseProcess1In1Out
 {
+    private:
+        ComputeGraph::Nodes::AverageFilterNode cgNode; 
+
 	public:
 		AverageFilter()
         {
@@ -53,10 +64,11 @@ class AverageFilter: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~AverageFilter(){}	
+        ComputeGraph::Node* GetComputeNode() { return &cgNode; }
 };
 
 class Blend: public BaseNode
-{
+{        
 	public:
 		Blend()
         {
@@ -76,6 +88,9 @@ class Blend: public BaseNode
 
 class BrightnessContrast: public BaseProcess1In1Out
 {
+    private:
+        ComputeGraph::Nodes::BrightnessContrastNode cgNode; 
+
 	public:
 		BrightnessContrast()
         {
@@ -86,10 +101,14 @@ class BrightnessContrast: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~BrightnessContrast(){}	
+        ComputeGraph::Node* GetComputeNode() { return &cgNode; }
 };
 
 class CameraDistortion: public BaseProcess1In1Out
 {
+    private:
+        ComputeGraph::Nodes::CameraDistortionNode cgNode; 
+
 	public:
 		CameraDistortion()
         {
@@ -104,6 +123,7 @@ class CameraDistortion: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~CameraDistortion(){}	
+        ComputeGraph::Node* GetComputeNode() { return &cgNode; }
 };
 
 class ChannelMapper: public BaseProcess1In1Out

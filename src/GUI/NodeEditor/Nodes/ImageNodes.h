@@ -5,6 +5,8 @@
 
 #include "../DataTypes.h"
 
+#include "../../../ComputeGraph/Nodes/ImageNodes.h"
+
 namespace Viso
 {
 namespace GUI
@@ -23,6 +25,8 @@ class ImageAllocate: public BaseNode
         std::weak_ptr<ImageTypeData> type;
 
         std::shared_ptr<ImageData> imageOut;
+
+        ComputeGraph::Nodes::ImageAllocate cgNode; 
 	 
 	public:
 		ImageAllocate()
@@ -39,6 +43,11 @@ class ImageAllocate: public BaseNode
         }
 
 		virtual ~ImageAllocate(){}	
+
+        ComputeGraph::Node* GetComputeNode() 
+        {
+            return &cgNode; 
+        }
 };
 
 class ImageDeallocate: public BaseNode
@@ -47,6 +56,8 @@ class ImageDeallocate: public BaseNode
         std::weak_ptr<ImageData> imageIn;
 
         std::shared_ptr<ImageData> imageOut;
+
+        ComputeGraph::Nodes::ImageDeallocate cgNode; 
 
 	public:
 		ImageDeallocate()
@@ -59,6 +70,11 @@ class ImageDeallocate: public BaseNode
         }
 
 		virtual ~ImageDeallocate(){}
+
+        ComputeGraph::Node* GetComputeNode() 
+        {
+            return &cgNode; 
+        }
 };
 
 class ImageGetDims: public BaseNode
@@ -69,6 +85,8 @@ class ImageGetDims: public BaseNode
 		std::shared_ptr<IntData> width;
 		std::shared_ptr<IntData> height;
         std::shared_ptr<ImageTypeData> type;
+
+        ComputeGraph::Nodes::ImageGetDims cgNode; 
 
 	public:
 		ImageGetDims()
@@ -83,6 +101,11 @@ class ImageGetDims: public BaseNode
         }
 
 		virtual ~ImageGetDims(){}
+
+        ComputeGraph::Node* GetComputeNode() 
+        {
+            return &cgNode; 
+        }
 };
 
 }

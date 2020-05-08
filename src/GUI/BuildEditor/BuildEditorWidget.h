@@ -2,6 +2,8 @@
 
 #include <QDockWidget>
 
+#include "../../Core/SerializedObject.h"
+
 class QScrollArea;
 class QLabel; 
 class QWidget;
@@ -12,12 +14,20 @@ class QPushButton;
 
 namespace Viso
 {
+
+class SerializedObject; 
+
 namespace GUI
 {
     
 namespace NodeEditor
 {
 class NodeEditorWidget; 
+}
+
+namespace ProjectHierarchy
+{
+	class ProjectHierarchyWidget; 
 }
 
 namespace BuildEditor
@@ -38,10 +48,13 @@ class BuildEditorWidget: public QDockWidget
 		QPushButton* compileButton; 
 		QPushButton* runButton; 
 
-		NodeEditor::NodeEditorWidget* nodeEditorWidget; 		
+		NodeEditor::NodeEditorWidget* nodeEditorWidget; 
+		ProjectHierarchy::ProjectHierarchyWidget* projectHierarchyWidget; 
+
+		SerializedObject serializedComputeGraph; 
 
 	public:
-		BuildEditorWidget(NodeEditor::NodeEditorWidget* ne); 
+		BuildEditorWidget(NodeEditor::NodeEditorWidget* ne, ProjectHierarchy::ProjectHierarchyWidget* phw); 
 };
 
 }	
