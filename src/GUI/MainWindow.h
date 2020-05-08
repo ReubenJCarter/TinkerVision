@@ -21,6 +21,11 @@ namespace ProjectHierarchy
 class ProjectHierarchyWidget; 
 }
 
+namespace BuildEditor
+{
+class BuildEditorWidget; 
+}
+
 class MainWindow: public QMainWindow
 {
 	Q_OBJECT
@@ -31,6 +36,7 @@ class MainWindow: public QMainWindow
 		QAction* newProjectAction; 
 		NodeEditor::NodeEditorWidget* nodeEditorWidegt; 
 		ProjectHierarchy::ProjectHierarchyWidget* projectHierarchyWidget; 
+		BuildEditor::BuildEditorWidget* buildEditorWidget; 
 		
 		MainWindow();
 		void ExpandToFitScreen();

@@ -231,7 +231,7 @@ void NodeEditorWidget::Clear()
 
 void NodeEditorWidget::SerializeToComputeGraph(SerializedObject* so)
 {
-
+	
 }
 
 }

@@ -68,15 +68,6 @@ ProjectHierarchyWidget::ProjectHierarchyWidget(NodeEditor::NodeEditorWidget* ne)
 	hierarchyList->setModel(hierarchyListModel);
 	layoutBase->addWidget(hierarchyList); 
 
-	//Add compile text box and button
-	compileButton = new QPushButton("Compile"); 
-	layoutBase->addWidget(compileButton); 
-
-	compileJsonTextScrollArea = new QScrollArea();
-	compileJsonText = new QLabel(); 
-	compileJsonText->setTextInteractionFlags(Qt::TextSelectableByMouse);
-	compileJsonTextScrollArea->setWidget(compileJsonText);
-	layoutBase->addWidget(compileJsonTextScrollArea); 
 	
 	
 	//Add dialog

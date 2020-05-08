@@ -2,8 +2,6 @@
 
 #include <QDockWidget>
 
-#include "Core/SerializedObject.h"
-
 class QScrollArea;
 class QLabel; 
 class QWidget;
@@ -52,10 +50,6 @@ class ProjectHierarchyWidget: public QDockWidget
 		AddGraphDialog* addGraphDialog;
 		DeleteGraphDialog* deleteGraphDialog;
 		YesNoDialog* startNewProjectDialog; 
-
-		QScrollArea* compileJsonTextScrollArea;
-		QLabel*	compileJsonText; 
-		QPushButton* compileButton; 
 
 		NodeEditor::NodeEditorWidget* nodeEditorWidget; 
 

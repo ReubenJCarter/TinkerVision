@@ -118,6 +118,8 @@ if(BUILD_GUI)
 		
 		${Q_DARK_STYLE_SHEET_QRC_FILE}
 		
+		GUI/BuildEditor/BuildEditorWidget.cpp
+
 		GUI/NodeEditor/BaseNode.cpp
 		GUI/NodeEditor/NodeEditorWidget.cpp
 

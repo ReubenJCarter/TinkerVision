@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 
+#include "BuildEditor/BuildEditorWidget.h"
 #include "NodeEditor/NodeEditorWidget.h"
 #include "ProjectHierarchy/ProjectHierarchyWidget.h"
 #include "Core/SerializedObject.h"
@@ -25,12 +26,12 @@ MainWindow::MainWindow()
 	
 	//Set the Top bar 
 	fileMenu = menuBar()->addMenu("File");
+	newProjectAction = fileMenu->addAction("New Project");
 	saveAction = fileMenu->addAction("Save Project");
 	loadAction = fileMenu->addAction("Load Project");
-	newProjectAction = fileMenu->addAction("New Project");
+	connect(newProjectAction, &QAction::triggered, this, &MainWindow::NewProject);
 	connect(saveAction, &QAction::triggered, this, &MainWindow::Save);
 	connect(loadAction, &QAction::triggered, this, &MainWindow::Load);
-	connect(newProjectAction, &QAction::triggered, this, &MainWindow::NewProject);
 	
 	//central
 	nodeEditorWidegt = new NodeEditor::NodeEditorWidget(); 
@@ -39,6 +40,9 @@ MainWindow::MainWindow()
 	//dockables
 	projectHierarchyWidget = new ProjectHierarchy::ProjectHierarchyWidget(nodeEditorWidegt); 
 	addDockWidget(Qt::LeftDockWidgetArea, projectHierarchyWidget);
+
+	buildEditorWidget = new BuildEditor::BuildEditorWidget(nodeEditorWidegt); 
+	addDockWidget(Qt::LeftDockWidgetArea, buildEditorWidget);
 
 	//Show
 	showNormal();

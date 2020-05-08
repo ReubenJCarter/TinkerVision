@@ -41,10 +41,10 @@ class Graph: public Node
         
         ~Graph()
         {
-            Destroy(); 
+            Clear(); 
         }
 
-        inline void Destroy()
+        inline void Clear()
         {
             graphOutputMapping.clear(); 
             for(int i = 0; i < nodes.size(); i++)
@@ -53,6 +53,21 @@ class Graph: public Node
             }
             nodes.clear();
             dirty = true; 
+        }
+
+        void AddNode(Node* n)
+        {
+            nodes.push_back(n); 
+        }
+        
+        int NodeCount()
+        {
+            return nodes.size(); 
+        }
+
+        Node* GetNode(int inx)
+        {
+            return nodes[inx]; 
         }
 
         inline void AddOutputMapping(Node* n, int outinx=0)
@@ -267,7 +282,7 @@ class Graph: public Node
             dirty = true; 
 
             //Destroy whole current graph 
-            Destroy(); 
+            Clear(); 
 
             //
             std::map<std::string, Node*> ptrmap; 
