@@ -1,15 +1,15 @@
 //run like   java -cp .\* JavaTest aruco.png
 
-import VisiJava.Visi.Color;
-import VisiJava.Visi.*;
-import VisiJava.Visi.IO.*;
-import VisiJava.Visi.Process.*;
-import VisiJava.Visi.CompositeProcess.*;
+import VisoJava.Viso.Color;
+import VisoJava.Viso.*;
+import VisoJava.Viso.IO.*;
+import VisoJava.Viso.Process.*;
+import VisoJava.Viso.CompositeProcess.*;
 
 public class JavaTest {
 
     static {
-        System.loadLibrary("Visi_Java") ;
+        System.loadLibrary("Viso_Java") ;
     }
 
     public static void main(String[] args) {

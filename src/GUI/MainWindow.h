@@ -5,7 +5,7 @@
 class QMenu;
 class QAction; 
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {

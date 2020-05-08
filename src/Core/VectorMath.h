@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-namespace Visi
+namespace Viso
 {
 
 class Color

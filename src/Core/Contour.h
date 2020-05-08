@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include <vector>
 #include "VectorMath.h"
 #include "BoundingBox.h"
 
-namespace Visi
+namespace Viso
 {
 	
-class VISI_EXPORT Contour
+class VISO_EXPORT Contour
 {
         public:
                 Contour* parent; 

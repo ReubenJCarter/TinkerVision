@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-namespace Visi 
+namespace Viso 
 {
 
 class Context::ContextInternal
@@ -43,7 +43,7 @@ void Context::ContextInternal::Create()
 	
     if(window == NULL)
     {
-        std::cerr << "Visi:Context:Error creating context\n"; 
+        std::cerr << "Viso:Context:Error creating context\n"; 
         return; 
     }
     

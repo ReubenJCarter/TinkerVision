@@ -8,7 +8,7 @@
 #include "../Process/Downsample.h"
 #include "../Process/CopyImage.h"
 
-namespace Visi
+namespace Viso
 {
 namespace CompositeProcess
 {
@@ -40,7 +40,7 @@ Sift::Internal::Internal()
     octaves = 4;
     scales = 5; 
     copyImage.SetFormatTranslate(false); 
-    downsample.SetMode(Visi::Process::Downsample::BOX); 
+    downsample.SetMode(Viso::Process::Downsample::BOX); 
 }
 
 void Sift::Internal::Run(ImageGPU* input, ImageGPU* output)

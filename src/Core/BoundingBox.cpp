@@ -6,7 +6,7 @@
 #include <glm/gtx/matrix_transform_2d.hpp>
 
 
-namespace Visi
+namespace Viso
 {
 
 BoundingBox::BoundingBox()

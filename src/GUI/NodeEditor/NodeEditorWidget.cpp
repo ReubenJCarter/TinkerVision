@@ -22,7 +22,7 @@
 #include "Nodes/MiscNodes.h"
 #include "Nodes/ProcessNodes.h"
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {

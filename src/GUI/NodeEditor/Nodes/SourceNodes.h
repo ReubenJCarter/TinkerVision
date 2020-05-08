@@ -10,7 +10,7 @@
 #include <QDoubleValidator>
 #include <QIntValidator>
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {

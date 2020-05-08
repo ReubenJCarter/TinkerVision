@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
@@ -9,12 +9,12 @@
 
 #include <vector>
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {
 	
-class VISI_EXPORT LocalMaxima
+class VISO_EXPORT LocalMaxima
 {
     private: 
         class Internal;

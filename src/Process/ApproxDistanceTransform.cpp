@@ -14,7 +14,7 @@
 #include "Sobel.h"
 #include "ChannelDemux.h"
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {

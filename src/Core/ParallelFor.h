@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include <functional> 
 
@@ -14,10 +14,10 @@
 
 #include <iostream>
 
-namespace Visi
+namespace Viso
 {
 	
-class VISI_EXPORT ParallelFor
+class VISO_EXPORT ParallelFor
 {
     private: 
         std::vector<std::thread> workers; 

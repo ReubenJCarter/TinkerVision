@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
-namespace Visi
+namespace Viso
 {
 		
 /**
@@ -10,7 +10,7 @@ namespace Visi
  *This class attempts to start an OpenGL 4.3 Core profile context. 
  */
 	
-class VISI_EXPORT Context
+class VISO_EXPORT Context
 {        
     private:
         class ContextInternal; /**Forward declaration of internal Implementation*/

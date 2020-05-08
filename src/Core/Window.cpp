@@ -11,7 +11,7 @@
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Visi 
+namespace Viso 
 {
 
 class Window::Internal
@@ -118,18 +118,18 @@ void Window::Internal::CreateShaders()
 		//for(int i = 0; i < 5000; i++) log[i] = (char)0; 
 		int logLen; 
 		glGetProgramInfoLog(programObject, 5000, &logLen, log);
-		std::cerr << "Visi:Window:Shader:Could not link program: " << std::endl;
+		std::cerr << "Viso:Window:Shader:Could not link program: " << std::endl;
 		std::cerr << log << std::endl;
 		glGetShaderInfoLog(vertexObject, 5000, &logLen, log);
-		std::cerr << "Visi:Window:vertex shader log:\n" << log << std::endl;
+		std::cerr << "Viso:Window:vertex shader log:\n" << log << std::endl;
 		glGetShaderInfoLog(fragmentObject, 5000, &logLen, log);
-		std::cerr << "Visi:Window:fragment shader log:\n" << log << std::endl;
+		std::cerr << "Viso:Window:fragment shader log:\n" << log << std::endl;
 		glDeleteProgram(programObject);
 		programObject = 0;
 	}
 	else
 	{
-		std::cout << "Visi:Window:Shader:compile success " << std::endl;
+		std::cout << "Viso:Window:Shader:compile success " << std::endl;
 	}
 }
 
@@ -194,7 +194,7 @@ void Window::Internal::Create(int w, int h, Context* shareContext, std::string t
 	originContext = shareContext; 
     if(window == NULL)
     {
-        std::cerr << "Visi:Window:Error creating window\n"; 
+        std::cerr << "Viso:Window:Error creating window\n"; 
         return; 
     }
     

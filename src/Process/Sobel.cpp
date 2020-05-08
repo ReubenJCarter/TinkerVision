@@ -10,7 +10,7 @@
 #include <vector>
 #include <math.h>
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {

@@ -12,7 +12,7 @@ namespace QtNodes
 	class FlowView;
 }
 
-namespace Visi
+namespace Viso
 {
 
 class SerializedObject; 

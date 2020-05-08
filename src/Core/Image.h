@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "ImageType.h"
 
-namespace Visi
+namespace Viso
 {
 	
 class ImageGPU; 
@@ -14,7 +14,7 @@ class ImageGPU;
  *
  */
 	
-class VISI_EXPORT Image
+class VISO_EXPORT Image
 {		
 	private:
         ImageType type; 

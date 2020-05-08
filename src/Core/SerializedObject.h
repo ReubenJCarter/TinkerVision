@@ -1,19 +1,19 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "../Core/VectorMath.h"
 
 #include <string>
 #include <vector>
 
-namespace Visi
+namespace Viso
 {
 		
 /**
  */
 	
-class VISI_EXPORT SerializedObject
+class VISO_EXPORT SerializedObject
 {
     private: 
         class Internal;

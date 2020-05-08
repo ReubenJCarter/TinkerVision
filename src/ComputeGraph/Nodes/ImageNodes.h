@@ -5,7 +5,7 @@
 #include "../../Core/Image.h"
 #include "../../Core/ImageGPU.h"
 
-namespace Visi
+namespace Viso
 {
 namespace ComputeGraph
 {
@@ -14,7 +14,7 @@ namespace Nodes
 
 class ImageAllocate: public Node
 {
-    VISI_CLONEABLE_MACRO(ImageAllocate) 
+    VISO_CLONEABLE_MACRO(ImageAllocate) 
     private:
         Data outImageData; /** cache of the output data, also null data when no image avilible.*/
 
@@ -48,7 +48,7 @@ class ImageAllocate: public Node
 
 class ImageDeallocate: public Node
 {
-    VISI_CLONEABLE_MACRO(ImageDeallocate) 
+    VISO_CLONEABLE_MACRO(ImageDeallocate) 
     private:
         Data outImageData; /** cache of the output data, also null data when no image avilible.*/
 
@@ -79,7 +79,7 @@ class ImageDeallocate: public Node
 
 class ImageGetDims: public Node
 {
-    VISI_CLONEABLE_MACRO(ImageGetDims) 
+    VISO_CLONEABLE_MACRO(ImageGetDims) 
     private:
         Data outWidth; 
         Data outHeight; 
@@ -134,7 +134,7 @@ class ImageGetDims: public Node
 	
 class ImageCopy: public Node
 {
-    VISI_CLONEABLE_MACRO(ImageCopy) 
+    VISO_CLONEABLE_MACRO(ImageCopy) 
     private:
         Data outImageData;  
         

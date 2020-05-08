@@ -7,7 +7,7 @@
 
 using namespace rapidjson;
 
-namespace Visi
+namespace Viso
 {
 
 class SerializedObject::Internal

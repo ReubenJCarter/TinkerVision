@@ -5,7 +5,7 @@
 #include "../../Core/Image.h"
 #include "../../Core/ImageGPU.h"
 
-namespace Visi
+namespace Viso
 {
 namespace ComputeGraph
 {
@@ -14,7 +14,7 @@ namespace Nodes
 
 class MathExpression: public Node
 {
-    VISI_CLONEABLE_MACRO(MathExpression) 
+    VISO_CLONEABLE_MACRO(MathExpression) 
     private:
         Data outData; /** cache of the output data, also null data when no image avilible.*/
 

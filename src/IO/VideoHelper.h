@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "../Core/ImageGPU.h"
 #include "../Core/Image.h"
@@ -8,12 +8,12 @@
 #include <string>
 #include <functional> 
 
-namespace Visi
+namespace Viso
 {
 namespace IO
 {
 
-class VISI_EXPORT VideoHelper
+class VISO_EXPORT VideoHelper
 {
     private: 
         class Internal;
@@ -26,7 +26,7 @@ class VISI_EXPORT VideoHelper
         int GetFrameWidth();
         int GetFrameHeight(); 
         bool Close(); 
-        bool NextFrame(std::function<void(Visi::ImageGPU*, Visi::Image*)> useFrame); 
+        bool NextFrame(std::function<void(Viso::ImageGPU*, Viso::Image*)> useFrame); 
         bool IsOpen(); 
 };
 	

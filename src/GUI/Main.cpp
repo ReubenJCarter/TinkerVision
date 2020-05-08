@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 	}
 
 	//create main window
-	Visi::GUI::MainWindow mainWindow;
+	Viso::GUI::MainWindow mainWindow;
 	
 	
     return app.exec();

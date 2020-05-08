@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Visi
+namespace Viso
 {
 
 class ShaderStorageBuffer

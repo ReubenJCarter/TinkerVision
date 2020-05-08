@@ -7,7 +7,7 @@
 #include <iostream>
 #include <map>
 
-namespace Visi
+namespace Viso
 {
 namespace CompositeProcess
 {
@@ -21,7 +21,7 @@ class BarcodeDetector::Internal
 
     public:
         Internal(); 
-        void Run(ImageGPU* input, std::vector<Visi::Contour>* barcodeQuads, std::vector< std::vector<unsigned char> >* barcodeData);
+        void Run(ImageGPU* input, std::vector<Viso::Contour>* barcodeQuads, std::vector< std::vector<unsigned char> >* barcodeData);
 };
 
 
@@ -29,7 +29,7 @@ BarcodeDetector::Internal::Internal()
 {
 }
 
-void BarcodeDetector::Internal::Run(ImageGPU* input, std::vector<Visi::Contour>* barcodeQuads, std::vector< std::vector<unsigned char> >* barcodeData)
+void BarcodeDetector::Internal::Run(ImageGPU* input, std::vector<Viso::Contour>* barcodeQuads, std::vector< std::vector<unsigned char> >* barcodeData)
 {
 
 }
@@ -46,7 +46,7 @@ BarcodeDetector::~BarcodeDetector()
     delete internal; 
 }
 
-void BarcodeDetector::Run(ImageGPU* input, std::vector<Visi::Contour>* barcodeQuads, std::vector< std::vector<unsigned char> >* barcodeData)
+void BarcodeDetector::Run(ImageGPU* input, std::vector<Viso::Contour>* barcodeQuads, std::vector< std::vector<unsigned char> >* barcodeData)
 {
     internal->Run(input, barcodeQuads, barcodeData); 
 }

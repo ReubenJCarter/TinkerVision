@@ -10,7 +10,7 @@ class QHBoxLayout;
 class QListView;
 class QPushButton; 
 
-namespace Visi
+namespace Viso
 {
 	
 class SerializedObject; 

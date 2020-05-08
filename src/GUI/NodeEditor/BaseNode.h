@@ -5,7 +5,7 @@
 
 #include "DataTypes.h"
 
-namespace Visi
+namespace Viso
 {
 
 class SerializedObject; 

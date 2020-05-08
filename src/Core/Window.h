@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "Image.h"
 #include "ImageGPU.h"
@@ -8,7 +8,7 @@
 
 #include <string>
 
-namespace Visi
+namespace Viso
 {
 	
 /*
@@ -16,7 +16,7 @@ namespace Visi
  *
  */
 	
-class VISI_EXPORT Window
+class VISO_EXPORT Window
 {        
     private:
         class Internal;

@@ -11,7 +11,7 @@
 #include <iostream>
 #include <map>
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {

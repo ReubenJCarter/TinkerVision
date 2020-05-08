@@ -10,7 +10,7 @@
 #include <map>
 #include <algorithm>
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {

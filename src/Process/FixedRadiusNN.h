@@ -1,19 +1,19 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "../Core/VectorMath.h"
 
 #include <vector>
 #include <algorithm>
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {
 
 
-class VISI_EXPORT FixedRadiusNN
+class VISO_EXPORT FixedRadiusNN
 {
     private:
         class Internal;

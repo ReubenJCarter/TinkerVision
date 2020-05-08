@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include <vector>
 #include <map>
@@ -11,14 +11,14 @@
 
 #include "Core/SerializedObject.h"
 
-#define VISI_CLONEABLE_MACRO(TYPE)\
+#define VISO_CLONEABLE_MACRO(TYPE)\
 public:\
 TYPE* CloneType() { return new TYPE(); }\
 std::string GetTypeName() { return #TYPE;}\
 private:
 
 
-namespace Visi
+namespace Viso
 {
 namespace ComputeGraph
 {

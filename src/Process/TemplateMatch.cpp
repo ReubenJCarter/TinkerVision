@@ -14,7 +14,7 @@
 #include <iostream>
 #include <map>
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {
@@ -112,7 +112,7 @@ void TemplateMatch::Internal::Run(ImageGPU* input, ImageGPU* match, ImageGPU* ou
 
     if(match->GetType() != input->GetType())
     {
-        std::cerr << "Visi:Process:TemplateMatch:input and match image type do not match FAIL\n"; 
+        std::cerr << "Viso:Process:TemplateMatch:input and match image type do not match FAIL\n"; 
         return;
     }
     ReallocateIfNotSameSize(output, input); 

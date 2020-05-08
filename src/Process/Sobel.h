@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {
 	
-class VISI_EXPORT Sobel
+class VISO_EXPORT Sobel
 {
     private: 
         class Internal;

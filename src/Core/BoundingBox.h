@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "VectorMath.h"
 
-namespace Visi
+namespace Viso
 {
 	
 /**
  *A 2D Bounding Box. The bounding box fits via a rotation position and extends. 
  *The 3x3 Transform can be aquired using the GetTransform function.
  */
-class VISI_EXPORT BoundingBox
+class VISO_EXPORT BoundingBox
 {
 	public:
 		/**The rotation of the bounding box in degrees.*/ 

@@ -5,12 +5,12 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
-namespace Visi
+namespace Viso
 {
 namespace IO
 {
 
-class VISI_EXPORT ImageFile
+class VISO_EXPORT ImageFile
 {	
     public:
         static bool Write(std::string fileName, Image* image);

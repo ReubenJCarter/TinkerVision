@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include <string>
 
-namespace Visi
+namespace Viso
 {
 	
-enum VISI_EXPORT ImageType {
+enum VISO_EXPORT ImageType {
     GRAYSCALE8, 
     GRAYSCALE16, 
     GRAYSCALE32F, 

@@ -11,7 +11,7 @@
 #include <functional>
 #include <glm/glm.hpp>
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {

@@ -7,7 +7,7 @@
 #include <QSpinBox>
 
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {

@@ -19,7 +19,7 @@
 #include <QStringListModel>
 #include <QStringList>
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {

@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
-namespace Visi
+namespace Viso
 {
 namespace CompositeProcess
 {
 	
-class VISI_EXPORT CannyEdgeDetect
+class VISO_EXPORT CannyEdgeDetect
 {
     private: 
         class Internal;

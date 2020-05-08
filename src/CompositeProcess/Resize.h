@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
@@ -9,12 +9,12 @@
 #include "../Process/Upsample.h"
 #include "../Process/Downsample.h"
 
-namespace Visi
+namespace Viso
 {
 namespace CompositeProcess
 {
 	
-class VISI_EXPORT Resize
+class VISO_EXPORT Resize
 {
     private: 
         class Internal;

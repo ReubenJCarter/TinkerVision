@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-namespace Visi 
+namespace Viso 
 {
 
 //Aligment issue

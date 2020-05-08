@@ -9,7 +9,7 @@
 #include <vector>
 #include <random>
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {

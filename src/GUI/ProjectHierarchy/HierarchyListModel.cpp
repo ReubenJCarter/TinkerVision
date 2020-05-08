@@ -13,7 +13,7 @@
 //https://forum.qt.io/topic/90560/qtreeview-qabstractitemmodel-and-internal-move/5
 //https://stackoverflow.com/questions/56819085/qt-how-to-implement-simple-internal-dragdrop-for-reordering-items-in-qlistview
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {

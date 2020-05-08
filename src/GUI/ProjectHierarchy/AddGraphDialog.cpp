@@ -6,7 +6,7 @@
 #include <QPushButton>
 #include <QCloseEvent>
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {

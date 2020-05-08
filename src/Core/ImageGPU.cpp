@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-namespace Visi 
+namespace Viso 
 {
 	
 ImageGPU::ImageGPU()
@@ -46,7 +46,7 @@ void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
     if(w == 0 || h == 0)
     {
         glBindTexture(GL_TEXTURE_2D, 0);
-        std::cerr << "Visi:ImageGPU:Allocate:w=0||h=0\n"; 
+        std::cerr << "Viso:ImageGPU:Allocate:w=0||h=0\n"; 
         return; 
     }
 

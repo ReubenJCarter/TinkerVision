@@ -2,7 +2,7 @@
 
 #include <nodes/NodeData>
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {

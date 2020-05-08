@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "Node.h"
 
@@ -11,7 +11,7 @@
 #include <iostream>
 #include <functional>
 
-namespace Visi
+namespace Viso
 {
 namespace ComputeGraph
 {
@@ -21,7 +21,7 @@ namespace ComputeGraph
 	
 class Graph: public Node
 {
-    VISI_CLONEABLE_MACRO(Graph) 
+    VISO_CLONEABLE_MACRO(Graph) 
 
     protected:
         std::vector<Node*> nodes; 
@@ -202,9 +202,9 @@ class Graph: public Node
             else
             {
                 if(circularDependency)
-                    std::cerr << "Visi:ComputeGraph:Graph: Circular deppendency! FAIL\n"; 
+                    std::cerr << "Viso:ComputeGraph:Graph: Circular deppendency! FAIL\n"; 
                 if(externalDependency)
-                    std::cerr << "Visi:ComputeGraph:Graph: External deppendency! FAIL\n"; 
+                    std::cerr << "Viso:ComputeGraph:Graph: External deppendency! FAIL\n"; 
             }
         }
 

@@ -15,14 +15,14 @@
 #include <iostream>
 #include <fstream>
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {
 	
 MainWindow::MainWindow()
 {
-	setWindowTitle("Visi GUI");
+	setWindowTitle("Viso GUI");
 	
 	//Set the Top bar 
 	fileMenu = menuBar()->addMenu("File");

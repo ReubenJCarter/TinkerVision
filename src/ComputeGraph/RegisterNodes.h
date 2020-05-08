@@ -7,7 +7,7 @@
 #include "Nodes/IONodes.h"
 #include "Nodes/ProcessNodes.h"
 
-namespace Visi
+namespace Viso
 {
 namespace ComputeGraph
 {

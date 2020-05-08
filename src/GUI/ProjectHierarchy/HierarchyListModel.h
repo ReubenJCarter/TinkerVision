@@ -6,7 +6,7 @@ class QScrollArea;
 class QWidget;
 class QVBoxLayout; 
 
-namespace Visi
+namespace Viso
 {
 
 class SerializedObject; 

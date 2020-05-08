@@ -10,7 +10,7 @@
 #include <QPushButton>
 
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {

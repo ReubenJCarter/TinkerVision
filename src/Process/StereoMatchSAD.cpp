@@ -12,7 +12,7 @@
 #include <vector>
 #include <math.h>
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {
@@ -136,7 +136,7 @@ void StereoMatchSAD::Internal::Run(ImageGPU* inputL, ImageGPU* inputR, ImageGPU*
 
     if(!inputL->IsSameDimensions(inputR))
     {
-        std::cout << "Visi:StereoMatchSAD:inputL is not the same dimentions as inputR\n";
+        std::cout << "Viso:StereoMatchSAD:inputL is not the same dimentions as inputR\n";
         return;
     }
  
@@ -169,7 +169,7 @@ void StereoMatchSAD::Internal::Run(Image* inputL, Image* inputR, Image* output)
 {
     if(!inputL->IsSameDimensions(inputR))
     {
-        std::cout << "Visi:StereoMatchSAD:inputL is not the same dimentions as inputR\n";
+        std::cout << "Viso:StereoMatchSAD:inputL is not the same dimentions as inputR\n";
         return;
     }
 

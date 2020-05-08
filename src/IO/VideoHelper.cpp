@@ -5,7 +5,7 @@
 #include <thread>
 #include <atomic>
 
-namespace Visi
+namespace Viso
 {
 namespace IO
 {
@@ -18,8 +18,8 @@ class VideoHelper::Internal
         std::atomic<bool> getFrameDataRunning;
         std::atomic<bool> running;
 
-        Visi::Image image[2]; 
-        Visi::ImageGPU imageGPU;
+        Viso::Image image[2]; 
+        Viso::ImageGPU imageGPU;
         int pingpong; 
 
     public:
@@ -29,7 +29,7 @@ class VideoHelper::Internal
         int GetFrameWidth();
         int GetFrameHeight(); 
         bool Close(); 
-        bool NextFrame(std::function<void(Visi::ImageGPU*, Visi::Image*)> useFrame);
+        bool NextFrame(std::function<void(Viso::ImageGPU*, Viso::Image*)> useFrame);
         bool IsOpen(); 
 };
 
@@ -114,7 +114,7 @@ bool VideoHelper::Internal::Close()
     return false; 
 }
 
-bool VideoHelper::Internal::NextFrame(std::function<void(Visi::ImageGPU*, Visi::Image*)> useFrame)
+bool VideoHelper::Internal::NextFrame(std::function<void(Viso::ImageGPU*, Viso::Image*)> useFrame)
 {
     if(!running)
     {
@@ -176,7 +176,7 @@ bool VideoHelper::Close()
     return internal->Close(); 
 }
 
-bool VideoHelper::NextFrame(std::function<void(Visi::ImageGPU*, Visi::Image*)> useFrame)
+bool VideoHelper::NextFrame(std::function<void(Viso::ImageGPU*, Viso::Image*)> useFrame)
 {
     return internal->NextFrame(useFrame); 
 }

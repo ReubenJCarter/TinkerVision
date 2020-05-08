@@ -11,7 +11,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {

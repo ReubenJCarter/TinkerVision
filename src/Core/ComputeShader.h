@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace Visi
+namespace Viso
 {
 	
 /**

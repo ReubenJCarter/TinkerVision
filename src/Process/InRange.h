@@ -1,18 +1,18 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 #include "../Core/VectorMath.h"
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {
 	
-class VISI_EXPORT InRange
+class VISO_EXPORT InRange
 {
     private: 
         class Internal;

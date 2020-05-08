@@ -3,7 +3,7 @@
 #include "ImageType.h"
 #include "Image.h"
 
-namespace Visi
+namespace Viso
 {
 
 void CompileImageComputeShaders(std::map<ImageType, ComputeShader>& computeShaderMap, std::string shaderSrc)

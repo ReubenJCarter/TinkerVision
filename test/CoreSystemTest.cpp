@@ -65,10 +65,10 @@
 int main(int argc, char *argv[])
 {
 	std::string testFileName = "aruco.png"; 
-	Visi::Context context; 
+	Viso::Context context; 
 	context.MakeCurrent(); 
 
-	Visi::ComputeGraph::RegisterNodes(); 
+	Viso::ComputeGraph::RegisterNodes(); 
 
 	if(argc == 2)
 	{
@@ -76,21 +76,21 @@ int main(int argc, char *argv[])
 	
 		std::cout << "Running Test\n"; 
 
-		Visi::Image image1; 
-		Visi::Image image2; 
-		Visi::Image image3; 
+		Viso::Image image1; 
+		Viso::Image image2; 
+		Viso::Image image3; 
 
-		Visi::ImageGPU imageGPU1;
-		Visi::ImageGPU imageGPU2;
-		Visi::ImageGPU imageGPU3;
-		Visi::ImageGPU imageGPU4;
+		Viso::ImageGPU imageGPU1;
+		Viso::ImageGPU imageGPU2;
+		Viso::ImageGPU imageGPU3;
+		Viso::ImageGPU imageGPU4;
 
 		//
 		//Pixel access
 		//
 		
 
-		image1.Allocate(256, 256, Visi::ImageType::RGBA8);
+		image1.Allocate(256, 256, Viso::ImageType::RGBA8);
 		for(int i = 0; i < 256; i++)
 		{
 			for(int j = 0; j < 256; j++)
@@ -102,179 +102,179 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		Visi::ImageGPU imageGPU;
+		Viso::ImageGPU imageGPU;
 		imageGPU.Copy(&image1); 
 		image1.Copy(&imageGPU); 
-		Visi::IO::ImageFile::Write("image0Test.png", &image1);
+		Viso::IO::ImageFile::Write("image0Test.png", &image1);
 
 
 		//
 		//Processes
 		//
 
-		Visi::IO::ImageFile::Read(testFileName, &image1);
+		Viso::IO::ImageFile::Read(testFileName, &image1);
 		imageGPU1.Copy(&image1);
 
 		//Birghtness Contrast
 		std::cout << "Brightness Contrast\n"; 
-		Visi::Process::BrightnessContrast brightnessContrast; 
+		Viso::Process::BrightnessContrast brightnessContrast; 
 		brightnessContrast.SetBrightness(-1); 
 		brightnessContrast.SetContrast(3); 
 		brightnessContrast.Run(&imageGPU1, &imageGPU2);
 		
 		
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image1_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image1_1Test.png", &image2);
 
 		brightnessContrast.Run(&image1, &image2); 
 
-		Visi::IO::ImageFile::Write("image1_2Test.png", &image2);
+		Viso::IO::ImageFile::Write("image1_2Test.png", &image2);
 
 		//Threshold
 		std::cout << "Threshold\n"; 
-		Visi::Process::Threshold threshold; 
+		Viso::Process::Threshold threshold; 
 		threshold.SetThreshold(0.5); 
 		threshold.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image2Test.png", &image2);
+		Viso::IO::ImageFile::Write("image2Test.png", &image2);
 
 		//Thin
 		std::cout << "Thin\n"; 
-		Visi::Process::Thinning thinning; 
+		Viso::Process::Thinning thinning; 
 		//thinning.Run(&image2, &image3); 
-		//Visi::ImageFile::Write("image2_1Test.png", &image3);
+		//Viso::ImageFile::Write("image2_1Test.png", &image3);
 
 		//GrayScale
 		std::cout << "Grayscale\n"; 
-		Visi::Process::GrayScale grayScale; 
+		Viso::Process::GrayScale grayScale; 
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image3Test.png", &image2);
+		Viso::IO::ImageFile::Write("image3Test.png", &image2);
 
 		//Aprox Distance Transform
 		std::cout << "Aprox Distance Transform\n"; 
-		Visi::Process::InRange inRange; 
-		inRange.SetLowThreshold(Visi::Vec3(0.5, 0.0, 0.0));
-		inRange.SetHighThreshold(Visi::Vec3(1.0, 1.0, 1.0) ); 
+		Viso::Process::InRange inRange; 
+		inRange.SetLowThreshold(Viso::Vec3(0.5, 0.0, 0.0));
+		inRange.SetHighThreshold(Viso::Vec3(1.0, 1.0, 1.0) ); 
 		inRange.Run(&imageGPU2, &imageGPU3); 
-		Visi::Process::Invert inv;
+		Viso::Process::Invert inv;
 		inv.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image3_1Test.png", &image2);
-		Visi::Process::ApproxDistanceTransform adt;
+		Viso::IO::ImageFile::Write("image3_1Test.png", &image2);
+		Viso::Process::ApproxDistanceTransform adt;
 		adt.Run(&image2, &image3); 
-		Visi::Process::Normalize nrm;
+		Viso::Process::Normalize nrm;
 		nrm.Run(&image3, &image2); 
-		Visi::IO::ImageFile::Write("image3_2Test.png", &image2);
+		Viso::IO::ImageFile::Write("image3_2Test.png", &image2);
 
 		//LocalMaxima
 		std::cout << "Local Maxima\n"; 
-		Visi::Process::GaussianBlur gb; 
+		Viso::Process::GaussianBlur gb; 
 		gb.SetSigma(3); 
 		imageGPU2.Copy(&image2); 
 		gb.Run(&imageGPU2, &imageGPU3); 
 		image2.Copy(&imageGPU3); 
-		Visi::IO::ImageFile::Write("image3_3Test.png", &image2);
-		Visi::Process::LocalMaxima localMax; 
+		Viso::IO::ImageFile::Write("image3_3Test.png", &image2);
+		Viso::Process::LocalMaxima localMax; 
 		localMax.Run(&image2, &image3);
-		Visi::IO::ImageFile::Write("image3_4Test.png", &image3);
+		Viso::IO::ImageFile::Write("image3_4Test.png", &image3);
 
 		//RGBToHSV vv HSVToRGB
 		std::cout << "RGBToHSV vv HSVToRGB\n"; 
-		Visi::Process::RGBToHSV rgbtohsv; 
+		Viso::Process::RGBToHSV rgbtohsv; 
 		rgbtohsv.Run(&imageGPU1, &imageGPU2); 
-		Visi::Process::HSVToRGB hsvtorgb; 
+		Viso::Process::HSVToRGB hsvtorgb; 
 		hsvtorgb.Run(&imageGPU2, &imageGPU3); 
 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image4_0Test.png", &image2);
+		Viso::IO::ImageFile::Write("image4_0Test.png", &image2);
 		image3.Copy(&imageGPU3);
-		Visi::IO::ImageFile::Write("image4_1Test.png", &image3);
+		Viso::IO::ImageFile::Write("image4_1Test.png", &image3);
 
 		//Adaptive Threshold
 		std::cout << "Adaptive THreshold\n"; 
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 		
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image5_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image5_1Test.png", &image2);
 		
-		Visi::Process::AdaptiveThreshold adaptiveThreshold; 
+		Viso::Process::AdaptiveThreshold adaptiveThreshold; 
 		adaptiveThreshold.SetThreshold(0.02); 
 		adaptiveThreshold.SetSize(7); 
 		adaptiveThreshold.Run(&imageGPU2, &imageGPU3); 
 
 		image3.Copy(&imageGPU3);
-		Visi::IO::ImageFile::Write("image5_2Test.png", &image3);
+		Viso::IO::ImageFile::Write("image5_2Test.png", &image3);
 
 		adaptiveThreshold.Run(&image2, &image3);
-		Visi::IO::ImageFile::Write("image5_3Test.png", &image3);
+		Viso::IO::ImageFile::Write("image5_3Test.png", &image3);
 
 		//Median Filter
 		std::cout << "Median Filter\n"; 
-		Visi::Process::MedianFilter medianFilter; 
+		Viso::Process::MedianFilter medianFilter; 
 		medianFilter.SetSize(3); 
 		medianFilter.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image6_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image6_1Test.png", &image2);
 
 		medianFilter.SetSize(5); 
 		medianFilter.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image6_2Test.png", &image2);
+		Viso::IO::ImageFile::Write("image6_2Test.png", &image2);
 
 		//Gaussian Blur
 		std::cout << "Guassian Blur\n"; 
-		Visi::Process::GaussianBlur gaussianBlur; 
+		Viso::Process::GaussianBlur gaussianBlur; 
 		gaussianBlur.SetSigma(10); 
 		gaussianBlur.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image7Test.png", &image2);
+		Viso::IO::ImageFile::Write("image7Test.png", &image2);
 
 		//Sobel
 		std::cout << "Sobel\n"; 
-		Visi::Process::Sobel sobel; 
+		Viso::Process::Sobel sobel; 
 		sobel.Run(&imageGPU1, &imageGPU2); 
 
-		imageGPU3.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Visi::ImageType::GRAYSCALE8); 
-		Visi::Process::ChannelDemux demux; 
+		imageGPU3.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Viso::ImageType::GRAYSCALE8); 
+		Viso::Process::ChannelDemux demux; 
 		demux.SetChannel(2);
 		demux.Run(&imageGPU2, &imageGPU3);
 
 		image2.Copy(&imageGPU3);
-		Visi::IO::ImageFile::Write("image8_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image8_1Test.png", &image2);
 
 		//NMS
 		imageGPU3.Allocate(imageGPU2.GetWidth(), imageGPU2.GetHeight(), imageGPU2.GetType()); 
 		std::cout << "NonMaximumEdgeSuppression\n"; 
-		Visi::Process::NonMaximumEdgeSuppression nms; 
+		Viso::Process::NonMaximumEdgeSuppression nms; 
 		nms.Run(&imageGPU2, &imageGPU3); 
 
-		imageGPU2.Allocate(imageGPU2.GetWidth(), imageGPU2.GetHeight(), Visi::ImageType::GRAYSCALE8); 
+		imageGPU2.Allocate(imageGPU2.GetWidth(), imageGPU2.GetHeight(), Viso::ImageType::GRAYSCALE8); 
 		demux.SetChannel(2);
 		demux.Run(&imageGPU3, &imageGPU2);
 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image8_2Test.png", &image2);
+		Viso::IO::ImageFile::Write("image8_2Test.png", &image2);
 
 		//Renderer
 		std::cout << "Renderer\n"; 
-		Visi::Process::Renderer renderer; 
-		renderer.AddCircle(Visi::Vec2(100, 100), 20);
-		renderer.AddCircle(Visi::Vec2(150, 100), 10, Visi::Color(1, 0, 0, 1), false, 1); 
-		std::vector<Visi::Vec2> pl = {{100, 100}, {100, 140}, {300, 300}, {100, 300}};
-		renderer.AddPolyLine(&pl, Visi::Color(0, 0, 1, 1)); 
+		Viso::Process::Renderer renderer; 
+		renderer.AddCircle(Viso::Vec2(100, 100), 20);
+		renderer.AddCircle(Viso::Vec2(150, 100), 10, Viso::Color(1, 0, 0, 1), false, 1); 
+		std::vector<Viso::Vec2> pl = {{100, 100}, {100, 140}, {300, 300}, {100, 300}};
+		renderer.AddPolyLine(&pl, Viso::Color(0, 0, 1, 1)); 
 		renderer.Run(&image1, &image2); 
 		
-		Visi::IO::ImageFile::Write("image9Test.png", &image2);
+		Viso::IO::ImageFile::Write("image9Test.png", &image2);
 
 		//Contour Simplify Test
 		std::cout << "Contour Simplify Test\n"; 
-		Visi::Contour c;
+		Viso::Contour c;
 		c.verticies = {
 					{11, 16}, {11, 17}, {11, 18}, {11, 19}, {20, 20}, {21, 20},
 
@@ -301,49 +301,49 @@ int main(int argc, char *argv[])
 					{11, 17}
 					};
 
-		std::vector<Visi::Contour> cs;
-		std::vector<Visi::Contour> cs2;
-		std::vector<Visi::Contour> cs3;
+		std::vector<Viso::Contour> cs;
+		std::vector<Viso::Contour> cs2;
+		std::vector<Viso::Contour> cs3;
 		cs.push_back(c);
-		Visi::Contour::ContoursSimplify(&cs, &cs2, 4);
+		Viso::Contour::ContoursSimplify(&cs, &cs2, 4);
 
 		cs3.resize(cs2.size());
 		for(int i = 0; i < cs2.size(); i++)
 		{ 
 			auto c = &(cs2[i]); 
 			std::vector<int> cInx;
-			Visi::Contour::FindConvexHull(c, &cInx);
+			Viso::Contour::FindConvexHull(c, &cInx);
 			for(int j = 0; j < cInx.size(); j++)
 			{
 				cs3[i].verticies.push_back(c->verticies[cInx[j]]); 
 			}
 		}
 
-		Visi::BoundingBox bb = Visi::Contour::FindBoundingBox(&c); 
+		Viso::BoundingBox bb = Viso::Contour::FindBoundingBox(&c); 
 
 		renderer.Clear(); 
 		renderer.AddContours(&cs, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::IO::ImageFile::Write("image11_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image11_1Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&cs2, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::IO::ImageFile::Write("image11_2Test.png", &image2);
+		Viso::IO::ImageFile::Write("image11_2Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&cs3, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::IO::ImageFile::Write("image11_3Test.png", &image2);
+		Viso::IO::ImageFile::Write("image11_3Test.png", &image2);
 
 		renderer.Clear(); 
-		renderer.AddBoundingBox(&bb, Visi::Color(1, 0, 1, 1)); 
+		renderer.AddBoundingBox(&bb, Viso::Color(1, 0, 1, 1)); 
 		renderer.Run(&image1, &image2); 
-		Visi::IO::ImageFile::Write("image11_4Test.png", &image2);
+		Viso::IO::ImageFile::Write("image11_4Test.png", &image2);
 
 		//Find Contours
 		std::cout << "Find Contours\n"; 
-		Visi::Process::FindContours findContours; 
+		Viso::Process::FindContours findContours; 
 		imageGPU2.AllocateLike(&imageGPU1);
 		imageGPU3.AllocateLike(&imageGPU1);
 		imageGPU4.AllocateLike(&imageGPU1);
@@ -351,191 +351,191 @@ int main(int argc, char *argv[])
 		adaptiveThreshold.SetThreshold(0.02); 
 		adaptiveThreshold.SetSize(7); 
 		adaptiveThreshold.Run(&imageGPU2, &imageGPU3); 
-		Visi::Process::Invert invert;
+		Viso::Process::Invert invert;
 		invert.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image10_1Test.png", &image2);
-		std::vector<Visi::Contour> contours; 
+		Viso::IO::ImageFile::Write("image10_1Test.png", &image2);
+		std::vector<Viso::Contour> contours; 
 		findContours.Run(&image2, &image3, &contours); 
-		Visi::IO::ImageFile::Write("image10_2Test.png", &image3);
+		Viso::IO::ImageFile::Write("image10_2Test.png", &image3);
 		
-		std::vector<Visi::Contour> contoursFiltered; 
-		Visi::Contour::ContoursVertCountFilter(&contours, &contoursFiltered, 100);
-		std::vector<Visi::Contour> contoursSimplified; 
-		Visi::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 3);
-		std::vector<Visi::Contour> contoursMerged; 
-		Visi::Contour::ContoursMergeVerticies(&contoursSimplified, &contoursMerged, 4);
-		Visi::Contour::ContoursSimplify(&contoursMerged, &contoursSimplified, 5);
-		std::vector<Visi::Contour> contoursQuads; 
-		Visi::Contour::ContoursVertCountFilter(&contoursSimplified, &contoursQuads, 4, 5);
+		std::vector<Viso::Contour> contoursFiltered; 
+		Viso::Contour::ContoursVertCountFilter(&contours, &contoursFiltered, 100);
+		std::vector<Viso::Contour> contoursSimplified; 
+		Viso::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 3);
+		std::vector<Viso::Contour> contoursMerged; 
+		Viso::Contour::ContoursMergeVerticies(&contoursSimplified, &contoursMerged, 4);
+		Viso::Contour::ContoursSimplify(&contoursMerged, &contoursSimplified, 5);
+		std::vector<Viso::Contour> contoursQuads; 
+		Viso::Contour::ContoursVertCountFilter(&contoursSimplified, &contoursQuads, 4, 5);
 
 		renderer.Clear(); 
 		renderer.AddContours(&contoursFiltered, true, 1, false, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::IO::ImageFile::Write("image10_3Test.png", &image2);
+		Viso::IO::ImageFile::Write("image10_3Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&contoursSimplified, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::IO::ImageFile::Write("image10_4Test.png", &image2);
+		Viso::IO::ImageFile::Write("image10_4Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&contoursMerged, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::IO::ImageFile::Write("image10_5Test.png", &image2);
+		Viso::IO::ImageFile::Write("image10_5Test.png", &image2);
 
 		renderer.Clear();
 		/*
-		std::vector<Visi::Contour> conxHullContours;
+		std::vector<Viso::Contour> conxHullContours;
 		conxHullContours.resize(contoursQuads.size()); 
 		for(int i = 0; i < contoursQuads.size(); i++)
 		{
 			std::vector<int> cInx;
-			Visi::Contour::FindConvexHull(&(contoursQuads[i]), &cInx);
+			Viso::Contour::FindConvexHull(&(contoursQuads[i]), &cInx);
 			for(int j = 0; j < cInx.size(); j++)
 			{
 				conxHullContours[i].verticies.push_back(contoursQuads[i].verticies[cInx[j]]); 
 			}
 
-			Visi::BoundingBox bb = Visi::Contour::FindBoundingBox(&(contoursQuads[i])); 
-			renderer.AddBoundingBox(&bb, Visi::Color(1, 0, 1, 1)); 
+			Viso::BoundingBox bb = Viso::Contour::FindBoundingBox(&(contoursQuads[i])); 
+			renderer.AddBoundingBox(&bb, Viso::Color(1, 0, 1, 1)); 
 		}
 		renderer.AddContours(&contoursQuads, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Visi::IO::ImageFile::Write("image10_6Test.png", &image2);
+		Viso::IO::ImageFile::Write("image10_6Test.png", &image2);
 		*/
 
-		Visi::Contour::ContoursToFile("image10_3Test.contours", &contoursFiltered); 
+		Viso::Contour::ContoursToFile("image10_3Test.contours", &contoursFiltered); 
 
 		//Canny Edges
 		std::cout << "Canny Edges\n"; 
-		Visi::CompositeProcess::CannyEdgeDetect canny; 
+		Viso::CompositeProcess::CannyEdgeDetect canny; 
 		canny.SetBlurSigma(0.5); 
 		canny.SetLowEdgeThreshold(0.1);
 		canny.SetHighEdgeThreshold(0.2);
-		image2.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Visi::ImageType::GRAYSCALE16); 
+		image2.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Viso::ImageType::GRAYSCALE16); 
 		canny.Run(&imageGPU1, &image2); 
-		Visi::IO::ImageFile::Write("image12_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image12_1Test.png", &image2);
 
 		//GaussianDerivative
 		std::cout << "GaussianDerivative\n"; 
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 
-		Visi::Process::GaussianDerivative guassDeriv; 
-		guassDeriv.SetDirection(Visi::Process::GaussianDerivative::Direction::HORIZONTAL); 
+		Viso::Process::GaussianDerivative guassDeriv; 
+		guassDeriv.SetDirection(Viso::Process::GaussianDerivative::Direction::HORIZONTAL); 
 		guassDeriv.Run(&imageGPU2, &imageGPU3); 
 
 		image2.Copy(&imageGPU3);
-		Visi::IO::ImageFile::Write("image13_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image13_1Test.png", &image2);
 
-		guassDeriv.SetDirection(Visi::Process::GaussianDerivative::Direction::VERTICAL); 
+		guassDeriv.SetDirection(Viso::Process::GaussianDerivative::Direction::VERTICAL); 
 		guassDeriv.Run(&imageGPU2, &imageGPU3); 
 
 		image2.Copy(&imageGPU3);
-		Visi::IO::ImageFile::Write("image13_2Test.png", &image2);
+		Viso::IO::ImageFile::Write("image13_2Test.png", &image2);
 		
 		//Corner detector
 		std::cout << "Corner detector\n"; 
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 
-		Visi::ImageGPU imageGPU5; 
-		Visi::CompositeProcess::CornerDetector cornerDetector; 
+		Viso::ImageGPU imageGPU5; 
+		Viso::CompositeProcess::CornerDetector cornerDetector; 
 		cornerDetector.Run(&imageGPU2, &imageGPU5);
 
-		imageGPU4.Allocate(imageGPU5.GetWidth(), imageGPU5.GetHeight(), Visi::ImageType::RGBA32F); 
+		imageGPU4.Allocate(imageGPU5.GetWidth(), imageGPU5.GetHeight(), Viso::ImageType::RGBA32F); 
 		demux.SetChannel(0);
 		demux.Run(&imageGPU5, &imageGPU4);
 		image2.Copy(&imageGPU4);
-		Visi::Process::Normalize normalize; 
+		Viso::Process::Normalize normalize; 
 		normalize.Run(&image2, &image3); 
 		imageGPU3.Copy(&image3);
-		imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Visi::ImageType::GRAYSCALE8); 
-		Visi::Process::CopyImage copyImage; 
+		imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Viso::ImageType::GRAYSCALE8); 
+		Viso::Process::CopyImage copyImage; 
 		copyImage.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image14_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image14_1Test.png", &image2);
 
 		demux.SetChannel(1);
 		demux.Run(&imageGPU5, &imageGPU4);
 		image2.Copy(&imageGPU4);
 		normalize.Run(&image2, &image3); 
 		imageGPU3.Copy(&image3);
-		imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Visi::ImageType::GRAYSCALE8); 
+		imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Viso::ImageType::GRAYSCALE8); 
 		copyImage.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image14_2Test.png", &image2);
+		Viso::IO::ImageFile::Write("image14_2Test.png", &image2);
 
 		//Camera Distortion
 		std::cout << "Camera Distortion\n"; 
-		Visi::Process::CameraDistortion camDistort;
+		Viso::Process::CameraDistortion camDistort;
 		camDistort.SetRadialCoefs(-0.1f, 0, 0);
 		camDistort.SetTangentialCoefs(0, 0); 
 		camDistort.SetFocalLength(1); 
 		camDistort.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image15_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image15_1Test.png", &image2);
 
 		//AverageFilter
 		std::cout << "Average Filter\n"; 
-		Visi::Process::AverageFilter avFilter;
+		Viso::Process::AverageFilter avFilter;
 		avFilter.SetSize(5); 
 		avFilter.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image16_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image16_1Test.png", &image2);
 
 		//ChannelMapper
 		std::cout << "Channel Mapper\n"; 
-		Visi::Process::ChannelMapper chMapr;
+		Viso::Process::ChannelMapper chMapr;
 		chMapr.SetChannelMap(2, -1, -1, 3); 
-		imageGPU2.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Visi::ImageType::GRAYSCALE8); 
+		imageGPU2.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Viso::ImageType::GRAYSCALE8); 
 		chMapr.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image17_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image17_1Test.png", &image2);
 
 		//DownSample
 		std::cout << "Downsample\n"; 
-		Visi::Process::Downsample dwnSmpl;
+		Viso::Process::Downsample dwnSmpl;
 		float dsScale = 0.5f;
 		imageGPU2.Allocate(imageGPU1.GetWidth() * dsScale, imageGPU1.GetHeight() * dsScale, imageGPU1.GetType()); 
-		dwnSmpl.SetMode(Visi::Process::Downsample::Mode::NEAREST); 
+		dwnSmpl.SetMode(Viso::Process::Downsample::Mode::NEAREST); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image18_1Test.png", &image2);
-		dwnSmpl.SetMode(Visi::Process::Downsample::Mode::BOX); 
+		Viso::IO::ImageFile::Write("image18_1Test.png", &image2);
+		dwnSmpl.SetMode(Viso::Process::Downsample::Mode::BOX); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image18_2Test.png", &image2);
-		dwnSmpl.SetMode(Visi::Process::Downsample::Mode::BILINEAR); 
+		Viso::IO::ImageFile::Write("image18_2Test.png", &image2);
+		dwnSmpl.SetMode(Viso::Process::Downsample::Mode::BILINEAR); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image18_3Test.png", &image2);
+		Viso::IO::ImageFile::Write("image18_3Test.png", &image2);
 
 		//UpSample
 		std::cout << "Upsample\n"; 
-		Visi::Process::Upsample upSmpl;
+		Viso::Process::Upsample upSmpl;
 		float usScale = 4.0f;
 		imageGPU2.Allocate(imageGPU1.GetWidth() * usScale, imageGPU1.GetHeight() * usScale, imageGPU1.GetType()); 
-		upSmpl.SetMode(Visi::Process::Upsample::Mode::BILINEAR); 
+		upSmpl.SetMode(Viso::Process::Upsample::Mode::BILINEAR); 
 		upSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image19_1Test.png", &image2);
-		upSmpl.SetMode(Visi::Process::Upsample::Mode::NEAREST); 
+		Viso::IO::ImageFile::Write("image19_1Test.png", &image2);
+		upSmpl.SetMode(Viso::Process::Upsample::Mode::NEAREST); 
 		upSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image19_2Test.png", &image2);
+		Viso::IO::ImageFile::Write("image19_2Test.png", &image2);
 
 		//Mipmaps
 		std::cout << "Mipmaps\n"; 
-		Visi::Process::Mipmaps mmaps;
-		std::vector<Visi::ImageGPU> mmstack; 
-		std::vector<Visi::Image> mmstackCPU; 
+		Viso::Process::Mipmaps mmaps;
+		std::vector<Viso::ImageGPU> mmstack; 
+		std::vector<Viso::Image> mmstackCPU; 
 		mmaps.Run(&imageGPU1, &mmstack); 
 		for(int i = 0; i < mmstack.size(); i++)
 		{
 			std::stringstream ss;
 			ss << "image20_" << i << ".png";
 			image2.Copy(&(mmstack[i])); 
-			Visi::IO::ImageFile::Write(ss.str(), &image2);
+			Viso::IO::ImageFile::Write(ss.str(), &image2);
 			if(i > 3)
 				break; //break after saving first 4 images
 		}
@@ -544,47 +544,47 @@ int main(int argc, char *argv[])
 		{
 			std::stringstream ss;
 			ss << "image21_" << i << ".png";
-			Visi::IO::ImageFile::Write(ss.str(), &(mmstackCPU[i]));
+			Viso::IO::ImageFile::Write(ss.str(), &(mmstackCPU[i]));
 			if(i > 3)
 				break; //break after saving first 4 images
 		}
 
 		//Sift
 		std::cout << "Sift\n"; 
-		Visi::CompositeProcess::Sift sift;
+		Viso::CompositeProcess::Sift sift;
 		sift.Run(&imageGPU1, &imageGPU2);
-		std::vector<Visi::ImageGPU>* pyramid = sift.GetPyramid(); 
+		std::vector<Viso::ImageGPU>* pyramid = sift.GetPyramid(); 
 
 		for(int i = 0; i < pyramid->size(); i++)
 		{
-			Visi::ImageGPU* py = &( pyramid->at(i) );
+			Viso::ImageGPU* py = &( pyramid->at(i) );
 			image2.Copy(py);
 			std::stringstream ss;
 			ss << "image22_0_" << i << ".png";
-			//Visi::IO::ImageFile::Write(ss.str(), &image2 );
+			//Viso::IO::ImageFile::Write(ss.str(), &image2 );
 		}
 
 		//Rotate
 		std::cout << "Rotate\n"; 
-		Visi::Process::Rotate rotate;
+		Viso::Process::Rotate rotate;
 		rotate.SetRotation(0); 
 		imageGPU2.AllocateLike(&imageGPU1);
 		rotate.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image23_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image23_1Test.png", &image2);
 
 		//Translate
 		std::cout << "Translate\n"; 
-		Visi::Process::Translate transl;
+		Viso::Process::Translate transl;
 		transl.SetTranslation(100, 200); 
 		imageGPU2.AllocateLike(&imageGPU1);
 		transl.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image24_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image24_1Test.png", &image2);
 		transl.SetTranslation(-100, -200); 
 		transl.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image24_2Test.png", &image2);
+		Viso::IO::ImageFile::Write("image24_2Test.png", &image2);
 
 		//CopyImage
 		std::cout << "CopyImage\n"; 
@@ -592,33 +592,33 @@ int main(int argc, char *argv[])
 		imageGPU2.Allocate(imageGPU1.GetWidth()*2, imageGPU1.GetHeight(), imageGPU1.GetType()); 
 		imageGPU3.Allocate(imageGPU1.GetWidth()/2, imageGPU1.GetHeight(), imageGPU1.GetType()); 
 
-		Visi::Process::CopyImage cpIm;
+		Viso::Process::CopyImage cpIm;
 		cpIm.UseOutputSize(true);
 		cpIm.SetOffset(0, 0);
 		cpIm.Run(&imageGPU1, &imageGPU2) ;
 		cpIm.SetOffset(imageGPU1.GetWidth(), 0);
 		cpIm.Run(&imageGPU1, &imageGPU2) ;
 		image2.Copy(&imageGPU2);
-		Visi::IO::ImageFile::Write("image25_1Test.png", &image2);
+		Viso::IO::ImageFile::Write("image25_1Test.png", &image2);
 
 		cpIm.SetOffset( -imageGPU1.GetWidth()/2, 0);
 		cpIm.Run(&imageGPU1, &imageGPU3) ;
 		image2.Copy(&imageGPU3);
-		Visi::IO::ImageFile::Write("image25_2Test.png", &image2);
+		Viso::IO::ImageFile::Write("image25_2Test.png", &image2);
 
 		//Template matching
-		Visi::ImageGPU templateImage;
-		Visi::Process::GaussianFunction gaussFunc; 
-		gaussFunc.SetGenerateMode(Visi::Process::GaussianFunction::SIZE_TO_SIGMA); 
+		Viso::ImageGPU templateImage;
+		Viso::Process::GaussianFunction gaussFunc; 
+		gaussFunc.SetGenerateMode(Viso::Process::GaussianFunction::SIZE_TO_SIGMA); 
 		gaussFunc.SetSigma(20); 
 		templateImage.Allocate(0, 0, imageGPU1.GetType()); 
 		gaussFunc.Run(&templateImage); 
-		Visi::IO::ImageFile::Write("image26_1Test.png", &templateImage);
-		Visi::Process::TemplateMatch tmplMatch;
+		Viso::IO::ImageFile::Write("image26_1Test.png", &templateImage);
+		Viso::Process::TemplateMatch tmplMatch;
 		tmplMatch.SetNormalized(true);
-		tmplMatch.SetMatchMode(Visi::Process::TemplateMatch::MATCH_CORR);
+		tmplMatch.SetMatchMode(Viso::Process::TemplateMatch::MATCH_CORR);
 		tmplMatch.Run(&imageGPU1, &templateImage, &imageGPU2);
-		Visi::IO::ImageFile::Write("image26_2Test.png", &imageGPU2);
+		Viso::IO::ImageFile::Write("image26_2Test.png", &imageGPU2);
 
 		std::cout << "DONE\n";
 
@@ -628,20 +628,20 @@ int main(int argc, char *argv[])
 		if(std::string( argv[1] ) == "-v")
 		{
 			std::cout << "Starting video test\n"; 
-			Visi::IO::VideoHelper videoHelper; 
+			Viso::IO::VideoHelper videoHelper; 
 			videoHelper.Open(argv[2]); 
-			Visi::Window visiWindow(videoHelper.GetFrameWidth(), videoHelper.GetFrameHeight(), &context);
-			Visi::ImageGPU filterIm;
+			Viso::Window VisoWindow(videoHelper.GetFrameWidth(), videoHelper.GetFrameHeight(), &context);
+			Viso::ImageGPU filterIm;
 
-			while(!visiWindow.ShouldClose())
+			while(!VisoWindow.ShouldClose())
 			{
-				videoHelper.NextFrame([&](Visi::ImageGPU* imageGPU, Visi::Image* image)
+				videoHelper.NextFrame([&](Viso::ImageGPU* imageGPU, Viso::Image* image)
 				{
-					Visi::Process::MedianFilter medianFilter; 
+					Viso::Process::MedianFilter medianFilter; 
 					medianFilter.SetSize(3); 
 					medianFilter.Run(imageGPU, &filterIm); 
-					visiWindow.DrawImage(&filterIm); 
-					visiWindow.Refresh();
+					VisoWindow.DrawImage(&filterIm); 
+					VisoWindow.Refresh();
 				}); 
 			}
 			videoHelper.Close(); 
@@ -649,10 +649,10 @@ int main(int argc, char *argv[])
 		else if(std::string( argv[1] ) == "-aruco")
 		{
 			std::cout << "Starting aruco test\n"; 
-			Visi::Image input;
-			Visi::IO::ImageFile::Read(argv[2], &input);
-			Visi::CompositeProcess::ARUCODetector arucoDetector;
-			Visi::ImageGPU inputGPU; 
+			Viso::Image input;
+			Viso::IO::ImageFile::Read(argv[2], &input);
+			Viso::CompositeProcess::ARUCODetector arucoDetector;
+			Viso::ImageGPU inputGPU; 
 			inputGPU.Copy(&input);
 
 
@@ -669,31 +669,31 @@ int main(int argc, char *argv[])
 
 			
 
-			std::vector<Visi::Contour> markerQuads; 
+			std::vector<Viso::Contour> markerQuads; 
 			std::vector<int> markerIds;
 			arucoDetector.Run(&inputGPU, &markerQuads, &markerIds, false);
 			
 			
 			
-			Visi::Process::Renderer renderer;
+			Viso::Process::Renderer renderer;
 			for(int i = 0; i < markerQuads.size(); i++)
 			{
-				Visi::Color color; 
+				Viso::Color color; 
 				if(markerIds[i] == markerId0)
-					color = Visi::Color(1, 0, 0); 
+					color = Viso::Color(1, 0, 0); 
 				
 				renderer.AddContour(&(markerQuads[i]), color, true, 4, true, true); 
 			}
 			
-			Visi::Image image2;
+			Viso::Image image2;
 			renderer.Run(&input, &image2); 
-			Visi::IO::ImageFile::Write("arcuo1Test.png", &image2); 
+			Viso::IO::ImageFile::Write("arcuo1Test.png", &image2); 
 		}
 		else if(std::string( argv[1] ) == "-computegraph")
 		{
 			std::cout << "Starting ComputeGraph test\n\n"; 
 
-			Visi::SerializedObject graphJson; 
+			Viso::SerializedObject graphJson; 
 
 			graphJson.FromString(R"(
 			{
@@ -735,9 +735,9 @@ int main(int argc, char *argv[])
 			}
 			)"); 
 
-			Visi::ComputeGraph::Graph graph;
+			Viso::ComputeGraph::Graph graph;
 			graph.Deserialize(&graphJson); 
-			Visi::SerializedObject outJson; 
+			Viso::SerializedObject outJson; 
 			graph.Serialize(&outJson); 
 			std::cout << outJson.ToString() << "\n"; 
 
@@ -752,32 +752,32 @@ int main(int argc, char *argv[])
 			//Try out data: http://vision.middlebury.edu/stereo/data/scenes2003/    
 			//Dataset created by created by Daniel Scharstein, Alexander Vandenberg-Rodes, and Rick Szeliski.
 			std::cout << "Starting depth from stereo test\n"; 
-			Visi::Image left;
-			Visi::Image right;
-			Visi::Image leftGrey;
-			Visi::Image rightGrey;
-			Visi::Image output; 
-			Visi::IO::ImageFile::Read(argv[2], &left);
-			Visi::IO::ImageFile::Read(argv[3], &right);
-			Visi::Process::GrayScale gs;
-			leftGrey.Allocate(left.GetWidth(), left.GetHeight(), Visi::ImageType::GRAYSCALE16); 
-			rightGrey.Allocate(right.GetWidth(), right.GetHeight(), Visi::ImageType::GRAYSCALE16); 
+			Viso::Image left;
+			Viso::Image right;
+			Viso::Image leftGrey;
+			Viso::Image rightGrey;
+			Viso::Image output; 
+			Viso::IO::ImageFile::Read(argv[2], &left);
+			Viso::IO::ImageFile::Read(argv[3], &right);
+			Viso::Process::GrayScale gs;
+			leftGrey.Allocate(left.GetWidth(), left.GetHeight(), Viso::ImageType::GRAYSCALE16); 
+			rightGrey.Allocate(right.GetWidth(), right.GetHeight(), Viso::ImageType::GRAYSCALE16); 
 			gs.Run(&left, &leftGrey);
 			gs.Run(&right, &rightGrey);
 
-			Visi::ImageGPU leftGPU;
-			Visi::ImageGPU rightGPU; 
-			Visi::ImageGPU outputGPU; 
+			Viso::ImageGPU leftGPU;
+			Viso::ImageGPU rightGPU; 
+			Viso::ImageGPU outputGPU; 
 
 			leftGPU.Copy(&leftGrey); 
 			rightGPU.Copy(&rightGrey); 
 
 
-			Visi::Process::StereoMatchSAD smsad;
+			Viso::Process::StereoMatchSAD smsad;
 			smsad.Run(&leftGPU, &rightGPU, &outputGPU);	
 
 			output.Copy(&outputGPU);
-			Visi::IO::ImageFile::Write("imageDepth1Test.png", &output);
+			Viso::IO::ImageFile::Write("imageDepth1Test.png", &output);
 		}
 	}
 

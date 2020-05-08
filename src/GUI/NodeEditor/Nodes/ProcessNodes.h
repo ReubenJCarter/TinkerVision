@@ -4,7 +4,7 @@
 
 #include "../../../ComputeGraph/Nodes/ProcessNodes.h"
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {

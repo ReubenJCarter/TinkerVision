@@ -346,7 +346,7 @@ namespace lambdatwist {
 ////////////////////////////////
 ///////////////////////////
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {
@@ -367,12 +367,12 @@ bool Perspective3Point::Internal::Run(std::vector<Vec3>* normalizedImageCoords, 
 {
     if(normalizedImageCoords->size() != 3)
     {
-        std::cout << "Visi:Perspective3Point:Run: Needs to be three points from image\n"; 
+        std::cout << "Viso:Perspective3Point:Run: Needs to be three points from image\n"; 
         return false; 
     }
     if(worldCoords->size() != 3)
     {
-        std::cout << "Visi:Perspective3Point:Run: Needs to be three points from world\n"; 
+        std::cout << "Viso:Perspective3Point:Run: Needs to be three points from world\n"; 
         return false; 
     }
 

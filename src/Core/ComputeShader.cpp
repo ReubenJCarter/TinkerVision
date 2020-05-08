@@ -6,7 +6,7 @@
 #include <iostream> 
 #include <vector>
 
-namespace Visi 
+namespace Viso 
 {
 
 ComputeShader::ComputeShader()
@@ -117,7 +117,7 @@ void ComputeShader::SetImage(std::string name, ImageGPU* image, Access access)
 	GLint loc = glGetUniformLocation(computeProgram, name.c_str());
 	if(loc == -1)
 	{
-		std::cerr << "Visi:ComputeShader:SetImage:uniform location " << name << " could not be found\n"; 
+		std::cerr << "Viso:ComputeShader:SetImage:uniform location " << name << " could not be found\n"; 
 		return; 
 	}
 	

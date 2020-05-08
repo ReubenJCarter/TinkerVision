@@ -6,7 +6,7 @@
 #include <QCloseEvent>
 #include <QLabel>
 
-namespace Visi
+namespace Viso
 {
 namespace GUI
 {

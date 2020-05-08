@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 
-project(Visi)
+project(Viso)
 set(PROJECT_BRIEF ${CMAKE_PROJECT_NAME})
 
 

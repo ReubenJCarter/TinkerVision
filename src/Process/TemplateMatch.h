@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
@@ -8,12 +8,12 @@
 
 #include "../Core/VectorMath.h"
 
-namespace Visi
+namespace Viso
 {
 namespace Process
 {
 	
-class VISI_EXPORT TemplateMatch
+class VISO_EXPORT TemplateMatch
 {
     public:
         enum MatchMode{MATCH_SAD, MATCH_CORR};

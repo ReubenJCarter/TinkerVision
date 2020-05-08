@@ -6,7 +6,7 @@
 #include "../../Core/ImageGPU.h"
 #include "../../IO/ImageFile.h"
 
-namespace Visi
+namespace Viso
 {
 namespace ComputeGraph
 {
@@ -15,7 +15,7 @@ namespace Nodes
 
 class ImageFileRead: public Node
 {
-    VISI_CLONEABLE_MACRO(ImageFileRead) 
+    VISO_CLONEABLE_MACRO(ImageFileRead) 
     private:
         Data outImageData; /** cache of the output data, also null data when no image avilible.*/
 
@@ -30,12 +30,12 @@ class ImageFileRead: public Node
             
             if(inAsimage != NULL)
             {
-                Visi::IO::ImageFile::Read(inFileName, inAsimage);
+                Viso::IO::ImageFile::Read(inFileName, inAsimage);
                 outImageData = Data(ImageData, inAsimage);
             }
             else if(inAsimageGPU != NULL)
             {
-                Visi::IO::ImageFile::Read(inFileName, inAsimageGPU);
+                Viso::IO::ImageFile::Read(inFileName, inAsimageGPU);
                 outImageData = Data(ImageGPUData, inAsimageGPU);
             }
             else
@@ -47,7 +47,7 @@ class ImageFileRead: public Node
 
 class ImageFileWrite: public Node
 {
-    VISI_CLONEABLE_MACRO(ImageFileWrite) 
+    VISO_CLONEABLE_MACRO(ImageFileWrite) 
     private:
         Data outImageData; /** cache of the output data, also null data when no image avilible.*/
 
@@ -62,12 +62,12 @@ class ImageFileWrite: public Node
             
             if(inAsimage != NULL)
             {
-                Visi::IO::ImageFile::Write(inFileName, inAsimage);
+                Viso::IO::ImageFile::Write(inFileName, inAsimage);
                 outImageData = Data(ImageData, inAsimage);
             }
             else if(inAsimageGPU != NULL)
             {
-                Visi::IO::ImageFile::Write(inFileName, inAsimageGPU);
+                Viso::IO::ImageFile::Write(inFileName, inAsimageGPU);
                 outImageData = Data(ImageGPUData, inAsimageGPU);
             }
             else

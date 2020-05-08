@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
@@ -9,12 +9,12 @@
 
 #include <vector>
 
-namespace Visi
+namespace Viso
 {
 namespace CompositeProcess
 {
 	
-class VISI_EXPORT BarcodeDetector
+class VISO_EXPORT BarcodeDetector
 {
     private: 
         class Internal;
@@ -24,7 +24,7 @@ class VISI_EXPORT BarcodeDetector
 		BarcodeDetector(); 
         ~BarcodeDetector(); 
         
-		void Run(ImageGPU* input, std::vector<Visi::Contour>* barcodeQuads, std::vector< std::vector<unsigned char> >* barcodeData);  
+		void Run(ImageGPU* input, std::vector<Viso::Contour>* barcodeQuads, std::vector< std::vector<unsigned char> >* barcodeData);  
 };
 	
 }

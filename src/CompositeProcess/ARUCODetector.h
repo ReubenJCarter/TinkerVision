@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
@@ -9,12 +9,12 @@
 
 #include <vector>
 
-namespace Visi
+namespace Viso
 {
 namespace CompositeProcess
 {
 	
-class VISI_EXPORT ARUCODetector
+class VISO_EXPORT ARUCODetector
 {
     private: 
         class Internal;
@@ -24,7 +24,7 @@ class VISI_EXPORT ARUCODetector
 		ARUCODetector(); 
         ~ARUCODetector(); 
         
-		void Run(ImageGPU* input, std::vector<Visi::Contour>* markerQuads, std::vector<int>* markerIds, bool retAllQuads=false); 
+		void Run(ImageGPU* input, std::vector<Viso::Contour>* markerQuads, std::vector<int>* markerIds, bool retAllQuads=false); 
         void AddDictionaryEntry(Image* entry, int id);
         void AddDictionaryEntry(std::vector<bool>* bitsequence, int size, int id);
         void SetMaxBitError(int mbe); 

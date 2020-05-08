@@ -14,7 +14,7 @@
 #include <iostream>
 #include <map>
 
-namespace Visi
+namespace Viso
 {
 namespace CompositeProcess
 {
@@ -83,7 +83,7 @@ void CannyEdgeDetect::Internal::Run(ImageGPU* input, Image* output)
 
     RunNMS(&tempGPU[2], &tempGPU[3]); 
 
-    Visi::Process::ChannelDemux demux; 
+    Viso::Process::ChannelDemux demux; 
     demux.SetChannel(2);
     demux.Run(&tempGPU[3], &tempGPU[1]);
 

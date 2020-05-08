@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visi_export.h"
+#include "Viso_export.h"
 
 #include <map>
 
@@ -11,7 +11,7 @@
 #include "ImageGPU.h"
 
 
-namespace Visi
+namespace Viso
 {
 
 class ComputeShader; 
