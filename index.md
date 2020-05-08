@@ -1,4 +1,4 @@
-# Visi
+# Viso
 
 An image processing and computer vision library.
 
