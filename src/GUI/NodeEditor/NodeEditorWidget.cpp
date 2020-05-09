@@ -17,10 +17,16 @@
 #include <nodes/Node>
 #include <nodes/NodeData>
 
+#include "BaseNode.h"
+
 #include "Nodes/ImageNodes.h"
 #include "Nodes/SourceNodes.h"
 #include "Nodes/MiscNodes.h"
 #include "Nodes/ProcessNodes.h"
+
+#include "ComputeGraph/Graph.h"
+#include "ComputeGraph/Node.h"
+
 
 namespace Viso
 {
@@ -231,6 +237,40 @@ void NodeEditorWidget::Clear()
 
 void NodeEditorWidget::SerializeToComputeGraph(SerializedObject* so)
 {
+	//retrieve all the connection an nodes info from the scene 
+	std::vector<QtNodes::Node*> sceneNodes = flowScene->allNodes(); 
+	std::vector<QtNodes::Connection*> sceneConnections;
+	for( auto itt = flowScene->connections().begin(); itt !=  flowScene->connections().end(); itt++ )
+	{
+		std::shared_ptr<QtNodes::Connection> c = itt->second; 
+		sceneConnections.push_back(c.get()); 
+	}
+
+	//Create the compute graph
+	ComputeGraph::Graph graph; 
+
+	//Add all the nodes to the compute graph and create Map gui IDs for nodes to compute nodes
+	std::map<QUuid, ComputeGraph::Node*> guiIdToComputeNode; 
+	for(int i = 0; i < sceneNodes.size(); i++)
+	{
+		//Get the base node, uid, compute node 
+		BaseNode* bn = (BaseNode*)(sceneNodes[i]->nodeDataModel());
+		QUuid uid = sceneNodes[i]->id(); 
+		ComputeGraph::Node* cn = bn->GetComputeNode(); 
+
+		//Test is this node a graph input node
+		if( bn->name() != QString("GraphInput") &&
+			bn->name() != QString("GraphOutput") &&
+			cn != NULL)
+		{
+			guiIdToComputeNode[uid] = cn; 
+			graph.AddNode( cn );
+		}
+	}
+
+	//cycle over all the connections
+	
+
 	
 }
 
