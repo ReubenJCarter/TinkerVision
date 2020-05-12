@@ -1,5 +1,5 @@
-# Viso
+# Tinker Vision
 
 An image processing and computer vision library.
 
-[Project Page](https://reubenjcarter.github.io/Viso/)
+[Project Page](https://reubenjcarter.github.io/TinkerVision/)
