@@ -25,8 +25,6 @@ class ImageAllocate: public BaseNode
         std::weak_ptr<ImageTypeData> type;
 
         std::shared_ptr<ImageData> imageOut;
-
-        ComputeGraph::Nodes::ImageAllocate cgNode; 
 	 
 	public:
 		ImageAllocate()
@@ -46,7 +44,7 @@ class ImageAllocate: public BaseNode
 
         ComputeGraph::Node* GetComputeNode() 
         {
-            return &cgNode; 
+            return new ComputeGraph::Nodes::ImageAllocate;  
         }
 };
 
@@ -56,8 +54,6 @@ class ImageDeallocate: public BaseNode
         std::weak_ptr<ImageData> imageIn;
 
         std::shared_ptr<ImageData> imageOut;
-
-        ComputeGraph::Nodes::ImageDeallocate cgNode; 
 
 	public:
 		ImageDeallocate()
@@ -73,7 +69,7 @@ class ImageDeallocate: public BaseNode
 
         ComputeGraph::Node* GetComputeNode() 
         {
-            return &cgNode; 
+            return new ComputeGraph::Nodes::ImageDeallocate; 
         }
 };
 
@@ -85,8 +81,6 @@ class ImageGetDims: public BaseNode
 		std::shared_ptr<IntData> width;
 		std::shared_ptr<IntData> height;
         std::shared_ptr<ImageTypeData> type;
-
-        ComputeGraph::Nodes::ImageGetDims cgNode; 
 
 	public:
 		ImageGetDims()
@@ -104,7 +98,7 @@ class ImageGetDims: public BaseNode
 
         ComputeGraph::Node* GetComputeNode() 
         {
-            return &cgNode; 
+            return new ComputeGraph::Nodes::ImageGetDims; 
         }
 };
 

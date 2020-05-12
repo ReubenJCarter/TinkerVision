@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QPushButton>
 
+#include <iostream>
 
 namespace Viso
 {
@@ -44,6 +45,7 @@ BuildEditorWidget::BuildEditorWidget(NodeEditor::NodeEditorWidget* ne, ProjectHi
 
 	compileJsonTextScrollArea = new QScrollArea();
 	compileJsonText = new QLabel(); 
+	compileJsonText->setSizePolicy(QSizePolicy::MinimumExpanding , QSizePolicy::MinimumExpanding );
 	compileJsonText->setTextInteractionFlags(Qt::TextSelectableByMouse);
 	compileJsonTextScrollArea->setWidget(compileJsonText);
 	layoutBase->addWidget(compileJsonTextScrollArea); 
@@ -53,7 +55,8 @@ BuildEditorWidget::BuildEditorWidget(NodeEditor::NodeEditorWidget* ne, ProjectHi
 
 		nodeEditorWidget->SerializeToComputeGraph(&serializedComputeGraph);
 		std::string str = serializedComputeGraph.ToString(); 
-		compileJsonText->setText( str.c_str() ); 
+		compileJsonText->setText( QString::fromStdString(str) ); 
+		compileJsonText->adjustSize(); 
 	});
 }
 

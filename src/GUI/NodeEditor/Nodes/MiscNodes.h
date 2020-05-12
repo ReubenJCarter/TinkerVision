@@ -154,12 +154,13 @@ class GraphInputNode: public BaseNode
             return std::static_pointer_cast<QtNodes::NodeData>(data);
         }
 		QWidget* embeddedWidget() { return baseWidget; };
+        inline int GetGraphInputInx(){ return graphInputInx; }
 };
 
 class GraphOutputNode: public BaseNode
 {
     private:
-        int graphInputInx; 
+        int graphOutputInx; 
 		std::shared_ptr<BaseNodeData> data;
 
         QWidget* baseWidget;
@@ -181,7 +182,7 @@ class GraphOutputNode: public BaseNode
             lineEdit->setValue(0);
             connect(lineEdit, QOverload<int>::of(&QSpinBox::valueChanged),[this ](int i)
             {
-                graphInputInx = i; 
+                graphOutputInx = i; 
             });
 
             comboEdit = new QComboBox(); 
@@ -258,7 +259,7 @@ class GraphOutputNode: public BaseNode
             QJsonObject modelJson = QtNodes::NodeDataModel::save();
             if(data) 
             {
-                modelJson["graphInputInx"] = QString::number(graphInputInx);
+                modelJson["graphOutputInx"] = QString::number(graphOutputInx);
                 modelJson["combo"] = comboEdit->currentText(); 
             }
 
@@ -267,7 +268,7 @@ class GraphOutputNode: public BaseNode
 
 		void restore(QJsonObject const &p)
         {
-            QJsonValue v = p["graphInputInx"];
+            QJsonValue v = p["graphOutputInx"];
             if (!v.isUndefined())
             {
                 QString strNum = v.toString();
@@ -275,7 +276,7 @@ class GraphOutputNode: public BaseNode
                 int d = strNum.toInt(&ok);
                 if (ok)
                 {
-                    graphInputInx = d; 
+                    graphOutputInx = d; 
                     lineEdit->setValue(d);
                     
                     QJsonValue vCombo = p["combo"];
@@ -290,6 +291,8 @@ class GraphOutputNode: public BaseNode
 
 		std::shared_ptr<QtNodes::NodeData> outData(QtNodes::PortIndex portIndex) { return nullptr; }
 		QWidget* embeddedWidget() { return baseWidget; }
+
+        inline int GetGraphOutputInx() { return graphOutputInx; }
 };
 
 }

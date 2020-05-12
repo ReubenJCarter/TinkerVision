@@ -93,6 +93,11 @@ class Graph: public Node
             return graphOutputMapping[inx].node->GetOutput(graphOutputMapping[inx].outputInx); 
         }
 
+        inline void AddInputMapping(Node* n, int graphInInx)
+        {
+            n->AddInputConnection(&graphInputSource, graphInInx); 
+        }
+
         void RecalculateCallOrder()
         {
             // node pointer to index in nodes

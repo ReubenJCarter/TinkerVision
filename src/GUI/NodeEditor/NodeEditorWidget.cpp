@@ -249,29 +249,100 @@ void NodeEditorWidget::SerializeToComputeGraph(SerializedObject* so)
 	//Create the compute graph
 	ComputeGraph::Graph graph; 
 
-	//Add all the nodes to the compute graph and create Map gui IDs for nodes to compute nodes
-	std::map<QUuid, ComputeGraph::Node*> guiIdToComputeNode; 
+	std::map<BaseNode*, ComputeGraph::Node*> computeNodes; 
+
+	//create a vector of all the gui nodes to include in the compute graph and add to graph
+	std::vector<BaseNode*> baseNodes; 
 	for(int i = 0; i < sceneNodes.size(); i++)
 	{
 		//Get the base node, uid, compute node 
 		BaseNode* bn = (BaseNode*)(sceneNodes[i]->nodeDataModel());
-		QUuid uid = sceneNodes[i]->id(); 
 		ComputeGraph::Node* cn = bn->GetComputeNode(); 
+		computeNodes[bn] = cn; 
 
-		//Test is this node a graph input node
+		//Test is this node a graph input/output/NULL node
 		if( bn->name() != QString("GraphInput") &&
 			bn->name() != QString("GraphOutput") &&
 			cn != NULL)
 		{
-			guiIdToComputeNode[uid] = cn; 
+			baseNodes.push_back(bn); 
 			graph.AddNode( cn );
 		}
 	}
 
-	//cycle over all the connections
-	
+	//cycle over all the connections 
+	std::map<ComputeGraph::Node*, std::map<int, ComputeGraph::Node::Connection> > connectionsMap; 
+	ComputeGraph::Nodes::InputCopySource graphInputPlaceholder; 
+	std::map<int, ComputeGraph::Node::Connection> outputMapping; 
 
-	
+	for(int i = 0; i < sceneConnections.size(); i++)
+	{
+		QtNodes::Connection* conect = sceneConnections[i]; 
+		QtNodes::Node* nIn = conect->getNode(QtNodes::PortType::In); 
+		QtNodes::Node* nOut = conect->getNode(QtNodes::PortType::Out); 
+		BaseNode* bnIn = (BaseNode*)(nIn->nodeDataModel());
+		ComputeGraph::Node* cnIn = computeNodes[bnIn]; 
+		BaseNode* bnOut = (BaseNode*)(nOut->nodeDataModel());
+		ComputeGraph::Node* cnOut = computeNodes[bnOut];  
+
+
+		ComputeGraph::Node* cn; 
+		ComputeGraph::Node::Connection newConnection; 
+		if( bnOut->name() == QString("GraphInput") )
+		{
+			cn = &graphInputPlaceholder; 
+			newConnection.outputInx = ((Nodes::GraphInputNode*)bnOut)->GetGraphInputInx(); 
+		}
+		else
+		{
+			cn = cnOut; 
+			newConnection.outputInx = (int)conect->getPortIndex(QtNodes::PortType::Out); 
+		}
+		newConnection.node = cn; 
+		
+
+
+		//if the second node is a graph output node set a graph mapping not connection
+		if( bnIn->name() == QString("GraphOutput") )
+		{
+			int graphOutputInx = ((Nodes::GraphOutputNode*)bnIn)->GetGraphOutputInx(); 
+			outputMapping[graphOutputInx] = newConnection;
+		}
+
+		else if(cnIn != NULL)
+		{
+			connectionsMap[cnIn][ (int)conect->getPortIndex(QtNodes::PortType::In) ] = newConnection;
+		}
+	}
+
+
+	//Add all the connections to the nodes in the graph
+	for(int i = 0; i < baseNodes.size(); i++)
+	{
+		int numOfInPorts = baseNodes[i]->nPorts(QtNodes::PortType::In);
+		ComputeGraph::Node* cn = computeNodes[baseNodes[i]];
+		for(int j = 0; j < numOfInPorts; j++)
+		{
+			ComputeGraph::Node::Connection c = connectionsMap[ cn ][j]; 
+			if(c.node == &graphInputPlaceholder)
+			{
+				graph.AddInputMapping(cn, c.outputInx); 
+			}
+			else
+			{
+				cn->AddInputConnection(c.node, c.outputInx); 
+			}
+		}
+	}
+
+	//Add all the output connections if there are gaps in the inx, the gaps are reduced.
+	for(auto itt = outputMapping.begin(); itt != outputMapping.end(); itt++)
+	{
+		graph.AddOutputMapping(itt->second.node, itt->second.outputInx); 
+	}
+
+	//serialize the graph
+	graph.Serialize(so); 
 }
 
 }

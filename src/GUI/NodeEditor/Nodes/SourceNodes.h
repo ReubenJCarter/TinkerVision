@@ -27,8 +27,7 @@ class IntSource: public BaseNode
         int sourceValue; 
 		std::shared_ptr<IntData> data;
 		QLineEdit* lineEdit;
-        ComputeGraph::Nodes::IntSource cgNode; 
-	 
+
 	public:
 		IntSource()
         {
@@ -96,8 +95,9 @@ class IntSource: public BaseNode
 
         ComputeGraph::Node* GetComputeNode() 
         {
-            cgNode.value = sourceValue; 
-            return &cgNode; 
+            ComputeGraph::Nodes::IntSource* cgNode = new ComputeGraph::Nodes::IntSource; 
+            cgNode->value = sourceValue; 
+            return cgNode; 
         }
 };
 
@@ -107,7 +107,6 @@ class FloatSource: public BaseNode
         float sourceValue; 
 		std::shared_ptr<FloatData> data;
 		QLineEdit* lineEdit;
-        ComputeGraph::Nodes::FloatSource cgNode; 
 	 
 	public:
 		FloatSource()
@@ -176,8 +175,9 @@ class FloatSource: public BaseNode
 
         ComputeGraph::Node* GetComputeNode() 
         {
-            cgNode.value = sourceValue; 
-            return &cgNode; 
+            ComputeGraph::Nodes::FloatSource* cgNode = new ComputeGraph::Nodes::FloatSource; 
+            cgNode->value = sourceValue; 
+            return cgNode; 
         }
 };
 
@@ -187,7 +187,6 @@ class BoolSource: public BaseNode
         bool sourceValue; 
 		std::shared_ptr<BoolData> data;
 		QCheckBox* checkEdit;
-        ComputeGraph::Nodes::BoolSource cgNode; 
 	 
 	public:
 		BoolSource()
@@ -246,8 +245,9 @@ class BoolSource: public BaseNode
 
         ComputeGraph::Node* GetComputeNode() 
         {
-            cgNode.value = sourceValue; 
-            return &cgNode; 
+            ComputeGraph::Nodes::BoolSource* cgNode = new ComputeGraph::Nodes::BoolSource; 
+            cgNode->value = sourceValue; 
+            return cgNode; 
         }
 };
 
@@ -257,7 +257,6 @@ class StringSource: public BaseNode
         std::string sourceValue; 
 		std::shared_ptr<StringData> data;
 		QLineEdit* lineEdit;
-        ComputeGraph::Nodes::StringSource cgNode; 
 	 
 	public:
 		StringSource()
@@ -310,8 +309,9 @@ class StringSource: public BaseNode
 
         ComputeGraph::Node* GetComputeNode() 
         {
-            cgNode.value = sourceValue; 
-            return &cgNode; 
+            ComputeGraph::Nodes::StringSource* cgNode = new ComputeGraph::Nodes::StringSource; 
+            cgNode->value = sourceValue; 
+            return cgNode; 
         }
 };
 
@@ -319,7 +319,6 @@ class ImageSource: public BaseNode
 {
 	private:
 		std::shared_ptr<ImageData> data;
-        ComputeGraph::Nodes::ImageSource cgNode; 
 	 
 	public:
 		ImageSource()
@@ -336,7 +335,7 @@ class ImageSource: public BaseNode
 
         ComputeGraph::Node* GetComputeNode() 
         {
-            return &cgNode; 
+            return new ComputeGraph::Nodes::ImageSource; 
         }
 };
 
@@ -344,7 +343,6 @@ class ImageGPUSource: public BaseNode
 {
 	private:
 		std::shared_ptr<ImageGPUData> data;
-        ComputeGraph::Nodes::ImageGPUSource cgNode; 
 	 
 	public:
 		ImageGPUSource()
@@ -361,7 +359,7 @@ class ImageGPUSource: public BaseNode
 
         ComputeGraph::Node* GetComputeNode() 
         {
-            return &cgNode; 
+            return new ComputeGraph::Nodes::ImageGPUSource; 
         }
 };
 
@@ -371,8 +369,6 @@ class ImageTypeSource: public BaseNode
         std::string sourceValue; 
 		std::shared_ptr<ImageTypeData> data;
 		QComboBox* comboEdit;
-	 
-        ComputeGraph::Nodes::ImageTypeSource cgNode; 
 
 	public:
 		ImageTypeSource()
@@ -434,8 +430,9 @@ class ImageTypeSource: public BaseNode
 
         ComputeGraph::Node* GetComputeNode() 
         {
-            cgNode.value = ImageTypehelper::ImageTypeFromString( comboEdit->currentText().toStdString() ); 
-            return &cgNode; 
+            ComputeGraph::Nodes::ImageTypeSource* cgNode = new ComputeGraph::Nodes::ImageTypeSource; 
+            cgNode->value = ImageTypehelper::ImageTypeFromString( comboEdit->currentText().toStdString() ); 
+            return cgNode; 
         }
 };
 

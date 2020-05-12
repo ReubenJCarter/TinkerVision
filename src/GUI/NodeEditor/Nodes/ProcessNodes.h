@@ -15,9 +15,6 @@ namespace Nodes
 
 class AdaptiveThreshold: public BaseProcess1In1Out
 {
-    private:
-        ComputeGraph::Nodes::AdaptiveThresholdNode cgNode; 
-
 	public:
 		AdaptiveThreshold()
         {   
@@ -28,14 +25,11 @@ class AdaptiveThreshold: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~AdaptiveThreshold(){}	
-        ComputeGraph::Node* GetComputeNode() { return &cgNode; }
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::AdaptiveThresholdNode; }
 };
 
 class ApproxDistanceTransform: public BaseProcess1In1Out
 {
-    private:
-        ComputeGraph::Nodes::ApproxDistanceTransformNode cgNode; 
-
 	public:
 		ApproxDistanceTransform()
         {
@@ -47,14 +41,11 @@ class ApproxDistanceTransform: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~ApproxDistanceTransform(){}	
-        ComputeGraph::Node* GetComputeNode() { return &cgNode; }
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::ApproxDistanceTransformNode; }
 };
 
 class AverageFilter: public BaseProcess1In1Out
 {
-    private:
-        ComputeGraph::Nodes::AverageFilterNode cgNode; 
-
 	public:
 		AverageFilter()
         {
@@ -64,7 +55,7 @@ class AverageFilter: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~AverageFilter(){}	
-        ComputeGraph::Node* GetComputeNode() { return &cgNode; }
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::AverageFilterNode; }
 };
 
 class Blend: public BaseNode
@@ -88,8 +79,6 @@ class Blend: public BaseNode
 
 class BrightnessContrast: public BaseProcess1In1Out
 {
-    private:
-        ComputeGraph::Nodes::BrightnessContrastNode cgNode; 
 
 	public:
 		BrightnessContrast()
@@ -101,14 +90,11 @@ class BrightnessContrast: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~BrightnessContrast(){}	
-        ComputeGraph::Node* GetComputeNode() { return &cgNode; }
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::BrightnessContrastNode; }
 };
 
 class CameraDistortion: public BaseProcess1In1Out
 {
-    private:
-        ComputeGraph::Nodes::CameraDistortionNode cgNode; 
-
 	public:
 		CameraDistortion()
         {
@@ -123,7 +109,7 @@ class CameraDistortion: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~CameraDistortion(){}	
-        ComputeGraph::Node* GetComputeNode() { return &cgNode; }
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::CameraDistortionNode; }
 };
 
 class ChannelMapper: public BaseProcess1In1Out

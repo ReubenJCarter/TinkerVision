@@ -174,6 +174,7 @@ void ProjectHierarchyWidget::LoadNodeEditorFromIndex(int inx)
 
 void ProjectHierarchyWidget::Serialize(SerializedObject* so)
 {
+	SaveCurrentNodeEditor(); 
 	hierarchyListModel->Serialize(so); 
 }
 
