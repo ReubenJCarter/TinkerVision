@@ -6,7 +6,7 @@
 #include <QPushButton>
 #include <QCloseEvent>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace GUI
 {

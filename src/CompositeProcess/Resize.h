@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
@@ -9,12 +9,12 @@
 #include "../Process/Upsample.h"
 #include "../Process/Downsample.h"
 
-namespace Viso
+namespace TnkrVis
 {
 namespace CompositeProcess
 {
 	
-class VISO_EXPORT Resize
+class TINKERVISION_EXPORT Resize
 {
     private: 
         class Internal;

@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-namespace Viso
+namespace TnkrVis
 {
 
 ParallelFor::ParallelFor(int workerCount)

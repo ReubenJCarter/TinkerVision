@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-namespace Viso 
+namespace TnkrVis 
 {
 
 class Context::ContextInternal
@@ -43,7 +43,7 @@ void Context::ContextInternal::Create()
 	
     if(window == NULL)
     {
-        std::cerr << "Viso:Context:Error creating context\n"; 
+        std::cerr << "TnkrVis:Context:Error creating context\n"; 
         return; 
     }
     

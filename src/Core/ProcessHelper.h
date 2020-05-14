@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include <map>
 
@@ -11,7 +11,7 @@
 #include "ImageGPU.h"
 
 
-namespace Viso
+namespace TnkrVis
 {
 
 class ComputeShader; 

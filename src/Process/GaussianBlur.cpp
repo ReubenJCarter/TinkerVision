@@ -9,7 +9,7 @@
 #include <vector>
 #include <math.h>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace Process
 {

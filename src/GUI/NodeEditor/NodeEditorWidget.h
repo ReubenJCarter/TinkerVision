@@ -12,7 +12,7 @@ namespace QtNodes
 	class FlowView;
 }
 
-namespace Viso
+namespace TnkrVis
 {
 
 class SerializedObject; 

@@ -17,7 +17,7 @@
 #include <iostream>
 #include <map>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace CompositeProcess
 {
@@ -31,12 +31,12 @@ class ARUCODetector::Internal
         Image temp[3];
 
         std::vector<Contour> contours;
-        std::vector<Viso::Contour> contoursFiltered; 
-        std::vector<Viso::Contour> contoursSimplified; 
-        std::vector<Viso::Contour> contoursMerged; 
-        std::vector<Viso::Contour> contoursQuads; 
-        std::vector<Viso::Contour> arucoQuads; 
-        std::vector<Viso::Image> bitImages;  
+        std::vector<TnkrVis::Contour> contoursFiltered; 
+        std::vector<TnkrVis::Contour> contoursSimplified; 
+        std::vector<TnkrVis::Contour> contoursMerged; 
+        std::vector<TnkrVis::Contour> contoursQuads; 
+        std::vector<TnkrVis::Contour> arucoQuads; 
+        std::vector<TnkrVis::Image> bitImages;  
 
         GrayScale gray; 
         AdaptiveThreshold adaptiveThreshold; 
@@ -47,7 +47,7 @@ class ARUCODetector::Internal
 
     public:
         Internal(); 
-        void Run(ImageGPU* input, std::vector<Viso::Contour>* markerQuads, std::vector<int>* markerIds, bool retAllQuads);
+        void Run(ImageGPU* input, std::vector<TnkrVis::Contour>* markerQuads, std::vector<int>* markerIds, bool retAllQuads);
         void AddDictionaryEntry(Image* entry, int id);
         void AddDictionaryEntry(std::vector<bool>* bitsequence, int size, int id);
         void SetMaxBitError(int mbe); 
@@ -58,7 +58,7 @@ ARUCODetector::Internal::Internal()
 {
 }
 
-void ARUCODetector::Internal::Run(ImageGPU* input, std::vector<Viso::Contour>* markerQuads, std::vector<int>* markerIds, bool retAllQuads)
+void ARUCODetector::Internal::Run(ImageGPU* input, std::vector<TnkrVis::Contour>* markerQuads, std::vector<int>* markerIds, bool retAllQuads)
 {
     bool grayConverted = false; 
     if(input->GetType() != ImageType::GRAYSCALE8 && input->GetType() != ImageType::GRAYSCALE16 && input->GetType() != ImageType::GRAYSCALE32F)
@@ -75,11 +75,11 @@ void ARUCODetector::Internal::Run(ImageGPU* input, std::vector<Viso::Contour>* m
 
     findContours.Run(&temp[0], &temp[1], &contours); 
 
-    Viso::Contour::ContoursVertCountFilter(&contours, &contoursFiltered, 100);
-    Viso::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 3);
-    Viso::Contour::ContoursMergeVerticies(&contoursSimplified, &contoursMerged, 4);
-    Viso::Contour::ContoursSimplify(&contoursMerged, &contoursSimplified, 5);
-    Viso::Contour::ContoursVertCountFilter(&contoursSimplified, &contoursQuads, 4, 4);
+    TnkrVis::Contour::ContoursVertCountFilter(&contours, &contoursFiltered, 100);
+    TnkrVis::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 3);
+    TnkrVis::Contour::ContoursMergeVerticies(&contoursSimplified, &contoursMerged, 4);
+    TnkrVis::Contour::ContoursSimplify(&contoursMerged, &contoursSimplified, 5);
+    TnkrVis::Contour::ContoursVertCountFilter(&contoursSimplified, &contoursQuads, 4, 4);
 
     temp[1].Copy(input); 
     markerBitExtract.Run(&temp[1], &contoursQuads, &bitImages);
@@ -101,13 +101,13 @@ void ARUCODetector::Internal::Run(ImageGPU* input, std::vector<Viso::Contour>* m
         std::string fn = "bitImage";
         fn += std::to_string(i); 
         fn += ".png"; 
-        Viso::IO::ImageFile::Write(fn, &bitImages[i]); 
+        TnkrVis::IO::ImageFile::Write(fn, &bitImages[i]); 
     }*/
     
     /*
     render.AddContours(&contoursQuads);
     render.Run(&temp[0], &temp[2]); 
-    Viso::IO::ImageFile::Write("testTemp.png", &temp[2]); 
+    TnkrVis::IO::ImageFile::Write("testTemp.png", &temp[2]); 
     */
 }
 
@@ -152,7 +152,7 @@ ARUCODetector::~ARUCODetector()
     delete internal; 
 }
 
-void ARUCODetector::Run(ImageGPU* input, std::vector<Viso::Contour>* markerQuads, std::vector<int>* markerIds, bool retAllQuads)
+void ARUCODetector::Run(ImageGPU* input, std::vector<TnkrVis::Contour>* markerQuads, std::vector<int>* markerIds, bool retAllQuads)
 {
     internal->Run(input, markerQuads, markerIds, retAllQuads); 
 }

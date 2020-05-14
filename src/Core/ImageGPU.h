@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include "ImageType.h"
 
-namespace Viso
+namespace TnkrVis
 {
 	
 class Image;
@@ -14,7 +14,7 @@ class Image;
  *
  */
 
-class VISO_EXPORT ImageGPU
+class TINKERVISION_EXPORT ImageGPU
 {		
 	private:
         ImageType type; 

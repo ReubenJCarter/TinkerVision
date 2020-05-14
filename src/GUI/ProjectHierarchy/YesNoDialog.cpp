@@ -6,7 +6,7 @@
 #include <QCloseEvent>
 #include <QLabel>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace GUI
 {

@@ -5,12 +5,12 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
-namespace Viso
+namespace TnkrVis
 {
 namespace IO
 {
 
-class VISO_EXPORT ImageFile
+class TINKERVISION_EXPORT ImageFile
 {	
     public:
         static bool Write(std::string fileName, Image* image);

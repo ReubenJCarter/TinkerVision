@@ -5,7 +5,7 @@
 
 #include "DataTypes.h"
 
-namespace Viso
+namespace TnkrVis
 {
 
 class SerializedObject; 

@@ -1,19 +1,19 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include "../Core/VectorMath.h"
 
 #include <string>
 #include <vector>
 
-namespace Viso
+namespace TnkrVis
 {
 		
 /**
  */
 	
-class VISO_EXPORT SerializedObject
+class TINKERVISION_EXPORT SerializedObject
 {
     private: 
         class Internal;

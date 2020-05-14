@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include <functional> 
 
@@ -14,10 +14,10 @@
 
 #include <iostream>
 
-namespace Viso
+namespace TnkrVis
 {
 	
-class VISO_EXPORT ParallelFor
+class TINKERVISION_EXPORT ParallelFor
 {
     private: 
         std::vector<std::thread> workers; 

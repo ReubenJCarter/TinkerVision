@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include "../Core/ImageGPU.h"
 #include "../Core/Image.h"
@@ -8,12 +8,12 @@
 #include <string>
 #include <functional> 
 
-namespace Viso
+namespace TnkrVis
 {
 namespace IO
 {
 
-class VISO_EXPORT VideoHelper
+class TINKERVISION_EXPORT VideoHelper
 {
     private: 
         class Internal;
@@ -26,7 +26,7 @@ class VISO_EXPORT VideoHelper
         int GetFrameWidth();
         int GetFrameHeight(); 
         bool Close(); 
-        bool NextFrame(std::function<void(Viso::ImageGPU*, Viso::Image*)> useFrame); 
+        bool NextFrame(std::function<void(TnkrVis::ImageGPU*, TnkrVis::Image*)> useFrame); 
         bool IsOpen(); 
 };
 	

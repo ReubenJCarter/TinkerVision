@@ -9,7 +9,7 @@
 #include <vector>
 #include <math.h>
 
-namespace Viso
+namespace TnkrVis
 {
 
 namespace Process
@@ -117,13 +117,13 @@ class FixedRadiusNN::Internal
         void RadialOutlierRemoval(std::vector<Vec2>* vecs, float minRadius, float maxRadius, int minNsWithinBounds)
         {
             Build(vecs, maxRadius); 
-            std::vector<Viso::Vec2> newVerticies;
+            std::vector<TnkrVis::Vec2> newVerticies;
             newVerticies.reserve(vecs->size()); 
             float minRadius2 = minRadius*minRadius;
             float maxRadius2 = maxRadius*maxRadius;
             for(int i = 0; i < vecs->size(); i++)
             {
-                Viso::Vec2 vc = vecs->at(i);
+                TnkrVis::Vec2 vc = vecs->at(i);
                 std::vector<int> nns;
                 Test(vc, &nns); 
                 int validNCount = 0;
@@ -132,7 +132,7 @@ class FixedRadiusNN::Internal
                     if(nns[j] == i)
                         continue; 
 
-                    Viso::Vec2 n = vecs->at( nns[j] );
+                    TnkrVis::Vec2 n = vecs->at( nns[j] );
                     float dist = (n - vc).Length2(); 
                     
                     if(dist > minRadius2 && dist < maxRadius2)

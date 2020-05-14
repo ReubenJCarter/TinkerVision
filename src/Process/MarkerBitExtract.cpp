@@ -11,7 +11,7 @@
 #include <iostream>
 #include <map>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace Process
 {
@@ -65,12 +65,12 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
         //if not 4 verts continue
         if(verts.size() != 4)
         {
-            bitImages->at(c).Allocate(0, 0, Viso::ImageType::GRAYSCALE8);
+            bitImages->at(c).Allocate(0, 0, TnkrVis::ImageType::GRAYSCALE8);
             continue; 
         }
         else
         {
-            bitImages->at(c).Allocate(gridW, gridH, Viso::ImageType::GRAYSCALE8);
+            bitImages->at(c).Allocate(gridW, gridH, TnkrVis::ImageType::GRAYSCALE8);
         }
 
         //sort into lowest and highest two x values 

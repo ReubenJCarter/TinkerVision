@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include <vector>
 #include <map>
@@ -11,14 +11,14 @@
 
 #include "Core/SerializedObject.h"
 
-#define VISO_CLONEABLE_MACRO(TYPE)\
+#define TNKRVIS_CLONEABLE_MACRO(TYPE)\
 public:\
 TYPE* CloneType() { return new TYPE(); }\
 std::string GetTypeName() { return #TYPE;}\
 private:
 
 
-namespace Viso
+namespace TnkrVis
 {
 namespace ComputeGraph
 {

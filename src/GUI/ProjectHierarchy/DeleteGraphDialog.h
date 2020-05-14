@@ -7,7 +7,7 @@ class QHBoxLayout;
 class QPushButton; 
 class QCloseEvent; 
 
-namespace Viso
+namespace TnkrVis
 {
 namespace GUI
 {

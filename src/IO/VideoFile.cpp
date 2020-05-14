@@ -8,7 +8,7 @@
 #include <map>
 #include <vector>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace IO
 {
@@ -81,7 +81,7 @@ VideoFile::Internal::~Internal()
 bool VideoFile::Internal::Open(std::string fileSrc)
 {
     av_log_set_level(AV_LOG_FATAL );
-    std::cout << "Viso:VideoFile: Opeing: " << fileSrc << "\n"; 
+    std::cout << "TnkrVis:VideoFile: Opeing: " << fileSrc << "\n"; 
     char errCharBuf[10000];
 
     //open input file
@@ -91,17 +91,17 @@ bool VideoFile::Internal::Open(std::string fileSrc)
     if(ret != 0)
     {
         av_strerror(ret, errCharBuf, 10000); 
-        std::cout << "Viso:VideoFile:Open Input: " << ret << " " << errCharBuf <<  "\n";
+        std::cout << "TnkrVis:VideoFile:Open Input: " << ret << " " << errCharBuf <<  "\n";
         return false;
     }
     
-    std::cout << "Viso:VideoFile:OpenFile:Format is " << pFormatContext->iformat->long_name << " duration is " << pFormatContext->duration << "\n";
+    std::cout << "TnkrVis:VideoFile:OpenFile:Format is " << pFormatContext->iformat->long_name << " duration is " << pFormatContext->duration << "\n";
     frameDuration = pFormatContext->duration; 
     
     //for each stream in the container file
     for (int i = 0; i < pFormatContext->nb_streams; i++)
     {
-        std::cout << "Viso:VideoFile:OpenFile: stream found... " << "\n";
+        std::cout << "TnkrVis:VideoFile:OpenFile: stream found... " << "\n";
 
         //get the codec parameters
         AVCodecParameters* pLocalCodecParameters = pFormatContext->streams[i]->codecpar;
@@ -172,7 +172,7 @@ bool VideoFile::Internal::Open(std::string fileSrc)
     }
     isOpen = true; 
      
-    std::cout << "Viso:VideoFile:OpenFile:Done \n";
+    std::cout << "TnkrVis:VideoFile:OpenFile:Done \n";
     return true; 
 }
 
@@ -376,41 +376,41 @@ class VideoFile::Internal
 
 VideoFile::Internal::Internal()
 {
-    std::cerr << "Viso:VideoFile: Cannont use VideoFile as Viso has not been linked to Video library\n";
+    std::cerr << "TnkrVis:VideoFile: Cannont use VideoFile as TnkrVis has not been linked to Video library\n";
 }
 
 bool VideoFile::Internal::Open(std::string fileSrc)
 {
-    std::cerr << "Viso:VideoFile: Cannont use VideoFile as Viso has not been linked to Video library\n";
+    std::cerr << "TnkrVis:VideoFile: Cannont use VideoFile as TnkrVis has not been linked to Video library\n";
     return false; 
 }
 
 int VideoFile::Internal::GetStreamCount()
 {
-    std::cerr << "Viso:VideoFile: Cannont use VideoFile as Viso has not been linked to Video library\n";
+    std::cerr << "TnkrVis:VideoFile: Cannont use VideoFile as TnkrVis has not been linked to Video library\n";
     return 0;
 }
 
 bool VideoFile::Internal::Close()
 {
-    std::cerr << "Viso:VideoFile: Cannont use VideoFile as Viso has not been linked to Video library\n";
+    std::cerr << "TnkrVis:VideoFile: Cannont use VideoFile as TnkrVis has not been linked to Video library\n";
     return false; 
 }
 
 bool VideoFile::Internal::LoadNextFrame()
 {
-    std::cerr << "Viso:VideoFile: Cannont use VideoFile as Viso has not been linked to Video library\n";
+    std::cerr << "TnkrVis:VideoFile: Cannont use VideoFile as TnkrVis has not been linked to Video library\n";
     return false; 
 }
 
 void VideoFile::Internal::SwapBuffers()
 {
-    std::cerr << "Viso:VideoFile: Cannont use VideoFile as Viso has not been linked to Video library\n";
+    std::cerr << "TnkrVis:VideoFile: Cannont use VideoFile as TnkrVis has not been linked to Video library\n";
 }
 
 bool VideoFile::Internal::GetFrame(Image* frameImage, int streamInx)
 {
-    std::cerr << "Viso:VideoFile: Cannont use VideoFile as Viso has not been linked to Video library\n";
+    std::cerr << "TnkrVis:VideoFile: Cannont use VideoFile as TnkrVis has not been linked to Video library\n";
     return false; 
 }
 
@@ -426,13 +426,13 @@ int VideoFile::Internal::GetFrameHeight(int streamInx)
 
 bool VideoFile::Internal::AtEnd(int streamInx)
 {
-    std::cerr << "Viso:VideoFile: Cannont use VideoFile as Viso has not been linked to Video library\n";
+    std::cerr << "TnkrVis:VideoFile: Cannont use VideoFile as TnkrVis has not been linked to Video library\n";
     return true; 
 }
 
 bool VideoFile::Internal::IsOpen()
 {
-    std::cerr << "Viso:VideoFile: Cannont use VideoFile as Viso has not been linked to Video library\n";
+    std::cerr << "TnkrVis:VideoFile: Cannont use VideoFile as TnkrVis has not been linked to Video library\n";
     return false; 
 }
 

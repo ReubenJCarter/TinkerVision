@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace Viso
+namespace TnkrVis
 {
 	
 /**

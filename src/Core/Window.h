@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include "Image.h"
 #include "ImageGPU.h"
@@ -8,7 +8,7 @@
 
 #include <string>
 
-namespace Viso
+namespace TnkrVis
 {
 	
 /*
@@ -16,7 +16,7 @@ namespace Viso
  *
  */
 	
-class VISO_EXPORT Window
+class TINKERVISION_EXPORT Window
 {        
     private:
         class Internal;

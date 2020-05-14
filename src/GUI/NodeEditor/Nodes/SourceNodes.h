@@ -12,7 +12,7 @@
 #include <QDoubleValidator>
 #include <QIntValidator>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace GUI
 {

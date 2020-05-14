@@ -6,7 +6,7 @@
 #include "../../Core/ImageGPU.h"
 #include "../../Core/VectorMath.h"
 
-namespace Viso
+namespace TnkrVis
 {
 namespace ComputeGraph
 {
@@ -18,7 +18,7 @@ namespace Nodes
 
 class InputCopySource: public Node
 {
-    VISO_CLONEABLE_MACRO(InputCopySource)
+    TNKRVIS_CLONEABLE_MACRO(InputCopySource)
     protected:
         Node* copyNode; 
 
@@ -77,7 +77,7 @@ class BaseSource: public Node
 	
 class StringSource: public BaseSource<std::string>
 {        
-    VISO_CLONEABLE_MACRO(StringSource)
+    TNKRVIS_CLONEABLE_MACRO(StringSource)
     public:
         StringSource(): BaseSource<std::string>(StringData){}
         virtual void Serialize(SerializedObject* sObj){sObj->SetString("val", value);}
@@ -89,7 +89,7 @@ class StringSource: public BaseSource<std::string>
 	
 class IntSource: public BaseSource<int>
 {        
-    VISO_CLONEABLE_MACRO(IntSource)
+    TNKRVIS_CLONEABLE_MACRO(IntSource)
     public:
         IntSource(): BaseSource<int>(IntData){}
         virtual void Serialize(SerializedObject* sObj){sObj->SetInt("val", value);}
@@ -101,7 +101,7 @@ class IntSource: public BaseSource<int>
 	
 class FloatSource: public BaseSource<float>
 {   
-    VISO_CLONEABLE_MACRO(FloatSource)     
+    TNKRVIS_CLONEABLE_MACRO(FloatSource)     
     public:
         FloatSource(): BaseSource<float>(FloatData){}
         virtual void Serialize(SerializedObject* sObj){sObj->SetFloat("val", value);}
@@ -113,7 +113,7 @@ class FloatSource: public BaseSource<float>
 	
 class BoolSource: public BaseSource<bool>
 {        
-    VISO_CLONEABLE_MACRO(BoolSource)  
+    TNKRVIS_CLONEABLE_MACRO(BoolSource)  
 	public:
         BoolSource(): BaseSource<bool>(BoolData){}
         virtual void Serialize(SerializedObject* sObj){sObj->SetBool("val", value);}
@@ -125,7 +125,7 @@ class BoolSource: public BaseSource<bool>
 	
 class Vec2Source: public BaseSource<Vec2>
 {   
-    VISO_CLONEABLE_MACRO(Vec2Source)       
+    TNKRVIS_CLONEABLE_MACRO(Vec2Source)       
 	public:
         Vec2Source(): BaseSource<Vec2>(Vec2Data){}
         virtual void Serialize(SerializedObject* sObj){sObj->SetVec2("val", value);}
@@ -137,7 +137,7 @@ class Vec2Source: public BaseSource<Vec2>
 	
 class Vec3Source: public BaseSource<Vec3>
 {      
-    VISO_CLONEABLE_MACRO(Vec3Source)    
+    TNKRVIS_CLONEABLE_MACRO(Vec3Source)    
 	public:
         Vec3Source(): BaseSource<Vec3>(Vec3Data){}
         virtual void Serialize(SerializedObject* sObj){sObj->SetVec3("val", value);}
@@ -149,7 +149,7 @@ class Vec3Source: public BaseSource<Vec3>
 	
 class Vec4Source: public BaseSource<Vec4>
 {      
-    VISO_CLONEABLE_MACRO(Vec4Source)    
+    TNKRVIS_CLONEABLE_MACRO(Vec4Source)    
 	public:
         Vec4Source(): BaseSource<Vec4>(Vec4Data){}
         virtual void Serialize(SerializedObject* sObj){sObj->SetVec4("val", value);}
@@ -161,7 +161,7 @@ class Vec4Source: public BaseSource<Vec4>
 	
 class Mat2Source: public BaseSource<Mat2>
 {     
-    VISO_CLONEABLE_MACRO(Mat2Source)     
+    TNKRVIS_CLONEABLE_MACRO(Mat2Source)     
 	public:
         Mat2Source(): BaseSource<Mat2>(Mat2Data){}
         virtual void Serialize(SerializedObject* sObj){sObj->SetMat2("val", value);}
@@ -173,7 +173,7 @@ class Mat2Source: public BaseSource<Mat2>
 	
 class Mat3Source: public BaseSource<Mat3>
 {   
-    VISO_CLONEABLE_MACRO(Mat3Source)       
+    TNKRVIS_CLONEABLE_MACRO(Mat3Source)       
 	public:
         Mat3Source(): BaseSource<Mat3>(Mat3Data){}
         virtual void Serialize(SerializedObject* sObj){sObj->SetMat3("val", value);}
@@ -185,7 +185,7 @@ class Mat3Source: public BaseSource<Mat3>
 	
 class ColorSource: public BaseSource<Color>
 {    
-    VISO_CLONEABLE_MACRO(ColorSource)      
+    TNKRVIS_CLONEABLE_MACRO(ColorSource)      
 	public:
         ColorSource(): BaseSource<Color>(ColorData){}
         virtual void Serialize(SerializedObject* sObj){sObj->SetColor("val", value);}
@@ -197,7 +197,7 @@ class ColorSource: public BaseSource<Color>
 	
 class ImageTypeSource: public BaseSource<ImageType>
 {        
-    VISO_CLONEABLE_MACRO(ImageTypeSource)  
+    TNKRVIS_CLONEABLE_MACRO(ImageTypeSource)  
 	public:
         ImageTypeSource(): BaseSource<ImageType>(ImageTypeData){}
         virtual void Serialize(SerializedObject* sObj){sObj->SetString("val", ImageTypehelper::ImageTypeToString(value) );}
@@ -209,7 +209,7 @@ class ImageTypeSource: public BaseSource<ImageType>
 	
 class ImageSource: public BaseSource<Image>
 {   
-    VISO_CLONEABLE_MACRO(ImageSource)       
+    TNKRVIS_CLONEABLE_MACRO(ImageSource)       
 	public:
         ImageSource(): BaseSource<Image>(ImageData){}
 };
@@ -219,7 +219,7 @@ class ImageSource: public BaseSource<Image>
 	
 class ImageGPUSource: public BaseSource<ImageGPU>
 {       
-    VISO_CLONEABLE_MACRO(ImageGPUSource)   
+    TNKRVIS_CLONEABLE_MACRO(ImageGPUSource)   
 	public:
         ImageGPUSource(): BaseSource<ImageGPU>(ImageGPUData){}
 };

@@ -5,7 +5,7 @@
 class QMenu;
 class QAction; 
 
-namespace Viso
+namespace TnkrVis
 {
 namespace GUI
 {

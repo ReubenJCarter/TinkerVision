@@ -9,7 +9,7 @@
 #include <iostream>
 #include <map>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace Process
 {
@@ -144,7 +144,7 @@ void Blend::Internal::Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* outp
 
     if(!inputSrc->IsSameDimensions(inputDst))
     {
-        std::cout << "Viso:Blend:Run:inputSrc is not the same dimentions as inputDst\n";
+        std::cout << "TnkrVis:Blend:Run:inputSrc is not the same dimentions as inputDst\n";
         return; 
     }
 
@@ -163,7 +163,7 @@ void Blend::Internal::Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* outp
         }
         else
         {
-            std::cout << "Viso:Blend:Run:blendMask is not the same dimentions as input\n";
+            std::cout << "TnkrVis:Blend:Run:blendMask is not the same dimentions as input\n";
             return; 
         }
     }
@@ -187,7 +187,7 @@ void Blend::Internal::Run(Image* inputSrc, Image* inputDst, Image* output, Image
 
     if(!inputSrc->IsSameDimensions(inputDst))
     {
-        std::cout << "Viso:Blend:inputSrc is not the same dimentions as inputDst\n";
+        std::cout << "TnkrVis:Blend:inputSrc is not the same dimentions as inputDst\n";
         return; 
     }
 
@@ -202,7 +202,7 @@ void Blend::Internal::Run(Image* inputSrc, Image* inputDst, Image* output, Image
         }
         else
         {
-            std::cout << "Viso:Blend:Run:blendMask is not the same dimentions as input\n";
+            std::cout << "TnkrVis:Blend:Run:blendMask is not the same dimentions as input\n";
             return; 
         }
     }

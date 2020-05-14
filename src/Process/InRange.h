@@ -1,18 +1,18 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 #include "../Core/VectorMath.h"
 
-namespace Viso
+namespace TnkrVis
 {
 namespace Process
 {
 	
-class VISO_EXPORT InRange
+class TINKERVISION_EXPORT InRange
 {
     private: 
         class Internal;

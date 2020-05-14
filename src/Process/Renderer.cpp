@@ -9,7 +9,7 @@
 #include <vector>
 #include <random>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace Process
 {

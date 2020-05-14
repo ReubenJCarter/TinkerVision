@@ -19,7 +19,7 @@
 #include <QStringListModel>
 #include <QStringList>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace GUI
 {

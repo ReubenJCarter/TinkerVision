@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-namespace Viso 
+namespace TnkrVis 
 {
 	
 ImageGPU::ImageGPU()
@@ -46,7 +46,7 @@ void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
     if(w == 0 || h == 0)
     {
         glBindTexture(GL_TEXTURE_2D, 0);
-        std::cerr << "Viso:ImageGPU:Allocate:w=0||h=0\n"; 
+        std::cerr << "TnkrVis:ImageGPU:Allocate:w=0||h=0\n"; 
         return; 
     }
 

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include <string>
 
-namespace Viso
+namespace TnkrVis
 {
 	
-enum VISO_EXPORT ImageType {
+enum TINKERVISION_EXPORT ImageType {
     GRAYSCALE8, 
     GRAYSCALE16, 
     GRAYSCALE32F, 

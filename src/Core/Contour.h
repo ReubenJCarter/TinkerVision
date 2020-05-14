@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include <vector>
 #include "VectorMath.h"
 #include "BoundingBox.h"
 
-namespace Viso
+namespace TnkrVis
 {
 	
-class VISO_EXPORT Contour
+class TINKERVISION_EXPORT Contour
 {
         public:
                 Contour* parent; 

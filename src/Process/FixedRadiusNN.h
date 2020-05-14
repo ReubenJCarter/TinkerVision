@@ -1,19 +1,19 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include "../Core/VectorMath.h"
 
 #include <vector>
 #include <algorithm>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace Process
 {
 
 
-class VISO_EXPORT FixedRadiusNN
+class TINKERVISION_EXPORT FixedRadiusNN
 {
     private:
         class Internal;

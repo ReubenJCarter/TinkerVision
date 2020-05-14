@@ -15,14 +15,14 @@
 #include <iostream>
 #include <fstream>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace GUI
 {
 	
 MainWindow::MainWindow()
 {
-	setWindowTitle("Viso GUI");
+	setWindowTitle("TnkrVis GUI");
 	
 	//Set the Top bar 
 	fileMenu = menuBar()->addMenu("File");

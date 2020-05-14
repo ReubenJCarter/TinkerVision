@@ -13,7 +13,7 @@
 #include "../../Process/BrightnessContrast.h"
 #include "../../Process/CameraDistortion.h"
 
-namespace Viso
+namespace TnkrVis
 {
 namespace ComputeGraph
 {
@@ -105,7 +105,7 @@ class BaseProcess1In1Out: public Node
 
 class AdaptiveThresholdNode: public BaseProcess1In1Out<Process::AdaptiveThreshold>
 {
-    VISO_CLONEABLE_MACRO(AdaptiveThresholdNode) 
+    TNKRVIS_CLONEABLE_MACRO(AdaptiveThresholdNode) 
     public:
         void SetParams() 
         {
@@ -116,12 +116,12 @@ class AdaptiveThresholdNode: public BaseProcess1In1Out<Process::AdaptiveThreshol
 
 class ApproxDistanceTransformNode: public BaseProcess1In1OutCPUOnly<Process::ApproxDistanceTransform>
 {
-    VISO_CLONEABLE_MACRO(ApproxDistanceTransformNode) 
+    TNKRVIS_CLONEABLE_MACRO(ApproxDistanceTransformNode) 
 }; 
 
 class AverageFilterNode: public BaseProcess1In1Out<Process::AverageFilter>
 {
-    VISO_CLONEABLE_MACRO(AverageFilterNode) 
+    TNKRVIS_CLONEABLE_MACRO(AverageFilterNode) 
     public:
         void SetParams() 
         {
@@ -131,7 +131,7 @@ class AverageFilterNode: public BaseProcess1In1Out<Process::AverageFilter>
 
 class BrightnessContrastNode: public BaseProcess1In1Out<Process::BrightnessContrast>
 {
-    VISO_CLONEABLE_MACRO(BrightnessContrastNode) 
+    TNKRVIS_CLONEABLE_MACRO(BrightnessContrastNode) 
     public:
         void SetParams() 
         {
@@ -142,7 +142,7 @@ class BrightnessContrastNode: public BaseProcess1In1Out<Process::BrightnessContr
 
 class CameraDistortionNode: public BaseProcess1In1Out<Process::CameraDistortion>
 {
-    VISO_CLONEABLE_MACRO(CameraDistortionNode) 
+    TNKRVIS_CLONEABLE_MACRO(CameraDistortionNode) 
     public:
         void SetParams() 
         {

@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-namespace Viso 
+namespace TnkrVis 
 {
 
 //Aligment issue

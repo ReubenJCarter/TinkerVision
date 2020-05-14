@@ -5,7 +5,7 @@
 #include <thread>
 #include <atomic>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace IO
 {
@@ -18,8 +18,8 @@ class VideoHelper::Internal
         std::atomic<bool> getFrameDataRunning;
         std::atomic<bool> running;
 
-        Viso::Image image[2]; 
-        Viso::ImageGPU imageGPU;
+        TnkrVis::Image image[2]; 
+        TnkrVis::ImageGPU imageGPU;
         int pingpong; 
 
     public:
@@ -29,7 +29,7 @@ class VideoHelper::Internal
         int GetFrameWidth();
         int GetFrameHeight(); 
         bool Close(); 
-        bool NextFrame(std::function<void(Viso::ImageGPU*, Viso::Image*)> useFrame);
+        bool NextFrame(std::function<void(TnkrVis::ImageGPU*, TnkrVis::Image*)> useFrame);
         bool IsOpen(); 
 };
 
@@ -114,7 +114,7 @@ bool VideoHelper::Internal::Close()
     return false; 
 }
 
-bool VideoHelper::Internal::NextFrame(std::function<void(Viso::ImageGPU*, Viso::Image*)> useFrame)
+bool VideoHelper::Internal::NextFrame(std::function<void(TnkrVis::ImageGPU*, TnkrVis::Image*)> useFrame)
 {
     if(!running)
     {
@@ -176,7 +176,7 @@ bool VideoHelper::Close()
     return internal->Close(); 
 }
 
-bool VideoHelper::NextFrame(std::function<void(Viso::ImageGPU*, Viso::Image*)> useFrame)
+bool VideoHelper::NextFrame(std::function<void(TnkrVis::ImageGPU*, TnkrVis::Image*)> useFrame)
 {
     return internal->NextFrame(useFrame); 
 }

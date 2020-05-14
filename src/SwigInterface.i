@@ -64,9 +64,9 @@
 
 %}
 
-//put things into packages correctly and put the JNI class into the Viso package
+//put things into packages correctly and put the JNI class into the TnkrVis package
 %feature(nspace);//seems to generate nice namespace packages in java but also break everything when building 
-%pragma(java) jniclasspackage="Viso";
+%pragma(java) jniclasspackage="TnkrVis";
 
 
 
@@ -81,14 +81,14 @@ SWIG_JAVABODY_TYPEWRAPPER(public, public, public, SWIGTYPE)
 
 //solves problems of not finding certain classes when using multiple packages
 //http://swig.10945.n7.nabble.com/Using-multiple-modules-and-packages-in-Java-td12215.html
-%typemap(javaimports) SWIGTYPE, SWIGTYPE * "import VisoJava.*;"
-%pragma(java) jniclassimports="import VisoJava.*;"
-%pragma(java) moduleimports="import VisoJava.*;"
+%typemap(javaimports) SWIGTYPE, SWIGTYPE * "import TnkrVisJava.*;"
+%pragma(java) jniclassimports="import TnkrVisJava.*;"
+%pragma(java) moduleimports="import TnkrVisJava.*;"
 
 
 
 
-#define VISO_EXPORT __declspec(dllimport)
+#define TINKERVISION_EXPORT __declspec(dllimport)
 
 %include "windows.i"
 %include "std_string.i" 
@@ -97,11 +97,11 @@ SWIG_JAVABODY_TYPEWRAPPER(public, public, public, SWIGTYPE)
 %include "std_vector.i"
 namespace std{
     %template (IntVector) vector<int>;
-    %template (ContourVector) vector<Viso::Contour>;
-    %template (Vec2Vector) vector<Viso::Vec2>;
-    %template (Vec3Vector) vector<Viso::Vec3>;
-    %template (ImageVector) vector<Viso::Image>; 
-    %template (CameraPoseVector) vector<Viso::CameraPose>; 
+    %template (ContourVector) vector<TnkrVis::Contour>;
+    %template (Vec2Vector) vector<TnkrVis::Vec2>;
+    %template (Vec3Vector) vector<TnkrVis::Vec3>;
+    %template (ImageVector) vector<TnkrVis::Image>; 
+    %template (CameraPoseVector) vector<TnkrVis::CameraPose>; 
 }
 
 %include "Core/VectorMath.h"

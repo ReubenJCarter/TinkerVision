@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace GUI
 {

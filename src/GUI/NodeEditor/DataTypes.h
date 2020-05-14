@@ -2,7 +2,7 @@
 
 #include <nodes/NodeData>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace GUI
 {

@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
-namespace Viso
+namespace TnkrVis
 {
 namespace Process
 {
 	
-class VISO_EXPORT GaussianBlur
+class TINKERVISION_EXPORT GaussianBlur
 {
     private: 
         class Internal;

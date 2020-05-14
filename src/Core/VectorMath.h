@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-namespace Viso
+namespace TnkrVis
 {
 
 class Color

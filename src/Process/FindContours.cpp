@@ -9,7 +9,7 @@
 #include <fstream>
 #include <functional>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace Process
 {

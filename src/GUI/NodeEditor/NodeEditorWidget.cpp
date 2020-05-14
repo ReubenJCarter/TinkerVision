@@ -28,7 +28,7 @@
 #include "ComputeGraph/Node.h"
 
 
-namespace Viso
+namespace TnkrVis
 {
 namespace GUI
 {

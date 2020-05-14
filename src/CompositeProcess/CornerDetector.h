@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
-namespace Viso
+namespace TnkrVis
 {
 namespace CompositeProcess
 {
 	
-class VISO_EXPORT CornerDetector
+class TINKERVISION_EXPORT CornerDetector
 {
     private: 
         class Internal;

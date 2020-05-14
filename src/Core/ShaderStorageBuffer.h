@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Viso
+namespace TnkrVis
 {
 
 class ShaderStorageBuffer

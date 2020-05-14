@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
 #include "../Core/ImageType.h"
 #include "../Core/Image.h"
@@ -8,12 +8,12 @@
 
 #include "../Core/VectorMath.h"
 
-namespace Viso
+namespace TnkrVis
 {
 namespace Process
 {
 	
-class VISO_EXPORT HighLowThreshold
+class TINKERVISION_EXPORT HighLowThreshold
 {
     private: 
         class Internal;

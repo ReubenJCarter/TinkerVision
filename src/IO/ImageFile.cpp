@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-namespace Viso 
+namespace TnkrVis 
 {
 namespace IO
 {
@@ -86,7 +86,7 @@ bool ImageFile::Write(std::string fileName, Image* image)
 
     if(dib == NULL)
     {
-        std::cerr << "Viso:WriteImageFile: Failed to create image:" << fileName << "\n";
+        std::cerr << "TnkrVis:WriteImageFile: Failed to create image:" << fileName << "\n";
         FreeImage_Unload(dib);
         return false;
     }
@@ -97,7 +97,7 @@ bool ImageFile::Write(std::string fileName, Image* image)
 
 	if(!dib)
     {
-        std::cerr << "Viso:WriteImageFile: invalid bitmap:" << fileName << "\n";
+        std::cerr << "TnkrVis:WriteImageFile: invalid bitmap:" << fileName << "\n";
         return false; 
     } 
 
@@ -105,7 +105,7 @@ bool ImageFile::Write(std::string fileName, Image* image)
     fif = FreeImage_GetFIFFromFilename(fileName.c_str());
     if(fif == FIF_UNKNOWN ) 
     {
-        std::cerr << "Viso:WriteImageFile: Unknown file type:" << fileName << "\n";
+        std::cerr << "TnkrVis:WriteImageFile: Unknown file type:" << fileName << "\n";
         return false; 
     }
 /*
@@ -114,7 +114,7 @@ bool ImageFile::Write(std::string fileName, Image* image)
     if(!FreeImage_FIFSupportsWriting(fif) || !FreeImage_FIFSupportsExportBPP(fif, bpp)) 
     {
         
-        std::cerr << "Viso:WriteImageFile: can't write to the file type:" << fileName << "  ";
+        std::cerr << "TnkrVis:WriteImageFile: can't write to the file type:" << fileName << "  ";
         std::cerr << "bits:" << bits << " bpp:" << bpp << " fif:" << fif << "\n"; 
         return ;
     }*/
@@ -150,13 +150,13 @@ bool ImageFile::Read(std::string fileName, Image* image)
     //check if the file is supported 
     if((fif == FIF_UNKNOWN)) 
     {
-        std::cerr << "Viso:ReadImageFile: LoadFileGeneric Unknown file type:" << fileName << "\n";
+        std::cerr << "TnkrVis:ReadImageFile: LoadFileGeneric Unknown file type:" << fileName << "\n";
         return false; 
     }
 
     if(!FreeImage_FIFSupportsReading(fif))
     {
-        std::cerr << "Viso:ReadImageFile: LoadFileGeneric Unknown file type:" << fileName << "\n";
+        std::cerr << "TnkrVis:ReadImageFile: LoadFileGeneric Unknown file type:" << fileName << "\n";
         return false; 
     }
 
@@ -164,7 +164,7 @@ bool ImageFile::Read(std::string fileName, Image* image)
     FIBITMAP* dib = FreeImage_Load(fif, fileName.c_str(), flag);
     if(dib == NULL)
     {
-        std::cerr << "Viso:ReadImageFile: Failed to load image:" << fileName << "\n";
+        std::cerr << "TnkrVis:ReadImageFile: Failed to load image:" << fileName << "\n";
         return false;
     }
 
@@ -209,7 +209,7 @@ bool ImageFile::Read(std::string fileName, Image* image)
     
     if(!imageTypeFound)
     {
-        std::cerr << "Viso:ReadImageFile: Failed to find correct type for image:Failed to load image:" << fileName << "\n";
+        std::cerr << "TnkrVis:ReadImageFile: Failed to find correct type for image:Failed to load image:" << fileName << "\n";
         return false;
     }
     image->Allocate(width, height, imageType); 

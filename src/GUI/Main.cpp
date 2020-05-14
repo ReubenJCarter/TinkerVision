@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 	}
 
 	//create main window
-	Viso::GUI::MainWindow mainWindow;
+	TnkrVis::GUI::MainWindow mainWindow;
 	
 	
     return app.exec();

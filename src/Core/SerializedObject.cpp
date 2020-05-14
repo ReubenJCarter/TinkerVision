@@ -7,7 +7,7 @@
 
 using namespace rapidjson;
 
-namespace Viso
+namespace TnkrVis
 {
 
 class SerializedObject::Internal

@@ -12,7 +12,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
 
-namespace Viso
+namespace TnkrVis
 {
 
 Contour::Contour()
@@ -26,7 +26,7 @@ void Contour::ContoursToFile(std::string fileName, std::vector<Contour>* contour
     ofstream.open(fileName); 
     if(!ofstream.is_open())
     {
-        std::cerr << "Viso:Contour::ContoursToFile:Could not open file for writting:" << fileName << "\n";
+        std::cerr << "TnkrVis:Contour::ContoursToFile:Could not open file for writting:" << fileName << "\n";
         return; 
     }
 

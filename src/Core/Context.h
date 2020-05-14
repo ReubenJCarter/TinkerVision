@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Viso_export.h"
+#include "TinkerVision_export.h"
 
-namespace Viso
+namespace TnkrVis
 {
 		
 /**
@@ -10,7 +10,7 @@ namespace Viso
  *This class attempts to start an OpenGL 4.3 Core profile context. 
  */
 	
-class VISO_EXPORT Context
+class TINKERVISION_EXPORT Context
 {        
     private:
         class ContextInternal; /**Forward declaration of internal Implementation*/

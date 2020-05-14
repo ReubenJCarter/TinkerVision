@@ -65,10 +65,10 @@
 int main(int argc, char *argv[])
 {
 	std::string testFileName = "aruco.png"; 
-	Viso::Context context; 
+	TnkrVis::Context context; 
 	context.MakeCurrent(); 
 
-	Viso::ComputeGraph::RegisterNodes(); 
+	TnkrVis::ComputeGraph::RegisterNodes(); 
 
 	if(argc == 2)
 	{
@@ -76,21 +76,21 @@ int main(int argc, char *argv[])
 	
 		std::cout << "Running Test\n"; 
 
-		Viso::Image image1; 
-		Viso::Image image2; 
-		Viso::Image image3; 
+		TnkrVis::Image image1; 
+		TnkrVis::Image image2; 
+		TnkrVis::Image image3; 
 
-		Viso::ImageGPU imageGPU1;
-		Viso::ImageGPU imageGPU2;
-		Viso::ImageGPU imageGPU3;
-		Viso::ImageGPU imageGPU4;
+		TnkrVis::ImageGPU imageGPU1;
+		TnkrVis::ImageGPU imageGPU2;
+		TnkrVis::ImageGPU imageGPU3;
+		TnkrVis::ImageGPU imageGPU4;
 
 		//
 		//Pixel access
 		//
 		
 
-		image1.Allocate(256, 256, Viso::ImageType::RGBA8);
+		image1.Allocate(256, 256, TnkrVis::ImageType::RGBA8);
 		for(int i = 0; i < 256; i++)
 		{
 			for(int j = 0; j < 256; j++)
@@ -102,179 +102,179 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		Viso::ImageGPU imageGPU;
+		TnkrVis::ImageGPU imageGPU;
 		imageGPU.Copy(&image1); 
 		image1.Copy(&imageGPU); 
-		Viso::IO::ImageFile::Write("image0Test.png", &image1);
+		TnkrVis::IO::ImageFile::Write("image0Test.png", &image1);
 
 
 		//
 		//Processes
 		//
 
-		Viso::IO::ImageFile::Read(testFileName, &image1);
+		TnkrVis::IO::ImageFile::Read(testFileName, &image1);
 		imageGPU1.Copy(&image1);
 
 		//Birghtness Contrast
 		std::cout << "Brightness Contrast\n"; 
-		Viso::Process::BrightnessContrast brightnessContrast; 
+		TnkrVis::Process::BrightnessContrast brightnessContrast; 
 		brightnessContrast.SetBrightness(-1); 
 		brightnessContrast.SetContrast(3); 
 		brightnessContrast.Run(&imageGPU1, &imageGPU2);
 		
 		
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image1_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image1_1Test.png", &image2);
 
 		brightnessContrast.Run(&image1, &image2); 
 
-		Viso::IO::ImageFile::Write("image1_2Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image1_2Test.png", &image2);
 
 		//Threshold
 		std::cout << "Threshold\n"; 
-		Viso::Process::Threshold threshold; 
+		TnkrVis::Process::Threshold threshold; 
 		threshold.SetThreshold(0.5); 
 		threshold.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image2Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image2Test.png", &image2);
 
 		//Thin
 		std::cout << "Thin\n"; 
-		Viso::Process::Thinning thinning; 
+		TnkrVis::Process::Thinning thinning; 
 		//thinning.Run(&image2, &image3); 
-		//Viso::ImageFile::Write("image2_1Test.png", &image3);
+		//TnkrVis::ImageFile::Write("image2_1Test.png", &image3);
 
 		//GrayScale
 		std::cout << "Grayscale\n"; 
-		Viso::Process::GrayScale grayScale; 
+		TnkrVis::Process::GrayScale grayScale; 
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image3Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image3Test.png", &image2);
 
 		//Aprox Distance Transform
 		std::cout << "Aprox Distance Transform\n"; 
-		Viso::Process::InRange inRange; 
-		inRange.SetLowThreshold(Viso::Vec3(0.5, 0.0, 0.0));
-		inRange.SetHighThreshold(Viso::Vec3(1.0, 1.0, 1.0) ); 
+		TnkrVis::Process::InRange inRange; 
+		inRange.SetLowThreshold(TnkrVis::Vec3(0.5, 0.0, 0.0));
+		inRange.SetHighThreshold(TnkrVis::Vec3(1.0, 1.0, 1.0) ); 
 		inRange.Run(&imageGPU2, &imageGPU3); 
-		Viso::Process::Invert inv;
+		TnkrVis::Process::Invert inv;
 		inv.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image3_1Test.png", &image2);
-		Viso::Process::ApproxDistanceTransform adt;
+		TnkrVis::IO::ImageFile::Write("image3_1Test.png", &image2);
+		TnkrVis::Process::ApproxDistanceTransform adt;
 		adt.Run(&image2, &image3); 
-		Viso::Process::Normalize nrm;
+		TnkrVis::Process::Normalize nrm;
 		nrm.Run(&image3, &image2); 
-		Viso::IO::ImageFile::Write("image3_2Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image3_2Test.png", &image2);
 
 		//LocalMaxima
 		std::cout << "Local Maxima\n"; 
-		Viso::Process::GaussianBlur gb; 
+		TnkrVis::Process::GaussianBlur gb; 
 		gb.SetSigma(3); 
 		imageGPU2.Copy(&image2); 
 		gb.Run(&imageGPU2, &imageGPU3); 
 		image2.Copy(&imageGPU3); 
-		Viso::IO::ImageFile::Write("image3_3Test.png", &image2);
-		Viso::Process::LocalMaxima localMax; 
+		TnkrVis::IO::ImageFile::Write("image3_3Test.png", &image2);
+		TnkrVis::Process::LocalMaxima localMax; 
 		localMax.Run(&image2, &image3);
-		Viso::IO::ImageFile::Write("image3_4Test.png", &image3);
+		TnkrVis::IO::ImageFile::Write("image3_4Test.png", &image3);
 
 		//RGBToHSV vv HSVToRGB
 		std::cout << "RGBToHSV vv HSVToRGB\n"; 
-		Viso::Process::RGBToHSV rgbtohsv; 
+		TnkrVis::Process::RGBToHSV rgbtohsv; 
 		rgbtohsv.Run(&imageGPU1, &imageGPU2); 
-		Viso::Process::HSVToRGB hsvtorgb; 
+		TnkrVis::Process::HSVToRGB hsvtorgb; 
 		hsvtorgb.Run(&imageGPU2, &imageGPU3); 
 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image4_0Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image4_0Test.png", &image2);
 		image3.Copy(&imageGPU3);
-		Viso::IO::ImageFile::Write("image4_1Test.png", &image3);
+		TnkrVis::IO::ImageFile::Write("image4_1Test.png", &image3);
 
 		//Adaptive Threshold
 		std::cout << "Adaptive THreshold\n"; 
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 		
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image5_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image5_1Test.png", &image2);
 		
-		Viso::Process::AdaptiveThreshold adaptiveThreshold; 
+		TnkrVis::Process::AdaptiveThreshold adaptiveThreshold; 
 		adaptiveThreshold.SetThreshold(0.02); 
 		adaptiveThreshold.SetSize(7); 
 		adaptiveThreshold.Run(&imageGPU2, &imageGPU3); 
 
 		image3.Copy(&imageGPU3);
-		Viso::IO::ImageFile::Write("image5_2Test.png", &image3);
+		TnkrVis::IO::ImageFile::Write("image5_2Test.png", &image3);
 
 		adaptiveThreshold.Run(&image2, &image3);
-		Viso::IO::ImageFile::Write("image5_3Test.png", &image3);
+		TnkrVis::IO::ImageFile::Write("image5_3Test.png", &image3);
 
 		//Median Filter
 		std::cout << "Median Filter\n"; 
-		Viso::Process::MedianFilter medianFilter; 
+		TnkrVis::Process::MedianFilter medianFilter; 
 		medianFilter.SetSize(3); 
 		medianFilter.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image6_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image6_1Test.png", &image2);
 
 		medianFilter.SetSize(5); 
 		medianFilter.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image6_2Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image6_2Test.png", &image2);
 
 		//Gaussian Blur
 		std::cout << "Guassian Blur\n"; 
-		Viso::Process::GaussianBlur gaussianBlur; 
+		TnkrVis::Process::GaussianBlur gaussianBlur; 
 		gaussianBlur.SetSigma(10); 
 		gaussianBlur.Run(&imageGPU1, &imageGPU2); 
 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image7Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image7Test.png", &image2);
 
 		//Sobel
 		std::cout << "Sobel\n"; 
-		Viso::Process::Sobel sobel; 
+		TnkrVis::Process::Sobel sobel; 
 		sobel.Run(&imageGPU1, &imageGPU2); 
 
-		imageGPU3.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Viso::ImageType::GRAYSCALE8); 
-		Viso::Process::ChannelDemux demux; 
+		imageGPU3.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), TnkrVis::ImageType::GRAYSCALE8); 
+		TnkrVis::Process::ChannelDemux demux; 
 		demux.SetChannel(2);
 		demux.Run(&imageGPU2, &imageGPU3);
 
 		image2.Copy(&imageGPU3);
-		Viso::IO::ImageFile::Write("image8_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image8_1Test.png", &image2);
 
 		//NMS
 		imageGPU3.Allocate(imageGPU2.GetWidth(), imageGPU2.GetHeight(), imageGPU2.GetType()); 
 		std::cout << "NonMaximumEdgeSuppression\n"; 
-		Viso::Process::NonMaximumEdgeSuppression nms; 
+		TnkrVis::Process::NonMaximumEdgeSuppression nms; 
 		nms.Run(&imageGPU2, &imageGPU3); 
 
-		imageGPU2.Allocate(imageGPU2.GetWidth(), imageGPU2.GetHeight(), Viso::ImageType::GRAYSCALE8); 
+		imageGPU2.Allocate(imageGPU2.GetWidth(), imageGPU2.GetHeight(), TnkrVis::ImageType::GRAYSCALE8); 
 		demux.SetChannel(2);
 		demux.Run(&imageGPU3, &imageGPU2);
 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image8_2Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image8_2Test.png", &image2);
 
 		//Renderer
 		std::cout << "Renderer\n"; 
-		Viso::Process::Renderer renderer; 
-		renderer.AddCircle(Viso::Vec2(100, 100), 20);
-		renderer.AddCircle(Viso::Vec2(150, 100), 10, Viso::Color(1, 0, 0, 1), false, 1); 
-		std::vector<Viso::Vec2> pl = {{100, 100}, {100, 140}, {300, 300}, {100, 300}};
-		renderer.AddPolyLine(&pl, Viso::Color(0, 0, 1, 1)); 
+		TnkrVis::Process::Renderer renderer; 
+		renderer.AddCircle(TnkrVis::Vec2(100, 100), 20);
+		renderer.AddCircle(TnkrVis::Vec2(150, 100), 10, TnkrVis::Color(1, 0, 0, 1), false, 1); 
+		std::vector<TnkrVis::Vec2> pl = {{100, 100}, {100, 140}, {300, 300}, {100, 300}};
+		renderer.AddPolyLine(&pl, TnkrVis::Color(0, 0, 1, 1)); 
 		renderer.Run(&image1, &image2); 
 		
-		Viso::IO::ImageFile::Write("image9Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image9Test.png", &image2);
 
 		//Contour Simplify Test
 		std::cout << "Contour Simplify Test\n"; 
-		Viso::Contour c;
+		TnkrVis::Contour c;
 		c.verticies = {
 					{11, 16}, {11, 17}, {11, 18}, {11, 19}, {20, 20}, {21, 20},
 
@@ -301,49 +301,49 @@ int main(int argc, char *argv[])
 					{11, 17}
 					};
 
-		std::vector<Viso::Contour> cs;
-		std::vector<Viso::Contour> cs2;
-		std::vector<Viso::Contour> cs3;
+		std::vector<TnkrVis::Contour> cs;
+		std::vector<TnkrVis::Contour> cs2;
+		std::vector<TnkrVis::Contour> cs3;
 		cs.push_back(c);
-		Viso::Contour::ContoursSimplify(&cs, &cs2, 4);
+		TnkrVis::Contour::ContoursSimplify(&cs, &cs2, 4);
 
 		cs3.resize(cs2.size());
 		for(int i = 0; i < cs2.size(); i++)
 		{ 
 			auto c = &(cs2[i]); 
 			std::vector<int> cInx;
-			Viso::Contour::FindConvexHull(c, &cInx);
+			TnkrVis::Contour::FindConvexHull(c, &cInx);
 			for(int j = 0; j < cInx.size(); j++)
 			{
 				cs3[i].verticies.push_back(c->verticies[cInx[j]]); 
 			}
 		}
 
-		Viso::BoundingBox bb = Viso::Contour::FindBoundingBox(&c); 
+		TnkrVis::BoundingBox bb = TnkrVis::Contour::FindBoundingBox(&c); 
 
 		renderer.Clear(); 
 		renderer.AddContours(&cs, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Viso::IO::ImageFile::Write("image11_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image11_1Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&cs2, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Viso::IO::ImageFile::Write("image11_2Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image11_2Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&cs3, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Viso::IO::ImageFile::Write("image11_3Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image11_3Test.png", &image2);
 
 		renderer.Clear(); 
-		renderer.AddBoundingBox(&bb, Viso::Color(1, 0, 1, 1)); 
+		renderer.AddBoundingBox(&bb, TnkrVis::Color(1, 0, 1, 1)); 
 		renderer.Run(&image1, &image2); 
-		Viso::IO::ImageFile::Write("image11_4Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image11_4Test.png", &image2);
 
 		//Find Contours
 		std::cout << "Find Contours\n"; 
-		Viso::Process::FindContours findContours; 
+		TnkrVis::Process::FindContours findContours; 
 		imageGPU2.AllocateLike(&imageGPU1);
 		imageGPU3.AllocateLike(&imageGPU1);
 		imageGPU4.AllocateLike(&imageGPU1);
@@ -351,191 +351,191 @@ int main(int argc, char *argv[])
 		adaptiveThreshold.SetThreshold(0.02); 
 		adaptiveThreshold.SetSize(7); 
 		adaptiveThreshold.Run(&imageGPU2, &imageGPU3); 
-		Viso::Process::Invert invert;
+		TnkrVis::Process::Invert invert;
 		invert.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image10_1Test.png", &image2);
-		std::vector<Viso::Contour> contours; 
+		TnkrVis::IO::ImageFile::Write("image10_1Test.png", &image2);
+		std::vector<TnkrVis::Contour> contours; 
 		findContours.Run(&image2, &image3, &contours); 
-		Viso::IO::ImageFile::Write("image10_2Test.png", &image3);
+		TnkrVis::IO::ImageFile::Write("image10_2Test.png", &image3);
 		
-		std::vector<Viso::Contour> contoursFiltered; 
-		Viso::Contour::ContoursVertCountFilter(&contours, &contoursFiltered, 100);
-		std::vector<Viso::Contour> contoursSimplified; 
-		Viso::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 3);
-		std::vector<Viso::Contour> contoursMerged; 
-		Viso::Contour::ContoursMergeVerticies(&contoursSimplified, &contoursMerged, 4);
-		Viso::Contour::ContoursSimplify(&contoursMerged, &contoursSimplified, 5);
-		std::vector<Viso::Contour> contoursQuads; 
-		Viso::Contour::ContoursVertCountFilter(&contoursSimplified, &contoursQuads, 4, 5);
+		std::vector<TnkrVis::Contour> contoursFiltered; 
+		TnkrVis::Contour::ContoursVertCountFilter(&contours, &contoursFiltered, 100);
+		std::vector<TnkrVis::Contour> contoursSimplified; 
+		TnkrVis::Contour::ContoursSimplify(&contoursFiltered, &contoursSimplified, 3);
+		std::vector<TnkrVis::Contour> contoursMerged; 
+		TnkrVis::Contour::ContoursMergeVerticies(&contoursSimplified, &contoursMerged, 4);
+		TnkrVis::Contour::ContoursSimplify(&contoursMerged, &contoursSimplified, 5);
+		std::vector<TnkrVis::Contour> contoursQuads; 
+		TnkrVis::Contour::ContoursVertCountFilter(&contoursSimplified, &contoursQuads, 4, 5);
 
 		renderer.Clear(); 
 		renderer.AddContours(&contoursFiltered, true, 1, false, true); 
 		renderer.Run(&image1, &image2); 
-		Viso::IO::ImageFile::Write("image10_3Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image10_3Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&contoursSimplified, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Viso::IO::ImageFile::Write("image10_4Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image10_4Test.png", &image2);
 
 		renderer.Clear(); 
 		renderer.AddContours(&contoursMerged, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Viso::IO::ImageFile::Write("image10_5Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image10_5Test.png", &image2);
 
 		renderer.Clear();
 		/*
-		std::vector<Viso::Contour> conxHullContours;
+		std::vector<TnkrVis::Contour> conxHullContours;
 		conxHullContours.resize(contoursQuads.size()); 
 		for(int i = 0; i < contoursQuads.size(); i++)
 		{
 			std::vector<int> cInx;
-			Viso::Contour::FindConvexHull(&(contoursQuads[i]), &cInx);
+			TnkrVis::Contour::FindConvexHull(&(contoursQuads[i]), &cInx);
 			for(int j = 0; j < cInx.size(); j++)
 			{
 				conxHullContours[i].verticies.push_back(contoursQuads[i].verticies[cInx[j]]); 
 			}
 
-			Viso::BoundingBox bb = Viso::Contour::FindBoundingBox(&(contoursQuads[i])); 
-			renderer.AddBoundingBox(&bb, Viso::Color(1, 0, 1, 1)); 
+			TnkrVis::BoundingBox bb = TnkrVis::Contour::FindBoundingBox(&(contoursQuads[i])); 
+			renderer.AddBoundingBox(&bb, TnkrVis::Color(1, 0, 1, 1)); 
 		}
 		renderer.AddContours(&contoursQuads, true, 4, true, true); 
 		renderer.Run(&image1, &image2); 
-		Viso::IO::ImageFile::Write("image10_6Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image10_6Test.png", &image2);
 		*/
 
-		Viso::Contour::ContoursToFile("image10_3Test.contours", &contoursFiltered); 
+		TnkrVis::Contour::ContoursToFile("image10_3Test.contours", &contoursFiltered); 
 
 		//Canny Edges
 		std::cout << "Canny Edges\n"; 
-		Viso::CompositeProcess::CannyEdgeDetect canny; 
+		TnkrVis::CompositeProcess::CannyEdgeDetect canny; 
 		canny.SetBlurSigma(0.5); 
 		canny.SetLowEdgeThreshold(0.1);
 		canny.SetHighEdgeThreshold(0.2);
-		image2.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Viso::ImageType::GRAYSCALE16); 
+		image2.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), TnkrVis::ImageType::GRAYSCALE16); 
 		canny.Run(&imageGPU1, &image2); 
-		Viso::IO::ImageFile::Write("image12_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image12_1Test.png", &image2);
 
 		//GaussianDerivative
 		std::cout << "GaussianDerivative\n"; 
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 
-		Viso::Process::GaussianDerivative guassDeriv; 
-		guassDeriv.SetDirection(Viso::Process::GaussianDerivative::Direction::HORIZONTAL); 
+		TnkrVis::Process::GaussianDerivative guassDeriv; 
+		guassDeriv.SetDirection(TnkrVis::Process::GaussianDerivative::Direction::HORIZONTAL); 
 		guassDeriv.Run(&imageGPU2, &imageGPU3); 
 
 		image2.Copy(&imageGPU3);
-		Viso::IO::ImageFile::Write("image13_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image13_1Test.png", &image2);
 
-		guassDeriv.SetDirection(Viso::Process::GaussianDerivative::Direction::VERTICAL); 
+		guassDeriv.SetDirection(TnkrVis::Process::GaussianDerivative::Direction::VERTICAL); 
 		guassDeriv.Run(&imageGPU2, &imageGPU3); 
 
 		image2.Copy(&imageGPU3);
-		Viso::IO::ImageFile::Write("image13_2Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image13_2Test.png", &image2);
 		
 		//Corner detector
 		std::cout << "Corner detector\n"; 
 		grayScale.Run(&imageGPU1, &imageGPU2); 
 
-		Viso::ImageGPU imageGPU5; 
-		Viso::CompositeProcess::CornerDetector cornerDetector; 
+		TnkrVis::ImageGPU imageGPU5; 
+		TnkrVis::CompositeProcess::CornerDetector cornerDetector; 
 		cornerDetector.Run(&imageGPU2, &imageGPU5);
 
-		imageGPU4.Allocate(imageGPU5.GetWidth(), imageGPU5.GetHeight(), Viso::ImageType::RGBA32F); 
+		imageGPU4.Allocate(imageGPU5.GetWidth(), imageGPU5.GetHeight(), TnkrVis::ImageType::RGBA32F); 
 		demux.SetChannel(0);
 		demux.Run(&imageGPU5, &imageGPU4);
 		image2.Copy(&imageGPU4);
-		Viso::Process::Normalize normalize; 
+		TnkrVis::Process::Normalize normalize; 
 		normalize.Run(&image2, &image3); 
 		imageGPU3.Copy(&image3);
-		imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Viso::ImageType::GRAYSCALE8); 
-		Viso::Process::CopyImage copyImage; 
+		imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), TnkrVis::ImageType::GRAYSCALE8); 
+		TnkrVis::Process::CopyImage copyImage; 
 		copyImage.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image14_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image14_1Test.png", &image2);
 
 		demux.SetChannel(1);
 		demux.Run(&imageGPU5, &imageGPU4);
 		image2.Copy(&imageGPU4);
 		normalize.Run(&image2, &image3); 
 		imageGPU3.Copy(&image3);
-		imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), Viso::ImageType::GRAYSCALE8); 
+		imageGPU2.Allocate(imageGPU3.GetWidth(), imageGPU3.GetHeight(), TnkrVis::ImageType::GRAYSCALE8); 
 		copyImage.Run(&imageGPU3, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image14_2Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image14_2Test.png", &image2);
 
 		//Camera Distortion
 		std::cout << "Camera Distortion\n"; 
-		Viso::Process::CameraDistortion camDistort;
+		TnkrVis::Process::CameraDistortion camDistort;
 		camDistort.SetRadialCoefs(-0.1f, 0, 0);
 		camDistort.SetTangentialCoefs(0, 0); 
 		camDistort.SetFocalLength(1); 
 		camDistort.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image15_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image15_1Test.png", &image2);
 
 		//AverageFilter
 		std::cout << "Average Filter\n"; 
-		Viso::Process::AverageFilter avFilter;
+		TnkrVis::Process::AverageFilter avFilter;
 		avFilter.SetSize(5); 
 		avFilter.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image16_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image16_1Test.png", &image2);
 
 		//ChannelMapper
 		std::cout << "Channel Mapper\n"; 
-		Viso::Process::ChannelMapper chMapr;
+		TnkrVis::Process::ChannelMapper chMapr;
 		chMapr.SetChannelMap(2, -1, -1, 3); 
-		imageGPU2.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), Viso::ImageType::GRAYSCALE8); 
+		imageGPU2.Allocate(imageGPU1.GetWidth(), imageGPU1.GetHeight(), TnkrVis::ImageType::GRAYSCALE8); 
 		chMapr.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image17_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image17_1Test.png", &image2);
 
 		//DownSample
 		std::cout << "Downsample\n"; 
-		Viso::Process::Downsample dwnSmpl;
+		TnkrVis::Process::Downsample dwnSmpl;
 		float dsScale = 0.5f;
 		imageGPU2.Allocate(imageGPU1.GetWidth() * dsScale, imageGPU1.GetHeight() * dsScale, imageGPU1.GetType()); 
-		dwnSmpl.SetMode(Viso::Process::Downsample::Mode::NEAREST); 
+		dwnSmpl.SetMode(TnkrVis::Process::Downsample::Mode::NEAREST); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image18_1Test.png", &image2);
-		dwnSmpl.SetMode(Viso::Process::Downsample::Mode::BOX); 
+		TnkrVis::IO::ImageFile::Write("image18_1Test.png", &image2);
+		dwnSmpl.SetMode(TnkrVis::Process::Downsample::Mode::BOX); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image18_2Test.png", &image2);
-		dwnSmpl.SetMode(Viso::Process::Downsample::Mode::BILINEAR); 
+		TnkrVis::IO::ImageFile::Write("image18_2Test.png", &image2);
+		dwnSmpl.SetMode(TnkrVis::Process::Downsample::Mode::BILINEAR); 
 		dwnSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image18_3Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image18_3Test.png", &image2);
 
 		//UpSample
 		std::cout << "Upsample\n"; 
-		Viso::Process::Upsample upSmpl;
+		TnkrVis::Process::Upsample upSmpl;
 		float usScale = 4.0f;
 		imageGPU2.Allocate(imageGPU1.GetWidth() * usScale, imageGPU1.GetHeight() * usScale, imageGPU1.GetType()); 
-		upSmpl.SetMode(Viso::Process::Upsample::Mode::BILINEAR); 
+		upSmpl.SetMode(TnkrVis::Process::Upsample::Mode::BILINEAR); 
 		upSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image19_1Test.png", &image2);
-		upSmpl.SetMode(Viso::Process::Upsample::Mode::NEAREST); 
+		TnkrVis::IO::ImageFile::Write("image19_1Test.png", &image2);
+		upSmpl.SetMode(TnkrVis::Process::Upsample::Mode::NEAREST); 
 		upSmpl.Run(&imageGPU1, &imageGPU2); 
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image19_2Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image19_2Test.png", &image2);
 
 		//Mipmaps
 		std::cout << "Mipmaps\n"; 
-		Viso::Process::Mipmaps mmaps;
-		std::vector<Viso::ImageGPU> mmstack; 
-		std::vector<Viso::Image> mmstackCPU; 
+		TnkrVis::Process::Mipmaps mmaps;
+		std::vector<TnkrVis::ImageGPU> mmstack; 
+		std::vector<TnkrVis::Image> mmstackCPU; 
 		mmaps.Run(&imageGPU1, &mmstack); 
 		for(int i = 0; i < mmstack.size(); i++)
 		{
 			std::stringstream ss;
 			ss << "image20_" << i << ".png";
 			image2.Copy(&(mmstack[i])); 
-			Viso::IO::ImageFile::Write(ss.str(), &image2);
+			TnkrVis::IO::ImageFile::Write(ss.str(), &image2);
 			if(i > 3)
 				break; //break after saving first 4 images
 		}
@@ -544,47 +544,47 @@ int main(int argc, char *argv[])
 		{
 			std::stringstream ss;
 			ss << "image21_" << i << ".png";
-			Viso::IO::ImageFile::Write(ss.str(), &(mmstackCPU[i]));
+			TnkrVis::IO::ImageFile::Write(ss.str(), &(mmstackCPU[i]));
 			if(i > 3)
 				break; //break after saving first 4 images
 		}
 
 		//Sift
 		std::cout << "Sift\n"; 
-		Viso::CompositeProcess::Sift sift;
+		TnkrVis::CompositeProcess::Sift sift;
 		sift.Run(&imageGPU1, &imageGPU2);
-		std::vector<Viso::ImageGPU>* pyramid = sift.GetPyramid(); 
+		std::vector<TnkrVis::ImageGPU>* pyramid = sift.GetPyramid(); 
 
 		for(int i = 0; i < pyramid->size(); i++)
 		{
-			Viso::ImageGPU* py = &( pyramid->at(i) );
+			TnkrVis::ImageGPU* py = &( pyramid->at(i) );
 			image2.Copy(py);
 			std::stringstream ss;
 			ss << "image22_0_" << i << ".png";
-			//Viso::IO::ImageFile::Write(ss.str(), &image2 );
+			//TnkrVis::IO::ImageFile::Write(ss.str(), &image2 );
 		}
 
 		//Rotate
 		std::cout << "Rotate\n"; 
-		Viso::Process::Rotate rotate;
+		TnkrVis::Process::Rotate rotate;
 		rotate.SetRotation(0); 
 		imageGPU2.AllocateLike(&imageGPU1);
 		rotate.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image23_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image23_1Test.png", &image2);
 
 		//Translate
 		std::cout << "Translate\n"; 
-		Viso::Process::Translate transl;
+		TnkrVis::Process::Translate transl;
 		transl.SetTranslation(100, 200); 
 		imageGPU2.AllocateLike(&imageGPU1);
 		transl.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image24_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image24_1Test.png", &image2);
 		transl.SetTranslation(-100, -200); 
 		transl.Run(&imageGPU1, &imageGPU2);
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image24_2Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image24_2Test.png", &image2);
 
 		//CopyImage
 		std::cout << "CopyImage\n"; 
@@ -592,33 +592,33 @@ int main(int argc, char *argv[])
 		imageGPU2.Allocate(imageGPU1.GetWidth()*2, imageGPU1.GetHeight(), imageGPU1.GetType()); 
 		imageGPU3.Allocate(imageGPU1.GetWidth()/2, imageGPU1.GetHeight(), imageGPU1.GetType()); 
 
-		Viso::Process::CopyImage cpIm;
+		TnkrVis::Process::CopyImage cpIm;
 		cpIm.UseOutputSize(true);
 		cpIm.SetOffset(0, 0);
 		cpIm.Run(&imageGPU1, &imageGPU2) ;
 		cpIm.SetOffset(imageGPU1.GetWidth(), 0);
 		cpIm.Run(&imageGPU1, &imageGPU2) ;
 		image2.Copy(&imageGPU2);
-		Viso::IO::ImageFile::Write("image25_1Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image25_1Test.png", &image2);
 
 		cpIm.SetOffset( -imageGPU1.GetWidth()/2, 0);
 		cpIm.Run(&imageGPU1, &imageGPU3) ;
 		image2.Copy(&imageGPU3);
-		Viso::IO::ImageFile::Write("image25_2Test.png", &image2);
+		TnkrVis::IO::ImageFile::Write("image25_2Test.png", &image2);
 
 		//Template matching
-		Viso::ImageGPU templateImage;
-		Viso::Process::GaussianFunction gaussFunc; 
-		gaussFunc.SetGenerateMode(Viso::Process::GaussianFunction::SIZE_TO_SIGMA); 
+		TnkrVis::ImageGPU templateImage;
+		TnkrVis::Process::GaussianFunction gaussFunc; 
+		gaussFunc.SetGenerateMode(TnkrVis::Process::GaussianFunction::SIZE_TO_SIGMA); 
 		gaussFunc.SetSigma(20); 
 		templateImage.Allocate(0, 0, imageGPU1.GetType()); 
 		gaussFunc.Run(&templateImage); 
-		Viso::IO::ImageFile::Write("image26_1Test.png", &templateImage);
-		Viso::Process::TemplateMatch tmplMatch;
+		TnkrVis::IO::ImageFile::Write("image26_1Test.png", &templateImage);
+		TnkrVis::Process::TemplateMatch tmplMatch;
 		tmplMatch.SetNormalized(true);
-		tmplMatch.SetMatchMode(Viso::Process::TemplateMatch::MATCH_CORR);
+		tmplMatch.SetMatchMode(TnkrVis::Process::TemplateMatch::MATCH_CORR);
 		tmplMatch.Run(&imageGPU1, &templateImage, &imageGPU2);
-		Viso::IO::ImageFile::Write("image26_2Test.png", &imageGPU2);
+		TnkrVis::IO::ImageFile::Write("image26_2Test.png", &imageGPU2);
 
 		std::cout << "DONE\n";
 
@@ -628,20 +628,20 @@ int main(int argc, char *argv[])
 		if(std::string( argv[1] ) == "-v")
 		{
 			std::cout << "Starting video test\n"; 
-			Viso::IO::VideoHelper videoHelper; 
+			TnkrVis::IO::VideoHelper videoHelper; 
 			videoHelper.Open(argv[2]); 
-			Viso::Window VisoWindow(videoHelper.GetFrameWidth(), videoHelper.GetFrameHeight(), &context);
-			Viso::ImageGPU filterIm;
+			TnkrVis::Window TnkrVisWindow(videoHelper.GetFrameWidth(), videoHelper.GetFrameHeight(), &context);
+			TnkrVis::ImageGPU filterIm;
 
-			while(!VisoWindow.ShouldClose())
+			while(!TnkrVisWindow.ShouldClose())
 			{
-				videoHelper.NextFrame([&](Viso::ImageGPU* imageGPU, Viso::Image* image)
+				videoHelper.NextFrame([&](TnkrVis::ImageGPU* imageGPU, TnkrVis::Image* image)
 				{
-					Viso::Process::MedianFilter medianFilter; 
+					TnkrVis::Process::MedianFilter medianFilter; 
 					medianFilter.SetSize(3); 
 					medianFilter.Run(imageGPU, &filterIm); 
-					VisoWindow.DrawImage(&filterIm); 
-					VisoWindow.Refresh();
+					TnkrVisWindow.DrawImage(&filterIm); 
+					TnkrVisWindow.Refresh();
 				}); 
 			}
 			videoHelper.Close(); 
@@ -649,10 +649,10 @@ int main(int argc, char *argv[])
 		else if(std::string( argv[1] ) == "-aruco")
 		{
 			std::cout << "Starting aruco test\n"; 
-			Viso::Image input;
-			Viso::IO::ImageFile::Read(argv[2], &input);
-			Viso::CompositeProcess::ARUCODetector arucoDetector;
-			Viso::ImageGPU inputGPU; 
+			TnkrVis::Image input;
+			TnkrVis::IO::ImageFile::Read(argv[2], &input);
+			TnkrVis::CompositeProcess::ARUCODetector arucoDetector;
+			TnkrVis::ImageGPU inputGPU; 
 			inputGPU.Copy(&input);
 
 
@@ -669,31 +669,31 @@ int main(int argc, char *argv[])
 
 			
 
-			std::vector<Viso::Contour> markerQuads; 
+			std::vector<TnkrVis::Contour> markerQuads; 
 			std::vector<int> markerIds;
 			arucoDetector.Run(&inputGPU, &markerQuads, &markerIds, false);
 			
 			
 			
-			Viso::Process::Renderer renderer;
+			TnkrVis::Process::Renderer renderer;
 			for(int i = 0; i < markerQuads.size(); i++)
 			{
-				Viso::Color color; 
+				TnkrVis::Color color; 
 				if(markerIds[i] == markerId0)
-					color = Viso::Color(1, 0, 0); 
+					color = TnkrVis::Color(1, 0, 0); 
 				
 				renderer.AddContour(&(markerQuads[i]), color, true, 4, true, true); 
 			}
 			
-			Viso::Image image2;
+			TnkrVis::Image image2;
 			renderer.Run(&input, &image2); 
-			Viso::IO::ImageFile::Write("arcuo1Test.png", &image2); 
+			TnkrVis::IO::ImageFile::Write("arcuo1Test.png", &image2); 
 		}
 		else if(std::string( argv[1] ) == "-computegraph")
 		{
 			std::cout << "Starting ComputeGraph test\n\n"; 
 
-			Viso::SerializedObject graphJson; 
+			TnkrVis::SerializedObject graphJson; 
 
 			graphJson.FromString(R"(
 			{
@@ -735,9 +735,9 @@ int main(int argc, char *argv[])
 			}
 			)"); 
 
-			Viso::ComputeGraph::Graph graph;
+			TnkrVis::ComputeGraph::Graph graph;
 			graph.Deserialize(&graphJson); 
-			Viso::SerializedObject outJson; 
+			TnkrVis::SerializedObject outJson; 
 			graph.Serialize(&outJson); 
 			std::cout << outJson.ToString() << "\n"; 
 
@@ -752,32 +752,32 @@ int main(int argc, char *argv[])
 			//Try out data: http://vision.middlebury.edu/stereo/data/scenes2003/    
 			//Dataset created by created by Daniel Scharstein, Alexander Vandenberg-Rodes, and Rick Szeliski.
 			std::cout << "Starting depth from stereo test\n"; 
-			Viso::Image left;
-			Viso::Image right;
-			Viso::Image leftGrey;
-			Viso::Image rightGrey;
-			Viso::Image output; 
-			Viso::IO::ImageFile::Read(argv[2], &left);
-			Viso::IO::ImageFile::Read(argv[3], &right);
-			Viso::Process::GrayScale gs;
-			leftGrey.Allocate(left.GetWidth(), left.GetHeight(), Viso::ImageType::GRAYSCALE16); 
-			rightGrey.Allocate(right.GetWidth(), right.GetHeight(), Viso::ImageType::GRAYSCALE16); 
+			TnkrVis::Image left;
+			TnkrVis::Image right;
+			TnkrVis::Image leftGrey;
+			TnkrVis::Image rightGrey;
+			TnkrVis::Image output; 
+			TnkrVis::IO::ImageFile::Read(argv[2], &left);
+			TnkrVis::IO::ImageFile::Read(argv[3], &right);
+			TnkrVis::Process::GrayScale gs;
+			leftGrey.Allocate(left.GetWidth(), left.GetHeight(), TnkrVis::ImageType::GRAYSCALE16); 
+			rightGrey.Allocate(right.GetWidth(), right.GetHeight(), TnkrVis::ImageType::GRAYSCALE16); 
 			gs.Run(&left, &leftGrey);
 			gs.Run(&right, &rightGrey);
 
-			Viso::ImageGPU leftGPU;
-			Viso::ImageGPU rightGPU; 
-			Viso::ImageGPU outputGPU; 
+			TnkrVis::ImageGPU leftGPU;
+			TnkrVis::ImageGPU rightGPU; 
+			TnkrVis::ImageGPU outputGPU; 
 
 			leftGPU.Copy(&leftGrey); 
 			rightGPU.Copy(&rightGrey); 
 
 
-			Viso::Process::StereoMatchSAD smsad;
+			TnkrVis::Process::StereoMatchSAD smsad;
 			smsad.Run(&leftGPU, &rightGPU, &outputGPU);	
 
 			output.Copy(&outputGPU);
-			Viso::IO::ImageFile::Write("imageDepth1Test.png", &output);
+			TnkrVis::IO::ImageFile::Write("imageDepth1Test.png", &output);
 		}
 	}
 

@@ -7,7 +7,7 @@
 
 #include "../../../ComputeGraph/Nodes/ImageNodes.h"
 
-namespace Viso
+namespace TnkrVis
 {
 namespace GUI
 {

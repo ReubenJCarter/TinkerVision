@@ -11,7 +11,7 @@
 #include <functional>
 #include <glm/glm.hpp>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace Process
 {

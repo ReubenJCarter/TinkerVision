@@ -1,15 +1,15 @@
 //run like   java -cp .\* JavaTest aruco.png
 
-import VisoJava.Viso.Color;
-import VisoJava.Viso.*;
-import VisoJava.Viso.IO.*;
-import VisoJava.Viso.Process.*;
-import VisoJava.Viso.CompositeProcess.*;
+import TnkrVisJava.TnkrVis.Color;
+import TnkrVisJava.TnkrVis.*;
+import TnkrVisJava.TnkrVis.IO.*;
+import TnkrVisJava.TnkrVis.Process.*;
+import TnkrVisJava.TnkrVis.CompositeProcess.*;
 
 public class JavaTest {
 
     static {
-        System.loadLibrary("Viso_Java") ;
+        System.loadLibrary("TinkerVision_Java") ;
     }
 
     public static void main(String[] args) {

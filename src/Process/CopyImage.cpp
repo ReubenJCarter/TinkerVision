@@ -10,7 +10,7 @@
 #include <map>
 #include <algorithm>
 
-namespace Viso
+namespace TnkrVis
 {
 namespace Process
 {
