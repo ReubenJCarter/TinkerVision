@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Visi: src/Core/ComputeShader.h Source File</title>
+<title>TinkerVision: src/Core/ComputeShader.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Visi
+   <div id="projectname">TinkerVision
    &#160;<span id="projectnumber">0.1</span>
    </div>
    <div id="projectbrief">Animageprocessingandcomputervisionlibrary.</div>
@@ -78,48 +78,58 @@ $(function() {
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Visi</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>TnkrVis</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    </div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="class_visi_1_1_compute_shader.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_visi_1_1_compute_shader.html">ComputeShader</a></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">public</span>: </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keyword">enum</span> Access{WRITE_ONLY, READ_ONLY, READ_WRITE}; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> computeShader;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> computeProgram;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <a class="code" href="class_visi_1_1_compute_shader.html">ComputeShader</a>();</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        ~<a class="code" href="class_visi_1_1_compute_shader.html">ComputeShader</a>();</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordtype">void</span> Compile(std::string shaderSrc);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordtype">void</span> Dispatch(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> workGroupsX, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> workGroupsY, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> workGroupsZ);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordtype">void</span> Block();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordtype">void</span> SetFloat(std::string name, <span class="keywordtype">float</span> value);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">void</span> SetFloat2(std::string name, <span class="keywordtype">float</span> value[2]);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">void</span> SetFloat3(std::string name, <span class="keywordtype">float</span> value[3]);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">void</span> SetFloat4(std::string name, <span class="keywordtype">float</span> value[4]);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordtype">void</span> SetInt(std::string name, <span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">void</span> SetInt2(std::string name, <span class="keywordtype">int</span> value[2]);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">void</span> SetInt3(std::string name, <span class="keywordtype">int</span> value[3]);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordtype">void</span> SetInt4(std::string name, <span class="keywordtype">int</span> value[4]);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordtype">void</span> SetUint(std::string name, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordtype">void</span> SetUint2(std::string name, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> value[2]);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordtype">void</span> SetUint3(std::string name, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> value[3]);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordtype">void</span> SetUint4(std::string name, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> value[4]);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordtype">void</span> SetMat2(std::string name, <span class="keywordtype">float</span> value[4]);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordtype">void</span> SetMat3(std::string name, <span class="keywordtype">float</span> value[9]);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordtype">void</span> SetMat4(std::string name, <span class="keywordtype">float</span> value[16]);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordtype">void</span> SetImage(std::string name, <a class="code" href="class_visi_1_1_image_g_p_u.html">ImageGPU</a>* image, Access access=READ_WRITE);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordtype">void</span> SetImage(std::string name, <a class="code" href="class_visi_1_1_image_g_p_u.html">ImageGPU</a>* image, <span class="keywordtype">int</span> imageUnit, Access access=READ_WRITE);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">void</span> SetShaderStorageBuffer(std::string name, <a class="code" href="class_visi_1_1_shader_storage_buffer.html">ShaderStorageBuffer</a>* shaderStorageBuffer); </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;};</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="class_tnkr_vis_1_1_compute_shader.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_tnkr_vis_1_1_compute_shader.html">ComputeShader</a></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">public</span>: </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="class_tnkr_vis_1_1_compute_shader.html#aba0cf42237837160853e74f9eca8a7a8">   19</a></span>&#160;        <span class="keyword">enum</span> <a class="code" href="class_tnkr_vis_1_1_compute_shader.html#aba0cf42237837160853e74f9eca8a7a8">Access</a>{WRITE_ONLY, READ_ONLY, READ_WRITE}; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> computeShader;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> computeProgram;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="class_tnkr_vis_1_1_compute_shader.html#a45e54196f0d808001e87aff78811d115">ComputeShader</a>();</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="class_tnkr_vis_1_1_compute_shader.html#a3ec9a99fbc1fbc0184f423be17939aeb">~ComputeShader</a>();</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_tnkr_vis_1_1_compute_shader.html#a65e26dca2a71ddae97b2101f45c3506c">Compile</a>(std::string shaderSrc);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_tnkr_vis_1_1_compute_shader.html#a9422b001723c911ce5c0557fe37b138f">Dispatch</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> workGroupsX, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> workGroupsY, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> workGroupsZ);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_tnkr_vis_1_1_compute_shader.html#a5c6a9abe25a6aee26b3d500bb1f5a949">Block</a>();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordtype">void</span> SetFloat(std::string name, <span class="keywordtype">float</span> value);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordtype">void</span> SetFloat2(std::string name, <span class="keywordtype">float</span> value[2]);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordtype">void</span> SetFloat3(std::string name, <span class="keywordtype">float</span> value[3]);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordtype">void</span> SetFloat4(std::string name, <span class="keywordtype">float</span> value[4]);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordtype">void</span> SetInt(std::string name, <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordtype">void</span> SetInt2(std::string name, <span class="keywordtype">int</span> value[2]);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">void</span> SetInt3(std::string name, <span class="keywordtype">int</span> value[3]);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordtype">void</span> SetInt4(std::string name, <span class="keywordtype">int</span> value[4]);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">void</span> SetUint(std::string name, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordtype">void</span> SetUint2(std::string name, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> value[2]);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordtype">void</span> SetUint3(std::string name, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> value[3]);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordtype">void</span> SetUint4(std::string name, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> value[4]);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordtype">void</span> SetMat2(std::string name, <span class="keywordtype">float</span> value[4]);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">void</span> SetMat3(std::string name, <span class="keywordtype">float</span> value[9]);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordtype">void</span> SetMat4(std::string name, <span class="keywordtype">float</span> value[16]);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordtype">void</span> SetImage(std::string name, <a class="code" href="class_tnkr_vis_1_1_image_g_p_u.html">ImageGPU</a>* image, <a class="code" href="class_tnkr_vis_1_1_compute_shader.html#aba0cf42237837160853e74f9eca8a7a8">Access</a> access=READ_WRITE);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordtype">void</span> SetImage(std::string name, <a class="code" href="class_tnkr_vis_1_1_image_g_p_u.html">ImageGPU</a>* image, <span class="keywordtype">int</span> imageUnit, <a class="code" href="class_tnkr_vis_1_1_compute_shader.html#aba0cf42237837160853e74f9eca8a7a8">Access</a> access=READ_WRITE);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordtype">void</span> SetShaderStorageBuffer(std::string name, <a class="code" href="class_tnkr_vis_1_1_shader_storage_buffer.html">ShaderStorageBuffer</a>* shaderStorageBuffer); </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;};</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_visi_1_1_shader_storage_buffer_html"><div class="ttname"><a href="class_visi_1_1_shader_storage_buffer.html">Visi::ShaderStorageBuffer</a></div><div class="ttdef"><b>Definition:</b> ShaderStorageBuffer.h:6</div></div>
-<div class="ttc" id="aclass_visi_1_1_compute_shader_html"><div class="ttname"><a href="class_visi_1_1_compute_shader.html">Visi::ComputeShader</a></div><div class="ttdef"><b>Definition:</b> ComputeShader.h:11</div></div>
-<div class="ttc" id="aclass_visi_1_1_image_g_p_u_html"><div class="ttname"><a href="class_visi_1_1_image_g_p_u.html">Visi::ImageGPU</a></div><div class="ttdef"><b>Definition:</b> ImageGPU.h:17</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_shader_storage_buffer_html"><div class="ttname"><a href="class_tnkr_vis_1_1_shader_storage_buffer.html">TnkrVis::ShaderStorageBuffer</a></div><div class="ttdef"><b>Definition:</b> ShaderStorageBuffer.h:6</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_image_g_p_u_html"><div class="ttname"><a href="class_tnkr_vis_1_1_image_g_p_u.html">TnkrVis::ImageGPU</a></div><div class="ttdef"><b>Definition:</b> ImageGPU.h:17</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_compute_shader_html_a65e26dca2a71ddae97b2101f45c3506c"><div class="ttname"><a href="class_tnkr_vis_1_1_compute_shader.html#a65e26dca2a71ddae97b2101f45c3506c">TnkrVis::ComputeShader::Compile</a></div><div class="ttdeci">void Compile(std::string shaderSrc)</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_compute_shader_html_a3ec9a99fbc1fbc0184f423be17939aeb"><div class="ttname"><a href="class_tnkr_vis_1_1_compute_shader.html#a3ec9a99fbc1fbc0184f423be17939aeb">TnkrVis::ComputeShader::~ComputeShader</a></div><div class="ttdeci">~ComputeShader()</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_compute_shader_html_a45e54196f0d808001e87aff78811d115"><div class="ttname"><a href="class_tnkr_vis_1_1_compute_shader.html#a45e54196f0d808001e87aff78811d115">TnkrVis::ComputeShader::ComputeShader</a></div><div class="ttdeci">ComputeShader()</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_compute_shader_html_a5c6a9abe25a6aee26b3d500bb1f5a949"><div class="ttname"><a href="class_tnkr_vis_1_1_compute_shader.html#a5c6a9abe25a6aee26b3d500bb1f5a949">TnkrVis::ComputeShader::Block</a></div><div class="ttdeci">void Block()</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_compute_shader_html"><div class="ttname"><a href="class_tnkr_vis_1_1_compute_shader.html">TnkrVis::ComputeShader</a></div><div class="ttdef"><b>Definition:</b> ComputeShader.h:15</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_compute_shader_html_aba0cf42237837160853e74f9eca8a7a8"><div class="ttname"><a href="class_tnkr_vis_1_1_compute_shader.html#aba0cf42237837160853e74f9eca8a7a8">TnkrVis::ComputeShader::Access</a></div><div class="ttdeci">Access</div><div class="ttdef"><b>Definition:</b> ComputeShader.h:19</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_compute_shader_html_a9422b001723c911ce5c0557fe37b138f"><div class="ttname"><a href="class_tnkr_vis_1_1_compute_shader.html#a9422b001723c911ce5c0557fe37b138f">TnkrVis::ComputeShader::Dispatch</a></div><div class="ttdeci">void Dispatch(unsigned int workGroupsX, unsigned int workGroupsY, unsigned int workGroupsZ)</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

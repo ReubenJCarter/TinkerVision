@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Visi: src/Core/BoundingBox.h Source File</title>
+<title>TinkerVision: src/Core/BoundingBox.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Visi
+   <div id="projectname">TinkerVision
    &#160;<span id="projectnumber">0.1</span>
    </div>
    <div id="projectbrief">Animageprocessingandcomputervisionlibrary.</div>
@@ -73,29 +73,35 @@ $(function() {
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;Visi_export.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;TinkerVision_export.h&quot;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;VectorMath.h&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>Visi</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>TnkrVis</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    </div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="class_visi_1_1_bounding_box.html">   10</a></span>&#160;<span class="keyword">class </span>VISI_EXPORT <a class="code" href="class_visi_1_1_bounding_box.html">BoundingBox</a></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;                <span class="keywordtype">float</span> rotation; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;                <a class="code" href="class_visi_1_1_vec2.html">Vec2</a> position; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;                <a class="code" href="class_visi_1_1_vec2.html">Vec2</a> extends;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;                <a class="code" href="class_visi_1_1_bounding_box.html">BoundingBox</a>();</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;                <a class="code" href="class_visi_1_1_mat3.html">Mat3</a> GetTransform(); </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;};</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;}</div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="class_tnkr_vis_1_1_bounding_box.html">   14</a></span>&#160;<span class="keyword">class </span>TINKERVISION_EXPORT <a class="code" href="class_tnkr_vis_1_1_bounding_box.html">BoundingBox</a></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="class_tnkr_vis_1_1_bounding_box.html#a46dc874f366e5c9ba0617cba03cf7f88">   18</a></span>&#160;        <span class="keywordtype">float</span> <a class="code" href="class_tnkr_vis_1_1_bounding_box.html#a46dc874f366e5c9ba0617cba03cf7f88">rotation</a>; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        </div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="class_tnkr_vis_1_1_bounding_box.html#aa21e710e0f2e1a843d554537b557fbb5">   21</a></span>&#160;        <a class="code" href="class_tnkr_vis_1_1_vec2.html">Vec2</a> <a class="code" href="class_tnkr_vis_1_1_bounding_box.html#aa21e710e0f2e1a843d554537b557fbb5">position</a>; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;         </div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="class_tnkr_vis_1_1_bounding_box.html#a7030f557b3f48ce8a9408ca91931e14f">   24</a></span>&#160;        <a class="code" href="class_tnkr_vis_1_1_vec2.html">Vec2</a> <a class="code" href="class_tnkr_vis_1_1_bounding_box.html#a7030f557b3f48ce8a9408ca91931e14f">extends</a>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <a class="code" href="class_tnkr_vis_1_1_bounding_box.html">BoundingBox</a>();</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="class_tnkr_vis_1_1_mat3.html">Mat3</a> GetTransform(); </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;};</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_visi_1_1_vec2_html"><div class="ttname"><a href="class_visi_1_1_vec2.html">Visi::Vec2</a></div><div class="ttdef"><b>Definition:</b> VectorMath.h:17</div></div>
-<div class="ttc" id="aclass_visi_1_1_mat3_html"><div class="ttname"><a href="class_visi_1_1_mat3.html">Visi::Mat3</a></div><div class="ttdef"><b>Definition:</b> VectorMath.h:94</div></div>
-<div class="ttc" id="aclass_visi_1_1_bounding_box_html"><div class="ttname"><a href="class_visi_1_1_bounding_box.html">Visi::BoundingBox</a></div><div class="ttdef"><b>Definition:</b> BoundingBox.h:10</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_bounding_box_html"><div class="ttname"><a href="class_tnkr_vis_1_1_bounding_box.html">TnkrVis::BoundingBox</a></div><div class="ttdef"><b>Definition:</b> BoundingBox.h:14</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_bounding_box_html_a7030f557b3f48ce8a9408ca91931e14f"><div class="ttname"><a href="class_tnkr_vis_1_1_bounding_box.html#a7030f557b3f48ce8a9408ca91931e14f">TnkrVis::BoundingBox::extends</a></div><div class="ttdeci">Vec2 extends</div><div class="ttdef"><b>Definition:</b> BoundingBox.h:24</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_mat3_html"><div class="ttname"><a href="class_tnkr_vis_1_1_mat3.html">TnkrVis::Mat3</a></div><div class="ttdef"><b>Definition:</b> VectorMath.h:95</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_vec2_html"><div class="ttname"><a href="class_tnkr_vis_1_1_vec2.html">TnkrVis::Vec2</a></div><div class="ttdef"><b>Definition:</b> VectorMath.h:17</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_bounding_box_html_a46dc874f366e5c9ba0617cba03cf7f88"><div class="ttname"><a href="class_tnkr_vis_1_1_bounding_box.html#a46dc874f366e5c9ba0617cba03cf7f88">TnkrVis::BoundingBox::rotation</a></div><div class="ttdeci">float rotation</div><div class="ttdef"><b>Definition:</b> BoundingBox.h:18</div></div>
+<div class="ttc" id="aclass_tnkr_vis_1_1_bounding_box_html_aa21e710e0f2e1a843d554537b557fbb5"><div class="ttname"><a href="class_tnkr_vis_1_1_bounding_box.html#aa21e710e0f2e1a843d554537b557fbb5">TnkrVis::BoundingBox::position</a></div><div class="ttdeci">Vec2 position</div><div class="ttdef"><b>Definition:</b> BoundingBox.h:21</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

@@ -1,4 +1,4 @@
-# Viso
+# Tinker Vision
 
 An image processing and computer vision library.
 
