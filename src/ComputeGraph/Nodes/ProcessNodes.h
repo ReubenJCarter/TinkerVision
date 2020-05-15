@@ -103,9 +103,9 @@ class BaseProcess1In1Out: public Node
 
 
 
-class AdaptiveThresholdNode: public BaseProcess1In1Out<Process::AdaptiveThreshold>
+class AdaptiveThreshold: public BaseProcess1In1Out<Process::AdaptiveThreshold>
 {
-    TNKRVIS_CLONEABLE_MACRO(AdaptiveThresholdNode) 
+    TNKRVIS_CLONEABLE_MACRO(AdaptiveThreshold) 
     public:
         void SetParams() 
         {
@@ -114,14 +114,14 @@ class AdaptiveThresholdNode: public BaseProcess1In1Out<Process::AdaptiveThreshol
         }
 };
 
-class ApproxDistanceTransformNode: public BaseProcess1In1OutCPUOnly<Process::ApproxDistanceTransform>
+class ApproxDistanceTransform: public BaseProcess1In1OutCPUOnly<Process::ApproxDistanceTransform>
 {
-    TNKRVIS_CLONEABLE_MACRO(ApproxDistanceTransformNode) 
+    TNKRVIS_CLONEABLE_MACRO(ApproxDistanceTransform) 
 }; 
 
-class AverageFilterNode: public BaseProcess1In1Out<Process::AverageFilter>
+class AverageFilter: public BaseProcess1In1Out<Process::AverageFilter>
 {
-    TNKRVIS_CLONEABLE_MACRO(AverageFilterNode) 
+    TNKRVIS_CLONEABLE_MACRO(AverageFilter) 
     public:
         void SetParams() 
         {
@@ -129,9 +129,9 @@ class AverageFilterNode: public BaseProcess1In1Out<Process::AverageFilter>
         }
 }; 
 
-class BrightnessContrastNode: public BaseProcess1In1Out<Process::BrightnessContrast>
+class BrightnessContrast: public BaseProcess1In1Out<Process::BrightnessContrast>
 {
-    TNKRVIS_CLONEABLE_MACRO(BrightnessContrastNode) 
+    TNKRVIS_CLONEABLE_MACRO(BrightnessContrast) 
     public:
         void SetParams() 
         {
@@ -140,9 +140,9 @@ class BrightnessContrastNode: public BaseProcess1In1Out<Process::BrightnessContr
         }
 }; 
 
-class CameraDistortionNode: public BaseProcess1In1Out<Process::CameraDistortion>
+class CameraDistortion: public BaseProcess1In1Out<Process::CameraDistortion>
 {
-    TNKRVIS_CLONEABLE_MACRO(CameraDistortionNode) 
+    TNKRVIS_CLONEABLE_MACRO(CameraDistortion) 
     public:
         void SetParams() 
         {

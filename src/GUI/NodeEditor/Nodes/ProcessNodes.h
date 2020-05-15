@@ -25,7 +25,7 @@ class AdaptiveThreshold: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~AdaptiveThreshold(){}	
-        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::AdaptiveThresholdNode; }
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::AdaptiveThreshold; }
 };
 
 class ApproxDistanceTransform: public BaseProcess1In1Out
@@ -41,7 +41,7 @@ class ApproxDistanceTransform: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~ApproxDistanceTransform(){}	
-        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::ApproxDistanceTransformNode; }
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::ApproxDistanceTransform; }
 };
 
 class AverageFilter: public BaseProcess1In1Out
@@ -55,7 +55,7 @@ class AverageFilter: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~AverageFilter(){}	
-        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::AverageFilterNode; }
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::AverageFilter; }
 };
 
 class Blend: public BaseNode
@@ -90,7 +90,7 @@ class BrightnessContrast: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~BrightnessContrast(){}	
-        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::BrightnessContrastNode; }
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::BrightnessContrast; }
 };
 
 class CameraDistortion: public BaseProcess1In1Out
@@ -109,7 +109,7 @@ class CameraDistortion: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~CameraDistortion(){}	
-        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::CameraDistortionNode; }
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::CameraDistortion; }
 };
 
 class ChannelMapper: public BaseProcess1In1Out

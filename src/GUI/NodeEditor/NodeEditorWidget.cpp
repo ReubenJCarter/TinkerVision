@@ -23,6 +23,7 @@
 #include "Nodes/SourceNodes.h"
 #include "Nodes/MiscNodes.h"
 #include "Nodes/ProcessNodes.h"
+#include "Nodes/IONodes.h"
 
 #include "ComputeGraph/Graph.h"
 #include "ComputeGraph/Node.h"
@@ -178,6 +179,9 @@ NodeEditorWidget::NodeEditorWidget()
 		ret->registerModel<Nodes::ImageAllocate>("Image");
 		ret->registerModel<Nodes::ImageDeallocate>("Image");
 		ret->registerModel<Nodes::ImageGetDims>("Image");
+
+		ret->registerModel<Nodes::ImageFileRead>("IO"); 
+		ret->registerModel<Nodes::ImageFileWrite>("IO"); 
 
 		ret->registerModel<Nodes::AdaptiveThreshold>("Processes"); 
 		ret->registerModel<Nodes::ApproxDistanceTransform>("Processes"); 

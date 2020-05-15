@@ -25,10 +25,10 @@ void RegisterNodes()
     Node::RegisterType<Nodes::ImageFileWrite>();
 
     //Process nodes
-    Node::RegisterType<Nodes::AdaptiveThresholdNode>(); 
-    Node::RegisterType<Nodes::ApproxDistanceTransformNode>();
-    Node::RegisterType<Nodes::BrightnessContrastNode>();
-    Node::RegisterType<Nodes::CameraDistortionNode>();
+    Node::RegisterType<Nodes::AdaptiveThreshold>(); 
+    Node::RegisterType<Nodes::ApproxDistanceTransform>();
+    Node::RegisterType<Nodes::BrightnessContrast>();
+    Node::RegisterType<Nodes::CameraDistortion>();
 
     //Source nodes
     Node::RegisterType<Nodes::StringSource>(); 
