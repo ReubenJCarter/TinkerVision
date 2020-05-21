@@ -46,7 +46,7 @@ class BaseProcess1In1OutCPUOnly: public Node
             if(inSrcAsimage != NULL && inDstAsimage != NULL)
             {
                 proc.Run(inSrcAsimage, inDstAsimage);
-                outImageData = Data(NullData, NULL); 
+                outImageData = Data(DataType::ImageData, inDstAsimage); 
             }
             else
             {
@@ -83,12 +83,12 @@ class BaseProcess1In1Out: public Node
             if(inSrcAsimage != NULL && inDstAsimage != NULL)
             {
                 proc.Run(inSrcAsimage, inDstAsimage);
-                outImageData = Data(NullData, NULL); 
+                outImageData = Data(DataType::ImageData, inDstAsimage); 
             }
             else if(inSrcAsimageGPU != NULL && inDstAsimageGPU != NULL)
             {
                 proc.Run(inSrcAsimageGPU, inDstAsimageGPU);
-                outImageData = Data(NullData, NULL);
+                outImageData = Data(DataType::ImageData, inDstAsimageGPU);
             }
             else
             {

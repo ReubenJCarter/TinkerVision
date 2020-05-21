@@ -194,8 +194,11 @@ class Graph: public Node
 
         void Run()
         {
+            
             if(dirty)
+            {
                 RecalculateCallOrder(); 
+            }
 
             if(!(circularDependency || externalDependency))
             {

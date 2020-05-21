@@ -12,9 +12,14 @@ int main(int argc, char *argv[])
         std::cout << "Not correct inputs, use like: TinkerVisionCMD <filename>\n\n\nHave a wonderful day.";
         return 1; 
     }
+
+    std::cout << "TinkerVision Starting\n"; 
+
     std::string fileName(argv[1]); 
 
     //Read json string from file
+    std::cout << "Reading Json File\n"; 
+    
     std::ifstream fs; 
     fs.open(argv[1], std::ifstream::binary);
     if(!fs.is_open())
@@ -33,13 +38,19 @@ int main(int argc, char *argv[])
     std::string jsonStr(fBuffer, byteCount); 
 
     //Deserialize the graph and run
+    std::cout << "Registering Compute Nodes\n"; 
+
     TnkrVis::ComputeGraph::RegisterNodes(); 
 
+    std::cout << "Loading json\n"; 
     TnkrVis::SerializedObject graphJson; 
     graphJson.FromString(jsonStr); 
+    
+    std::cout << "Deserializing graph\n"; 
     TnkrVis::ComputeGraph::Graph graph;
     graph.Deserialize(&graphJson); 
 
+    std::cout << "Running graph\n"; 
     graph.Run(); 
 
     return 0; 

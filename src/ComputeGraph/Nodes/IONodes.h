@@ -6,6 +6,8 @@
 #include "../../Core/ImageGPU.h"
 #include "../../IO/ImageFile.h"
 
+#include <iostream>
+
 namespace TnkrVis
 {
 namespace ComputeGraph
@@ -59,7 +61,6 @@ class ImageFileWrite: public Node
             Image* inAsimage = GetInputData(0).AsType<Image>(ImageData);  
             ImageGPU* inAsimageGPU = GetInputData(0).AsType<ImageGPU>(ImageGPUData);  
             std::string inFileName = GetInputData(1).DerefAsType<std::string>(StringData, "");            
-            
             if(inAsimage != NULL)
             {
                 TnkrVis::IO::ImageFile::Write(inFileName, inAsimage);

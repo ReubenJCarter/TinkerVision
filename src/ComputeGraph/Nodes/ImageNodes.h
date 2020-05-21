@@ -16,7 +16,7 @@ class ImageAllocate: public Node
 {
     TNKRVIS_CLONEABLE_MACRO(ImageAllocate) 
     private:
-        Data outImageData; /** cache of the output data, also null data when no image avilible.*/
+        Data outImageData; 
 
 	public:
         Data GetOutput(int inx){ return outImageData; }
@@ -50,7 +50,7 @@ class ImageDeallocate: public Node
 {
     TNKRVIS_CLONEABLE_MACRO(ImageDeallocate) 
     private:
-        Data outImageData; /** cache of the output data, also null data when no image avilible.*/
+        Data outImageData; 
 
 	public:
         Data GetOutput(int inx){ return outImageData; }

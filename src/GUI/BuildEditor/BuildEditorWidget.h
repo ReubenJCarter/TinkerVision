@@ -11,6 +11,8 @@ class QVBoxLayout;
 class QHBoxLayout; 
 class QListView;
 class QPushButton; 
+class QProcess; 
+class QTextEdit; 
 
 namespace TnkrVis
 {
@@ -44,6 +46,8 @@ class BuildEditorWidget: public QDockWidget
 
 		QScrollArea* compileJsonTextScrollArea;
 		QLabel*	compileJsonText; 
+		QScrollArea* stdOutputTextScrollArea;
+		QTextEdit* stdOutputText;
 		QHBoxLayout* compileRunButtonLayout; 
 		QPushButton* compileButton; 
 		QPushButton* runButton; 
@@ -52,6 +56,8 @@ class BuildEditorWidget: public QDockWidget
 		ProjectHierarchy::ProjectHierarchyWidget* projectHierarchyWidget; 
 
 		SerializedObject serializedComputeGraph; 
+
+		QProcess* tinkerVisionProcess;
 
 	public:
 		BuildEditorWidget(NodeEditor::NodeEditorWidget* ne, ProjectHierarchy::ProjectHierarchyWidget* phw); 
