@@ -16,20 +16,21 @@ int main(int argc, char *argv[])
 
     //Read json string from file
     std::ifstream fs; 
-    fs.open(argv[1]);
+    fs.open(argv[1], std::ifstream::binary);
     if(!fs.is_open())
     {
         std::cout << "Failed to open JSON file " << fileName << "\n";
         return 1; 
     }
 
-    fs.seekg(fs.end);  
-    unsigned int byteCount = fs.tellg();
-    fs.seekg(fs.beg);  
+    int fileBegin = fs.tellg();
+    fs.seekg(0, std::ios::end);  
+    int fileEnd = fs.tellg();
+    int byteCount = fileEnd - fileBegin;
+    fs.seekg(0, std::ios::beg);  
     char* fBuffer = new char [byteCount];
     fs.read(fBuffer, byteCount); 
     std::string jsonStr(fBuffer, byteCount); 
-
 
     //Deserialize the graph and run
     TnkrVis::ComputeGraph::RegisterNodes(); 
