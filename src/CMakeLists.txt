@@ -89,6 +89,20 @@ install(TARGETS ${CMAKE_PROJECT_NAME}
 		COMPONENT MainLibrary  
 )
 
+#Build CMD tool
+set(CMDToolSrc 
+	CMDTool.cpp 
+)
+
+add_executable(${CMAKE_PROJECT_NAME}_CMD ${CMDToolSrc})
+target_link_libraries(${CMAKE_PROJECT_NAME}_CMD ${CMAKE_PROJECT_NAME})
+
+install(TARGETS ${CMAKE_PROJECT_NAME}_CMD
+		RUNTIME DESTINATION bin
+		COMPONENT MainLibrary  
+)
+
+
 #java language support
 if(CREATE_JAVA_SUPPORT)
 	SET_SOURCE_FILES_PROPERTIES(SwigInterface.i PROPERTIES CPLUSPLUS ON)

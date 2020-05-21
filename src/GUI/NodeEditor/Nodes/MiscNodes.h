@@ -293,6 +293,7 @@ class GraphOutputNode: public BaseNode
 		QWidget* embeddedWidget() { return baseWidget; }
 
         inline int GetGraphOutputInx() { return graphOutputInx; }
+
 };
 
 }
