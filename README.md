@@ -8,11 +8,11 @@ with ease and a powerful engine with support for C++ Java and C#.
 
 
 <p align="center">
-  <img width="640" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/NodeBasedGUI1.jpg"/>
-  <img width="640" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/MedianFilter.jpg"/>
-  <img width="640" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/GaussianBlur.jpg"/>
-  <img width="640" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/CannyEdges.jpg"/>
-  <img width="640" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/ARUCO.jpg"/>
-  <img width="640" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/CameraCorrection.jpg"/>
-  <img width="640" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/CornerDetector.jpg"/>
+  <img width="800" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/NodeBasedGUI1.jpg"/>
+  <img width="800" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/MedianFilter.jpg"/>
+  <img width="800" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/GaussianBlur.jpg"/>
+  <img width="800" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/CannyEdges.jpg"/>
+  <img width="800" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/ARUCO.jpg"/>
+  <img width="800" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/CameraCorrection.jpg"/>
+  <img width="800" src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/CornerDetector.jpg"/>
 </p>
