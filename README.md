@@ -14,5 +14,5 @@ with ease and a powerful engine with support for C++ Java and C#.
   <img src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/CannyEdges.jpg"/>
   <img src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/ARUCO.jpg"/>
   <img src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/CameraCorrection.jpg"/>
-  <img src="https://raw.githubusercontent.com/ReubenJCarter/OpenGLPathTracer/master/web/img/CornerDetector.jpg"/>
+  <img src="https://raw.githubusercontent.com/ReubenJCarter/TinkerVision/gh-pages/img/CornerDetector.jpg"/>
 </p>
