@@ -345,8 +345,7 @@ class Graph: public Node
                     }
                 }
 
-                //build the output mappings
-                
+                //build the output mappings              
                 std::vector<SerializedObject*> graphOutputMappingSObj;
                 bool hasOutputMappings = sObj->GetSerializedObjectArray("outmaps", graphOutputMappingSObj);
                 graphOutputMapping.clear(); 
