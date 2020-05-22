@@ -312,6 +312,10 @@ class Graph: public Node
                     {
                         n->SetId( id ); 
                     }
+                    else
+                    {
+                        std::cerr << "TnkrVis:ComputeGraph:Graph:Deserialize: Node not recognized " <<  id << "\n"; 
+                    }
                    
                     SerializedObject* params = nodessobj[i]->GetSerializedObject("params"); 
                     if (params != NULL && n != NULL)
@@ -329,17 +333,20 @@ class Graph: public Node
                     
                     Node* n = nodes[i]; 
                     
-                    n->ClearInputConnections(); //needed??
-
-                    for (int c = 0; c < connectionsArraySObj.size(); c++)
+                    if(n != NULL)
                     {
-                        std::string connectionId = connectionsArraySObj[c]->GetString("id"); 
-                        int outInx = connectionsArraySObj[c]->GetInt("outinx");  
-                        n->AddInputConnection(ptrmap[connectionId], outInx); 
+                        n->ClearInputConnections(); //needed??
+                        for (int c = 0; c < connectionsArraySObj.size(); c++)
+                        {
+                            std::string connectionId = connectionsArraySObj[c]->GetString("id"); 
+                            int outInx = connectionsArraySObj[c]->GetInt("outinx");  
+                            n->AddInputConnection(ptrmap[connectionId], outInx); 
+                        }
                     }
                 }
 
                 //build the output mappings
+                
                 std::vector<SerializedObject*> graphOutputMappingSObj;
                 bool hasOutputMappings = sObj->GetSerializedObjectArray("outmaps", graphOutputMappingSObj);
                 graphOutputMapping.clear(); 

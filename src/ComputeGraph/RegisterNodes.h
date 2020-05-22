@@ -27,6 +27,7 @@ void RegisterNodes()
     //Process nodes
     Node::RegisterType<Nodes::AdaptiveThreshold>(); 
     Node::RegisterType<Nodes::ApproxDistanceTransform>();
+    Node::RegisterType<Nodes::AverageFilter>(); 
     Node::RegisterType<Nodes::BrightnessContrast>();
     Node::RegisterType<Nodes::CameraDistortion>();
 
