@@ -25,11 +25,11 @@ class TINKERVISION_EXPORT Blend
 
         void SetMode(BlendMode bm);
 
-		void Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* output, ImageGPU* blendMask); 
-        void Run(Image* inputSrc, Image* inputDst, Image* output, Image* blendMask); 
+		void Run(ImageGPU* inputTop, ImageGPU* inputBottom, ImageGPU* output, ImageGPU* blendMask); 
+        void Run(Image* inputTop, Image* inputBottom, Image* output, Image* blendMask); 
 
-        void Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* output); 
-        void Run(Image* inputSrc, Image* inputDst, Image* output); 
+        void Run(ImageGPU* inputTop, ImageGPU* inputBottom, ImageGPU* output); 
+        void Run(Image* inputTop, Image* inputBottom, Image* output); 
 };
 	
 }

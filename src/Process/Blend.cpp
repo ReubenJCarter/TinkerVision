@@ -276,24 +276,24 @@ void Blend::SetMode(BlendMode bm)
     internal->SetMode(bm); 
 }
 
-void Blend::Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* output, ImageGPU* blendMask)
+void Blend::Run(ImageGPU* inputTop, ImageGPU* inputBottom, ImageGPU* output, ImageGPU* blendMask)
 {
-    internal->Run(inputSrc, inputDst, output, blendMask); 
+    internal->Run(inputTop, inputBottom, output, blendMask); 
 }
 
-void Blend::Run(Image* inputSrc, Image* inputDst, Image* output, Image* blendMask)
+void Blend::Run(Image* inputTop, Image* inputBottom, Image* output, Image* blendMask)
 {
-    internal->Run(inputSrc, inputDst, output, blendMask); 
+    internal->Run(inputTop, inputBottom, output, blendMask); 
 }
 
-void Blend::Run(ImageGPU* inputSrc, ImageGPU* inputDst, ImageGPU* output)
+void Blend::Run(ImageGPU* inputTop, ImageGPU* inputBottom, ImageGPU* output)
 {
-    internal->Run(inputSrc, inputDst, output); 
+    internal->Run(inputTop, inputBottom, output); 
 }
 
-void Blend::Run(Image* inputSrc, Image* inputDst, Image* output)
+void Blend::Run(Image* inputTop, Image* inputBottom, Image* output)
 {
-    internal->Run(inputSrc, inputDst, output); 
+    internal->Run(inputTop, inputBottom, output); 
 }
 
 }
