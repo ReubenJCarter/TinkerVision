@@ -28,8 +28,18 @@ void RegisterNodes()
     Node::RegisterType<Nodes::AdaptiveThreshold>(); 
     Node::RegisterType<Nodes::ApproxDistanceTransform>();
     Node::RegisterType<Nodes::AverageFilter>(); 
+    Node::RegisterType<Nodes::Blend>();
     Node::RegisterType<Nodes::BrightnessContrast>();
     Node::RegisterType<Nodes::CameraDistortion>();
+    Node::RegisterType<Nodes::ChannelDemux>();
+    Node::RegisterType<Nodes::ChannelMapper>();
+    Node::RegisterType<Nodes::ChannelMux>();
+    Node::RegisterType<Nodes::CircleHoughTransform>();
+    Node::RegisterType<Nodes::ClearColor>();
+    Node::RegisterType<Nodes::Convolution>();
+    Node::RegisterType<Nodes::CopyImage>();
+    Node::RegisterType<Nodes::Crop>();
+    Node::RegisterType<Nodes::Downsample>();
 
     //Source nodes
     Node::RegisterType<Nodes::StringSource>(); 
