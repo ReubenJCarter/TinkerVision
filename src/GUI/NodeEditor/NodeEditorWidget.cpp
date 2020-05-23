@@ -189,9 +189,14 @@ NodeEditorWidget::NodeEditorWidget()
 		ret->registerModel<Nodes::Blend>("Processes"); 
 		ret->registerModel<Nodes::BrightnessContrast>("Processes"); 
 		ret->registerModel<Nodes::CameraDistortion>("Processes"); 
+		ret->registerModel<Nodes::ChannelDemux>("Processes"); 
 		ret->registerModel<Nodes::ChannelMapper>("Processes"); 
+		ret->registerModel<Nodes::ChannelMux>("Processes"); 
+		ret->registerModel<Nodes::CircleHoughTransform>("Processes"); 
 		ret->registerModel<Nodes::ClearColor>("Processes"); 
+		ret->registerModel<Nodes::Convolution>("Processes"); 
 		ret->registerModel<Nodes::CopyImage>("Processes"); 
+		ret->registerModel<Nodes::Crop>("Processes"); 
 
 		return ret; 
 	};

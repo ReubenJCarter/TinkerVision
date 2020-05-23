@@ -75,6 +75,7 @@ class Blend: public BaseNode
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~Blend(){}	
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::Blend; }
 };
 
 class BrightnessContrast: public BaseProcess1In1Out
@@ -112,6 +113,20 @@ class CameraDistortion: public BaseProcess1In1Out
         ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::CameraDistortion; }
 };
 
+class ChannelDemux: public BaseProcess1In1Out
+{
+	public:
+		ChannelDemux()
+        {
+            inputPorts.push_back({"ch", true, IntData().type(), true});
+            
+            Init("ChannelDemux", inputPorts, outputPorts, true, "Channel Demux", false); 
+            SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
+        }
+		virtual ~ChannelDemux(){}	
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::ChannelDemux; }
+};
+
 class ChannelMapper: public BaseProcess1In1Out
 {
 	public:
@@ -126,6 +141,33 @@ class ChannelMapper: public BaseProcess1In1Out
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~ChannelMapper(){}	
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::ChannelMapper; }
+};
+
+class ChannelMux: public BaseProcess1In1Out
+{
+	public:
+		ChannelMux()
+        {
+            inputPorts.push_back({"ch", true, IntData().type(), true});
+            
+            Init("ChannelMux", inputPorts, outputPorts, true, "Channel Mux", false); 
+            SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
+        }
+		virtual ~ChannelMux(){}	
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::ChannelMux; }
+};
+
+class CircleHoughTransform: public BaseProcess1In1Out
+{
+	public:
+		CircleHoughTransform()
+        {            
+            Init("CircleHoughTransform", inputPorts, outputPorts, true, "Circle Hough Transform", false); 
+            SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
+        }
+		virtual ~CircleHoughTransform(){}	
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::CircleHoughTransform; }
 };
 
 class ClearColor: public BaseProcess1In1Out
@@ -133,33 +175,70 @@ class ClearColor: public BaseProcess1In1Out
 	public:
 		ClearColor()
         {
-            inputPorts.push_back({"color", true, IntData().type(), true});
+            inputPorts.push_back({"r", true, FloatData().type(), true});
+            inputPorts.push_back({"g", true, FloatData().type(), true});
+            inputPorts.push_back({"b", true, FloatData().type(), true});
+            inputPorts.push_back({"a", true, FloatData().type(), false});
             
             Init("ClearColor", inputPorts, outputPorts, true, "Clear Color", false); 
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~ClearColor(){}	
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::ClearColor; }
 };
 
-class CopyImage: public BaseNode
+class Convolution: public BaseNode
+{        
+	public:
+		Convolution()
+        {
+            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
+                                                        {"src", true, ImageData().type(), true},
+                                                        {"conv", true, ImageData().type(), true}
+                                                        });
+
+            std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
+            
+            Init("Convolution", inputPorts, outputPorts, true, "Convolution", false); 
+            SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
+        }
+		virtual ~Convolution(){}	
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::Convolution; }
+};
+
+class CopyImage: public BaseProcess1In1Out
 {
 	public:
 		CopyImage()
         {
-            std::vector<BaseNode::InputPortInfo> inputPorts({{"dst", true, ImageData().type(), true},
-                                                        {"src", true, ImageData().type(), true},
-                                                        {"format translate", true, BoolData().type(), true}, 
-                                                        {"offsetX", true, IntData().type(), false}, 
-                                                        {"offsetY", true, IntData().type(), false}, 
-                                                        });
-
-            std::vector<BaseNode::OutputPortInfo> outputPorts({ {"im", true, ImageData().type()} }); 
+           
+            inputPorts.push_back({"format translate", true, BoolData().type(), false}); 
+            inputPorts.push_back({"use out's size", true, BoolData().type(), false}); 
+            inputPorts.push_back({"offsetX", true, IntData().type(), false}); 
+            inputPorts.push_back({"offsetY", true, IntData().type(), false});
             
             Init("CopyImage", inputPorts, outputPorts, true, "Copy Image", false); 
             SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
         }
 		virtual ~CopyImage(){}	
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::CopyImage; }
 };
+
+class Crop: public BaseProcess1In1Out
+{
+	public:
+		Crop()
+        {
+            inputPorts.push_back({"offsetX", true, IntData().type(), false}); 
+            inputPorts.push_back({"offsetY", true, IntData().type(), false});
+            
+            Init("Crop", inputPorts, outputPorts, true, "Crop", false); 
+            SetValidationState(QtNodes::NodeValidationState::Error, "input error"); 
+        }
+		virtual ~Crop(){}	
+        ComputeGraph::Node* GetComputeNode() { return new ComputeGraph::Nodes::Crop; }
+};
+
 
 }
 }

@@ -131,7 +131,7 @@ class BaseProcess1In1Out: public Node
             else if(inSrcAsimageGPU != NULL && inDstAsimageGPU != NULL)
             {
                 proc.Run(inSrcAsimageGPU, inDstAsimageGPU);
-                outImageData = Data(DataType::ImageData, inDstAsimageGPU);
+                outImageData = Data(DataType::ImageGPUData, inDstAsimageGPU);
             }
             else
             {
@@ -350,14 +350,16 @@ class Convolution:  public Node
         void Run()
         {
 
-            Image* inSrcAsimage = GetInputData(0).AsType<Image>(ImageData);
-            ImageGPU* inSrcAsimageGPU = GetInputData(0).AsType<ImageGPU>(ImageGPUData);  
+             Image* dstAsimage = GetInputData(0).AsType<Image>(ImageData);  
+            ImageGPU* dstAsimageGPU = GetInputData(0).AsType<ImageGPU>(ImageGPUData);  
 
-            Image* convAsimage = GetInputData(1).AsType<Image>(ImageData);  
-            ImageGPU* convAsimageGPU = GetInputData(1).AsType<ImageGPU>(ImageGPUData);  
+            Image* inSrcAsimage = GetInputData(1).AsType<Image>(ImageData);
+            ImageGPU* inSrcAsimageGPU = GetInputData(1).AsType<ImageGPU>(ImageGPUData);  
 
-            Image* dstAsimage = GetInputData(2).AsType<Image>(ImageData);  
-            ImageGPU* dstAsimageGPU = GetInputData(2).AsType<ImageGPU>(ImageGPUData);  
+            Image* convAsimage = GetInputData(2).AsType<Image>(ImageData);  
+            ImageGPU* convAsimageGPU = GetInputData(2).AsType<ImageGPU>(ImageGPUData);  
+
+           
                         
             if(inSrcAsimage != NULL && convAsimage != NULL && dstAsimage != NULL)
             {
@@ -412,6 +414,12 @@ class Downsample: public BaseProcess1In1Out<Process::Downsample>
         }
 }; 
 
+class FindContours: public BaseProcess1In1OutCPUOnly<Process::FindContours>
+{
+    TNKRVIS_CLONEABLE_MACRO(FindContours) 
+    public:
+        void SetParams() {}
+}; 
 
 }
 }

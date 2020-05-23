@@ -36,10 +36,7 @@ layout(FORMAT_QUALIFIER, binding=1) uniform image2D inputImage;
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
-    ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-    vec4 d = imageLoad(inputImage, id);
-    float av = (d.r + d.g + d.b ) / 3.0f; 
-    imageStore(outputImage, id, vec4(av, av, av, av)); 
+    
 }
 
 )";
@@ -84,12 +81,6 @@ void CircleHoughTransform::Internal::Run(Image* input, Image* output)
         glm::vec4 d = GetPixel(input, x, y); 
         
         glm::vec4 outVec ; 
-
-        float av = (d.r + d.g + d.b ) / 3.0f; 
-        outVec.r = av;
-        outVec.g = av;
-        outVec.b = av;
-        outVec.a = d.a;
 
         SetPixel(output, x, y, outVec); 
     };

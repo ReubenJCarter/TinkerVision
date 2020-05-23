@@ -31,6 +31,8 @@ set(LIBRARYSRCFILES
 	Process/CameraDistortion.cpp
 	Process/ChannelDemux.cpp
 	Process/ChannelMapper.cpp
+	Process/ChannelMux.cpp
+	Process/CircleHoughTransform.cpp
 	Process/ClearColor.cpp
 	Process/Convolution.cpp
 	Process/CopyImage.cpp

@@ -40,6 +40,7 @@ void RegisterNodes()
     Node::RegisterType<Nodes::CopyImage>();
     Node::RegisterType<Nodes::Crop>();
     Node::RegisterType<Nodes::Downsample>();
+    Node::RegisterType<Nodes::FindContours>(); 
 
     //Source nodes
     Node::RegisterType<Nodes::StringSource>(); 
