@@ -1,4 +1,4 @@
-#include "Thinning.h"
+#include "MorphThinning.h"
 
 #include "../Core/ComputeShader.h"
 #include "../Core/ProcessHelper.h"
@@ -16,7 +16,7 @@ namespace TnkrVis
 namespace Process
 {
 
-class Thinning::Internal
+class MorphThinning::Internal
 {
     private:
         Image temp; 
@@ -72,11 +72,11 @@ class Thinning::Internal
 };
 
 
-Thinning::Internal::Internal()
+MorphThinning::Internal::Internal()
 {
 }
 
-void Thinning::Internal::CopyImage(Image* input, Image* output)
+void MorphThinning::Internal::CopyImage(Image* input, Image* output)
 {
     for(int j = 0; j < input->GetHeight(); j++)
     {
@@ -88,7 +88,7 @@ void Thinning::Internal::CopyImage(Image* input, Image* output)
     }
 }
 
-void Thinning::Internal::Run(Image* input, Image* output)
+void MorphThinning::Internal::Run(Image* input, Image* output)
 {
     if(output->GetWidth() != input->GetWidth() || output->GetHeight() != input->GetHeight() || output->GetType() != ImageType::GRAYSCALE8) 
     {
@@ -154,17 +154,17 @@ void Thinning::Internal::Run(Image* input, Image* output)
 
 
 
-Thinning::Thinning()
+MorphThinning::MorphThinning()
 {
     internal = new Internal(); 
 }
 
-Thinning::~Thinning()
+MorphThinning::~MorphThinning()
 { 
     delete internal; 
 }
 
-void Thinning::Run(Image* input, Image* output)
+void MorphThinning::Run(Image* input, Image* output)
 {
     internal->Run(input, output); 
 }

@@ -26,7 +26,7 @@
 #include "Process/CopyImage.h"
 #include "Process/GaussianDerivative.h"
 #include "Process/Normalize.h"
-#include "Process/Thinning.h"
+#include "Process/MorphThinning.h"
 #include "Process/ApproxDistanceTransform.h"
 #include "Process/InRange.h"
 #include "Process/LocalMaxima.h"
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 
 		//Thin
 		std::cout << "Thin\n"; 
-		TnkrVis::Process::Thinning thinning; 
+		TnkrVis::Process::MorphThinning thinning; 
 		//thinning.Run(&image2, &image3); 
 		//TnkrVis::ImageFile::Write("image2_1Test.png", &image3);
 

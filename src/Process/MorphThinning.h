@@ -11,15 +11,15 @@ namespace TnkrVis
 namespace Process
 {
 	
-class TINKERVISION_EXPORT Thinning
+class TINKERVISION_EXPORT MorphThinning
 {
     private: 
         class Internal;
         Internal* internal;
 
 	public:
-		Thinning(); 
-        ~Thinning(); 
+		MorphThinning(); 
+        ~MorphThinning(); 
         void Run(Image* input, Image* output); 
 };
 	

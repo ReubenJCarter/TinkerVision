@@ -56,6 +56,7 @@ set(LIBRARYSRCFILES
 	Process/MedianFilter.cpp
 	Process/Mipmaps.cpp
 	Process/MorphRect.cpp
+	Process/MorphThinning.cpp
 	Process/NonMaximumEdgeSuppression.cpp
 	Process/Normalize.cpp
 	Process/OtsuThreshold.cpp
@@ -67,7 +68,6 @@ set(LIBRARYSRCFILES
 	Process/StereoMatchSAD.cpp
 	Process/StructureTensor.cpp
 	Process/TemplateMatch.cpp
-	Process/Thinning.cpp
 	Process/Threshold.cpp
 	Process/Translate.cpp
 	Process/Upsample.cpp
