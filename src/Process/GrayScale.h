@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -25,4 +27,20 @@ class TINKERVISION_EXPORT GrayScale
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class GrayScale: public BaseProcess1In1Out<Process::GrayScale>
+{
+    TNKRVIS_CLONEABLE_MACRO(GrayScale) 
+    public:
+        void SetParams() {}
+};
+
+}
+}
+
 }

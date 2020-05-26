@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -26,4 +28,23 @@ class TINKERVISION_EXPORT ChannelDemux
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class ChannelDemux: public BaseProcess1In1Out<Process::ChannelDemux>
+{
+    TNKRVIS_CLONEABLE_MACRO(ChannelDemux) 
+    public:
+        void SetParams() 
+        {
+            proc.SetChannel( GetInputData(2).DerefAsType<int>(IntData, 0));
+        }
+}; 
+
+}
+}
+
 }

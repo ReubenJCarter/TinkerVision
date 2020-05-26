@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../Node.h"
+#include "Node.h"
 
-#include "../../Core/Image.h"
-#include "../../Core/ImageGPU.h"
-#include "../../Core/VectorMath.h"
+#include "../Core/Image.h"
+#include "../Core/ImageGPU.h"
+#include "../Core/VectorMath.h"
 
 namespace TnkrVis
 {

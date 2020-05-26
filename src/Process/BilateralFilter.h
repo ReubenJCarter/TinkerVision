@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -27,4 +29,24 @@ class TINKERVISION_EXPORT BilateralFilter
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class BilateralFilter: public BaseProcess1In1Out<Process::BilateralFilter>
+{
+    TNKRVIS_CLONEABLE_MACRO(BilateralFilter) 
+    public:
+        void SetParams() 
+        {
+            proc.SetSigma( GetInputData(2).DerefAsType<float>(FloatData, 1.6));
+            proc.SetSize( GetInputData(2).DerefAsType<int>(IntData, 5));
+        }
+}; 
+
+}
+}
+
 }

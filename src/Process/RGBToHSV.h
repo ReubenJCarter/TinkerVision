@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -25,4 +27,20 @@ class TINKERVISION_EXPORT RGBToHSV
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class RGBToHSV: public BaseProcess1In1Out<Process::RGBToHSV>
+{
+    TNKRVIS_CLONEABLE_MACRO(RGBToHSV) 
+    public:
+        void SetParams() { }
+}; 
+
+}
+}
+
 }

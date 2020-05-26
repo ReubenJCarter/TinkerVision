@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -24,4 +26,18 @@ class TINKERVISION_EXPORT ApproxDistanceTransform
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class ApproxDistanceTransform: public BaseProcess1In1OutCPUOnly<Process::ApproxDistanceTransform>
+{
+    TNKRVIS_CLONEABLE_MACRO(ApproxDistanceTransform) 
+}; 
+
+}
+}
+
 }

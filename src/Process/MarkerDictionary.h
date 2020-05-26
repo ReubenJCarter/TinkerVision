@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -26,4 +28,13 @@ class TINKERVISION_EXPORT MarkerDictionary
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+}
+}
+
 }

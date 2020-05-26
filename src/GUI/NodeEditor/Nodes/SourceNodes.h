@@ -4,7 +4,7 @@
 
 #include "../DataTypes.h"
 
-#include "../../../ComputeGraph/Nodes/SourceNodes.h"
+#include "../../../ComputeGraph/SourceNodes.h"
 
 #include <QLineEdit>
 #include <QCheckBox>

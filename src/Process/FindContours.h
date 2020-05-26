@@ -7,6 +7,8 @@
 #include "../Core/ImageGPU.h"
 #include "../Core/Contour.h"
 
+#include "../ComputeGraph/Node.h"
+
 #include <vector>
 
 namespace TnkrVis
@@ -27,4 +29,20 @@ class TINKERVISION_EXPORT FindContours
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class FindContours: public BaseProcess1In1OutCPUOnly<Process::FindContours>
+{
+    TNKRVIS_CLONEABLE_MACRO(FindContours) 
+    public:
+        void SetParams() {}
+};
+
+}
+}
+
 }

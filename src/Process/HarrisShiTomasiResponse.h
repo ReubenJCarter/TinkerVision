@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -26,4 +28,20 @@ class TINKERVISION_EXPORT HarrisShiTomasiResponse
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class HarrisShiTomasiResponse: public BaseProcess1In1Out<Process::HarrisShiTomasiResponse>
+{
+    TNKRVIS_CLONEABLE_MACRO(HarrisShiTomasiResponse) 
+    public:
+        void SetParams() {}
+}; 
+
+}
+}
+
 }

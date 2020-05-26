@@ -27,7 +27,7 @@ namespace ComputeGraph
  * Node of a compute graph.
  */
 	
-class Node
+class TINKERVISION_EXPORT Node
 {
     private:
 		static std::map<std::string, Node*> nodeTypes; 
@@ -199,18 +199,93 @@ class Node
             return inputConnection[inx]; 
         }
 
-        void SetId(std::string idstr)
+        inline void SetId(std::string idstr)
         {
             id = idstr;
         }
 
-        std::string GetId()
+        inline std::string GetId()
         {
             return id; 
         }
 };
 
-std::map<std::string, Node*>  Node::nodeTypes; 
-	
+template<class T>
+class BaseProcess1In1OutCPUOnly: public Node
+{
+    protected:
+        Data outImageData; /** cache of the output data, also null data when no image avilible.*/
+        T proc;
+    
+    public: 
+        Data GetOutput(int inx){ return outImageData; }
+
+        inline virtual void SetParams()
+        {
+            
+        }
+
+        void Run()
+        {
+            SetParams(); 
+            
+            Image* inDstAsimage = GetInputData(0).AsType<Image>(ImageData);  
+
+            Image* inSrcAsimage = GetInputData(1).AsType<Image>(ImageData);  
+                        
+            if(inSrcAsimage != NULL && inDstAsimage != NULL)
+            {
+                proc.Run(inSrcAsimage, inDstAsimage);
+                outImageData = Data(DataType::ImageData, inDstAsimage); 
+            }
+            else
+            {
+                outImageData = Data(NullData, NULL); 
+            }
+        }
+}; 
+
+template<class T>
+class BaseProcess1In1Out: public Node
+{
+    protected:
+        Data outImageData; /** cache of the output data, also null data when no image avilible.*/
+        T proc;
+    
+    public: 
+        Data GetOutput(int inx){ return outImageData; }
+
+        inline virtual void SetParams()
+        {
+            
+        }
+
+        void Run()
+        {
+            SetParams(); 
+
+            Image* inDstAsimage = GetInputData(0).AsType<Image>(ImageData);
+            ImageGPU* inDstAsimageGPU = GetInputData(0).AsType<ImageGPU>(ImageGPUData);  
+
+            Image* inSrcAsimage = GetInputData(1).AsType<Image>(ImageData);  
+            ImageGPU* inSrcAsimageGPU = GetInputData(1).AsType<ImageGPU>(ImageGPUData);  
+                        
+            if(inSrcAsimage != NULL && inDstAsimage != NULL)
+            {
+                proc.Run(inSrcAsimage, inDstAsimage);
+                outImageData = Data(DataType::ImageData, inDstAsimage); 
+            }
+            else if(inSrcAsimageGPU != NULL && inDstAsimageGPU != NULL)
+            {
+                proc.Run(inSrcAsimageGPU, inDstAsimageGPU);
+                outImageData = Data(DataType::ImageGPUData, inDstAsimageGPU);
+            }
+            else
+            {
+                outImageData = Data(NullData, NULL); 
+            }
+        }
+}; 
+
 }
 }

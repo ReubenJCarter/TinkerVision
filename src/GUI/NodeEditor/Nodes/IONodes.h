@@ -4,7 +4,7 @@
 
 #include "../DataTypes.h"
 
-#include "../../../ComputeGraph/Nodes/IONodes.h"
+#include "../../../IO/ImageFile.h"
 
 namespace TnkrVis
 {

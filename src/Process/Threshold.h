@@ -8,6 +8,8 @@
 
 #include "../Core/VectorMath.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -29,4 +31,23 @@ class TINKERVISION_EXPORT Threshold
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class Threshold: public BaseProcess1In1Out<Process::Threshold>
+{
+    TNKRVIS_CLONEABLE_MACRO(Threshold) 
+    public:
+        void SetParams() 
+        { 
+            proc.SetThreshold( GetInputData(2).DerefAsType<Color>(ColorData, Color(0.5, 0.5, 0.5)));
+        }
+};
+
+}
+}
+
 }

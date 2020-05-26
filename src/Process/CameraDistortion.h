@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -28,4 +30,28 @@ class TINKERVISION_EXPORT CameraDistortion
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class CameraDistortion: public BaseProcess1In1Out<Process::CameraDistortion>
+{
+    TNKRVIS_CLONEABLE_MACRO(CameraDistortion) 
+    public:
+        void SetParams() 
+        {
+            proc.SetRadialCoefs( GetInputData(2).DerefAsType<float>(FloatData, 0), 
+                                 GetInputData(3).DerefAsType<float>(FloatData, 0), 
+                                 GetInputData(4).DerefAsType<float>(FloatData, 0) );
+            proc.SetTangentialCoefs( GetInputData(5).DerefAsType<float>(FloatData, 0),
+                                     GetInputData(6).DerefAsType<float>(FloatData, 0) );
+            proc.SetFocalLength( GetInputData(7).DerefAsType<float>(FloatData, 1) );
+        }
+};  
+
+}
+}
+
 }

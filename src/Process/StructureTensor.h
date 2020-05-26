@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -26,4 +28,20 @@ class TINKERVISION_EXPORT StructureTensor
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class StructureTensor: public BaseProcess1In1Out<Process::StructureTensor>
+{
+    TNKRVIS_CLONEABLE_MACRO(StructureTensor) 
+    public:
+        void SetParams() { }
+}; 
+
+}
+}
+
 }

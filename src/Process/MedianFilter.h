@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -26,4 +28,23 @@ class TINKERVISION_EXPORT MedianFilter
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class MedianFilter: public BaseProcess1In1Out<Process::MedianFilter>
+{
+    TNKRVIS_CLONEABLE_MACRO(MedianFilter) 
+    public:
+        void SetParams() 
+        {
+            proc.SetSize( GetInputData(2).DerefAsType<int>(IntData, 3 ) ); 
+        }
+};
+
+}
+}
+
 }

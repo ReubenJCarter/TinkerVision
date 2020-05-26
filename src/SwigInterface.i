@@ -104,6 +104,7 @@ namespace std{
     %template (CameraPoseVector) vector<TnkrVis::CameraPose>; 
 }
 
+
 %include "Core/VectorMath.h"
 %include "Core/BoundingBox.h"
 %include "Core/Contour.h"
@@ -149,7 +150,6 @@ namespace std{
 %include "Process/MorphThinning.h"
 %include "Process/NonMaximumEdgeSuppression.h"
 %include "Process/Normalize.h"
-%include "Process/Perspective3Point.h"
 %include "Process/Renderer.h"
 %include "Process/RGBToHSV.h"
 %include "Process/Rotate.h"

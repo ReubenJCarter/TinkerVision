@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -25,4 +27,20 @@ class TINKERVISION_EXPORT Invert
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class Invert: public BaseProcess1In1Out<Process::Invert>
+{
+    TNKRVIS_CLONEABLE_MACRO(Invert) 
+    public:
+        void SetParams() {}
+}; 
+
+}
+}
+
 }

@@ -348,7 +348,7 @@ namespace lambdatwist {
 
 namespace TnkrVis
 {
-namespace Process
+namespace Algo
 {
 
 

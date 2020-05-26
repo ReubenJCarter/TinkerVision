@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -28,4 +30,23 @@ class TINKERVISION_EXPORT Sobel
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class Sobel: public BaseProcess1In1Out<Process::Sobel>
+{
+    TNKRVIS_CLONEABLE_MACRO(Sobel) 
+    public:
+        void SetParams() 
+        { 
+            proc.SetMode( (Process::Sobel::Mode)GetInputData(2).DerefAsType<int>(IntData, Process::Sobel::Mode::FULL));
+        }
+}; 
+
+}
+}
+
 }

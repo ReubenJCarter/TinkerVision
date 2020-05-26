@@ -7,6 +7,8 @@
 #include "../Core/ImageGPU.h"
 #include "../Core/VectorMath.h"
 
+#include "../ComputeGraph/Node.h"
+
 #include <vector>
 
 namespace TnkrVis
@@ -29,4 +31,23 @@ class TINKERVISION_EXPORT AverageFilter
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class AverageFilter: public BaseProcess1In1Out<Process::AverageFilter>
+{
+    TNKRVIS_CLONEABLE_MACRO(AverageFilter) 
+    public:
+        void SetParams() 
+        {
+            proc.SetSize( GetInputData(2).DerefAsType<int>(IntData, 0) );
+        }
+};  
+
+}
+}
+
 }

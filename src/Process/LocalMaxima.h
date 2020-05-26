@@ -7,6 +7,8 @@
 #include "../Core/ImageGPU.h"
 #include "../Core/VectorMath.h"
 
+#include "../ComputeGraph/Node.h"
+
 #include <vector>
 
 namespace TnkrVis
@@ -29,4 +31,24 @@ class TINKERVISION_EXPORT LocalMaxima
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class LocalMaxima: public BaseProcess1In1OutCPUOnly<Process::LocalMaxima>
+{
+    TNKRVIS_CLONEABLE_MACRO(LocalMaxima) 
+    public:
+        void SetParams() 
+        { //TODO Array of centers support (needs general array support)
+            proc.SetThreshold( GetInputData(2).DerefAsType<float>(FloatData, 1.0f )  ); 
+            proc.SetSize( GetInputData(3).DerefAsType<float>(FloatData, 1.0f )  );
+        }
+};
+
+}
+}
+
 }

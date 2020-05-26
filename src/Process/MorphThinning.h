@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -24,4 +26,20 @@ class TINKERVISION_EXPORT MorphThinning
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class MorphThinning: public BaseProcess1In1OutCPUOnly<Process::MorphThinning>
+{
+    TNKRVIS_CLONEABLE_MACRO(MorphThinning) 
+    public:
+        void SetParams() { }
+}; 
+
+}
+}
+
 }

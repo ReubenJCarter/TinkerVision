@@ -7,6 +7,8 @@
 #include "../Core/ImageGPU.h"
 #include "../Core/Contour.h"
 
+#include "../ComputeGraph/Node.h"
+
 #include <vector>
 
 namespace TnkrVis
@@ -29,4 +31,43 @@ class TINKERVISION_EXPORT MarkerBitExtract
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class MarkerBitExtract: public Node //TODO (with array support)
+{
+    TNKRVIS_CLONEABLE_MACRO(MarkerBitExtract) 
+    private:
+        Data outImageData;
+        Process::MarkerBitExtract proc; 
+
+    public:
+        Data GetOutput(int inx){ return outImageData; }
+
+        void Run()
+        {
+            proc.SetGridSize(GetInputData(3).DerefAsType<int>(IntData, 0), 
+                             GetInputData(4).DerefAsType<int>(IntData, 0)); 
+            proc.SetMarginSize( GetInputData(5).DerefAsType<float>(FloatData, 0)); 
+
+            Image* dstAsimage = GetInputData(0).AsType<Image>(ImageData);  
+                        
+            if(dstAsimage != NULL)
+            {
+                //proc.Run( dstAsimage);
+                outImageData = Data(DataType::ImageData, dstAsimage); 
+            }
+            else
+            {
+                outImageData = Data(NullData, NULL); 
+            }
+        }
+};
+
+}
+}
+
 }

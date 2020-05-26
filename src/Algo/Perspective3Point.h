@@ -11,7 +11,7 @@
 
 namespace TnkrVis
 {
-namespace Process
+namespace Algo
 {
 
 class TINKERVISION_EXPORT Perspective3Point

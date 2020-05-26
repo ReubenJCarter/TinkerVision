@@ -8,6 +8,8 @@
 
 #include "../Core/VectorMath.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -32,4 +34,54 @@ class TINKERVISION_EXPORT TemplateMatch
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class TemplateMatch:  public Node
+{
+    TNKRVIS_CLONEABLE_MACRO(TemplateMatch) 
+    private:
+        Data outImageData;
+        Process::TemplateMatch proc;
+
+    public:
+        Data GetOutput(int inx){ return outImageData; }
+
+        void Run()
+        {
+            Image* dstAsimage = GetInputData(0).AsType<Image>(ImageData);  
+            ImageGPU* dstAsimageGPU = GetInputData(0).AsType<ImageGPU>(ImageGPUData);  
+
+            Image* inSrcAsimage = GetInputData(1).AsType<Image>(ImageData);
+            ImageGPU* inSrcAsimageGPU = GetInputData(1).AsType<ImageGPU>(ImageGPUData);  
+
+            Image* matchAsimage = GetInputData(2).AsType<Image>(ImageData);  
+            ImageGPU* matchAsimageGPU = GetInputData(2).AsType<ImageGPU>(ImageGPUData);  
+
+            proc.SetMatchMode( (Process::TemplateMatch::MatchMode)GetInputData(3).DerefAsType<int>(IntData, (int)Process::TemplateMatch::MatchMode::MATCH_SAD)); 
+            proc.SetNormalized( GetInputData(4).DerefAsType<bool>(BoolData, true)); 
+                        
+            if(inSrcAsimage != NULL && matchAsimage != NULL && dstAsimage != NULL)
+            {
+                proc.Run(inSrcAsimage, matchAsimage, dstAsimage);
+                outImageData = Data(DataType::ImageData, dstAsimage); 
+            }
+            else if(inSrcAsimageGPU != NULL && matchAsimageGPU != NULL && dstAsimageGPU != NULL)
+            {
+                proc.Run(inSrcAsimageGPU, matchAsimageGPU, dstAsimageGPU);
+                outImageData = Data(DataType::ImageGPUData, dstAsimageGPU); 
+            }
+            else
+            {
+                outImageData = Data(NullData, NULL); 
+            }
+        }
+}; 
+
+}
+}
+
 }

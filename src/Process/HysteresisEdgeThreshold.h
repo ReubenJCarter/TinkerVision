@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -26,4 +28,24 @@ class TINKERVISION_EXPORT HysteresisEdgeThreshold
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class HysteresisEdgeThreshold: public BaseProcess1In1OutCPUOnly<Process::HysteresisEdgeThreshold>
+{
+    TNKRVIS_CLONEABLE_MACRO(HysteresisEdgeThreshold) 
+    public:
+        void SetParams() 
+        {
+            proc.SetHighThreshold( GetInputData(2).DerefAsType<float>(FloatData, 1.0f ) ); 
+            proc.SetLowThreshold( GetInputData(3).DerefAsType<float>(FloatData, 0.0f) ); 
+        }
+}; 
+
+}
+}
+
 }

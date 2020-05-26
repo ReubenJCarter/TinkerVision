@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -25,4 +27,22 @@ class TINKERVISION_EXPORT CircleHoughTransform
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class CircleHoughTransform: public BaseProcess1In1Out<Process::CircleHoughTransform>
+{
+    TNKRVIS_CLONEABLE_MACRO(CircleHoughTransform) 
+    public:
+        void SetParams() 
+        {
+        }
+}; 
+
+}
+}
+
 }

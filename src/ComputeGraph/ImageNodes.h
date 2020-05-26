@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../Node.h"
+#include "Node.h"
 
-#include "../../Core/Image.h"
-#include "../../Core/ImageGPU.h"
+#include "../Core/Image.h"
+#include "../Core/ImageGPU.h"
 
 namespace TnkrVis
 {

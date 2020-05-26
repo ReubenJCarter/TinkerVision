@@ -4,12 +4,14 @@
 
 #include "../Core/VectorMath.h"
 
+#include "../ComputeGraph/Node.h"
+
 #include <vector>
 #include <algorithm>
 
 namespace TnkrVis
 {
-namespace Process
+namespace Algo
 {
 
 
@@ -30,5 +32,4 @@ class TINKERVISION_EXPORT FixedRadiusNN
 
 
 }
-
 }

@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 #include <vector>
 
 namespace TnkrVis
@@ -27,4 +29,45 @@ class TINKERVISION_EXPORT Mipmaps
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class Mipmaps: public Node //TODO (with array support)
+{
+    TNKRVIS_CLONEABLE_MACRO(Mipmaps) 
+    private:
+        Data outImageData;
+        Process::Mipmaps proc; 
+
+    public:
+        Data GetOutput(int inx){ return outImageData; }
+
+        void Run()
+        {
+            Image* dstAsimage = GetInputData(0).AsType<Image>(ImageData);  
+            ImageGPU* dstAsimageGPU = GetInputData(0).AsType<ImageGPU>(ImageGPUData);  
+                        
+            if(dstAsimage != NULL)
+            {
+                //proc.Run( dstAsimage);
+                outImageData = Data(DataType::ImageData, dstAsimage); 
+            }
+            else if(dstAsimageGPU != NULL)
+            {
+                //proc.Run( dstAsimageGPU);
+                outImageData = Data(DataType::ImageGPUData, dstAsimageGPU); 
+            }
+            else
+            {
+                outImageData = Data(NullData, NULL); 
+            }
+        }
+};
+
+}
+}
+
 }

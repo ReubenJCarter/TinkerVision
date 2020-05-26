@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -25,4 +27,20 @@ class TINKERVISION_EXPORT NonMaximumEdgeSuppression
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class NonMaximumEdgeSuppression: public BaseProcess1In1Out<Process::NonMaximumEdgeSuppression>
+{
+    TNKRVIS_CLONEABLE_MACRO(NonMaximumEdgeSuppression) 
+    public:
+        void SetParams() { }
+}; 
+
+}
+}
+
 }

@@ -7,6 +7,8 @@
 #include "../Core/ImageGPU.h"
 #include "../Core/VectorMath.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -31,4 +33,28 @@ class TINKERVISION_EXPORT InRange
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class InRange: public BaseProcess1In1Out<Process::InRange>
+{
+    TNKRVIS_CLONEABLE_MACRO(InRange) 
+    public:
+        void SetParams() 
+        {
+            proc.SetHighThreshold( GetInputData(2).DerefAsType<Vec3>(Vec3Data, Vec3(1, 1, 1) ) ); 
+            proc.SetLowThreshold( GetInputData(3).DerefAsType<Vec3>(Vec3Data, Vec3(0, 0, 0)) ); 
+
+            proc.SetInvertRange( GetInputData(4).DerefAsType<bool>(BoolData, false),
+                                 GetInputData(5).DerefAsType<bool>(BoolData, false),
+                                 GetInputData(6).DerefAsType<bool>(BoolData, false)); 
+        }
+}; 
+
+}
+}
+
 }

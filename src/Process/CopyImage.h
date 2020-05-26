@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -28,4 +30,28 @@ class TINKERVISION_EXPORT CopyImage
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class CopyImage: public BaseProcess1In1Out<Process::CopyImage>
+{
+    TNKRVIS_CLONEABLE_MACRO(CopyImage) 
+    public:
+        void SetParams() 
+        {
+            proc.SetFormatTranslate(GetInputData(2).DerefAsType<bool>(BoolData, true)); 
+
+            proc.UseOutputSize(GetInputData(3).DerefAsType<bool>(BoolData, false)); 
+
+            proc.SetOffset(GetInputData(4).DerefAsType<int>(IntData, 0),
+                           GetInputData(5).DerefAsType<int>(IntData, 0)); 
+        }
+};  
+
+}
+}
+
 }

@@ -7,6 +7,8 @@
 #include "../Core/ImageGPU.h"
 #include "../Core/VectorMath.h"
 
+#include "../ComputeGraph/Node.h"
+
 #include <vector>
 
 namespace TnkrVis
@@ -29,4 +31,26 @@ class TINKERVISION_EXPORT ChannelMapper
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class ChannelMapper: public BaseProcess1In1Out<Process::ChannelMapper>
+{
+    TNKRVIS_CLONEABLE_MACRO(ChannelMapper) 
+    public:
+        void SetParams() 
+        {
+            proc.SetChannelMap( GetInputData(2).DerefAsType<int>(IntData, 0), 
+                                GetInputData(3).DerefAsType<int>(IntData, 1), 
+                                GetInputData(4).DerefAsType<int>(IntData, 2),
+                                GetInputData(5).DerefAsType<int>(IntData, 3));
+        }
+}; 
+
+}
+}
+
 }

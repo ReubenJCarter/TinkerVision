@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -30,4 +32,25 @@ class TINKERVISION_EXPORT MorphRect
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class MorphRect: public BaseProcess1In1Out<Process::MorphRect>
+{
+    TNKRVIS_CLONEABLE_MACRO(MorphRect) 
+    public:
+        void SetParams() 
+        {
+            proc.SetMode( (Process::MorphRect::Mode)GetInputData(2).DerefAsType<int>(IntData, (int)Process::MorphRect::Mode::DILATE) );
+            proc.SetKernel( GetInputData(3).DerefAsType<int>(IntData, 3),
+                            GetInputData(4).DerefAsType<int>(IntData, 3) );  
+        }
+}; 
+
+}
+}
+
 }

@@ -4,7 +4,7 @@
 
 #include "../DataTypes.h"
 
-#include "../../../ComputeGraph/Nodes/ImageNodes.h"
+#include "../../../ComputeGraph/ImageNodes.h"
 
 namespace TnkrVis
 {

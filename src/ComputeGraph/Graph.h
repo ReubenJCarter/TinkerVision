@@ -4,7 +4,7 @@
 
 #include "Node.h"
 
-#include "Nodes/SourceNodes.h"
+#include "SourceNodes.h"
 
 #include "../Core/SerializedObject.h"
 

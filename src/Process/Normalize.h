@@ -6,6 +6,8 @@
 #include "../Core/Image.h"
 #include "../Core/ImageGPU.h"
 
+#include "../ComputeGraph/Node.h"
+
 namespace TnkrVis
 {
 namespace Process
@@ -24,4 +26,20 @@ class TINKERVISION_EXPORT Normalize
 };
 	
 }
+
+namespace ComputeGraph
+{
+namespace Nodes
+{
+
+class Normalize: public BaseProcess1In1OutCPUOnly<Process::Normalize>
+{
+    TNKRVIS_CLONEABLE_MACRO(Normalize) 
+    public:
+        void SetParams() { }
+}; 
+
+}
+}
+
 }

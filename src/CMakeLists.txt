@@ -1,10 +1,18 @@
 set(LIBRARYSRCFILES
+
+	Algo/FixedRadiusNN.cpp
+	Algo/Perspective3Point.cpp
+
 	CompositeProcess/ARUCODetector.cpp
 	CompositeProcess/BarcodeDetector.cpp
 	CompositeProcess/CannyEdgeDetect.cpp
 	CompositeProcess/CornerDetector.cpp
 	CompositeProcess/Resize.cpp
 	CompositeProcess/Sift.cpp
+
+	ComputeGraph/Graph.cpp
+	ComputeGraph/Node.cpp
+	ComputeGraph/RegisterNodes.cpp
 
 	Core/BoundingBox.cpp
 	Core/ComputeShader.cpp
@@ -39,7 +47,6 @@ set(LIBRARYSRCFILES
 	Process/Crop.cpp
 	Process/Downsample.cpp
 	Process/FindContours.cpp
-	Process/FixedRadiusNN.cpp
 	Process/GaussianBlur.cpp
 	Process/GaussianDerivative.cpp
 	Process/GaussianFunction.cpp
@@ -60,7 +67,6 @@ set(LIBRARYSRCFILES
 	Process/NonMaximumEdgeSuppression.cpp
 	Process/Normalize.cpp
 	Process/OtsuThreshold.cpp
-	Process/Perspective3Point.cpp
 	Process/Renderer.cpp
 	Process/RGBToHSV.cpp
 	Process/Rotate.cpp

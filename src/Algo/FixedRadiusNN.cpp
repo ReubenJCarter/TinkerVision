@@ -12,7 +12,7 @@
 namespace TnkrVis
 {
 
-namespace Process
+namespace Algo
 {
 
 
