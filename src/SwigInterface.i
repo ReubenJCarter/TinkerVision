@@ -1,5 +1,9 @@
 %module SwigInterface
 %{
+
+#include "ComputeGraph/Graph.h"
+#include "ComputeGraph/Node.h"
+
 #include "Core/VectorMath.h"
 #include "Core/BoundingBox.h"
 #include "Core/Contour.h"
@@ -7,6 +11,7 @@
 #include "Core/Image.h"
 #include "Core/ImageGPU.h"
 #include "Core/Context.h"
+#include  "Core/SerializedObject.h"
 #include "Core/Window.h"
 
 #include "IO/ImageFile.h"
@@ -45,7 +50,6 @@
 #include "Process/MorphThinning.h"
 #include "Process/NonMaximumEdgeSuppression.h"
 #include "Process/Normalize.h"
-#include "Process/Perspective3Point.h"
 #include "Process/Renderer.h"
 #include "Process/RGBToHSV.h"
 #include "Process/Rotate.h"
@@ -90,6 +94,12 @@ SWIG_JAVABODY_TYPEWRAPPER(public, public, public, SWIGTYPE)
 
 #define TINKERVISION_EXPORT __declspec(dllimport)
 
+#define TNKRVIS_CLONEABLE_MACRO(TYPE)\
+public:\
+TYPE* CloneType() { return new TYPE(); }\
+std::string GetTypeName() { return #TYPE;}\
+private:
+
 %include "windows.i"
 %include "std_string.i" 
 %include "cpointer.i"
@@ -105,6 +115,8 @@ namespace std{
 }
 
 
+//ORDER MATTER! Thank you Swig
+
 %include "Core/VectorMath.h"
 %include "Core/BoundingBox.h"
 %include "Core/Contour.h"
@@ -112,7 +124,11 @@ namespace std{
 %include "Core/Image.h"
 %include "Core/ImageGPU.h"
 %include "Core/Context.h"
+%include "Core/SerializedObject.h"
 %include "Core/Window.h"
+
+%include "ComputeGraph/Node.h"
+%include "ComputeGraph/Graph.h"
 
 %include "IO/ImageFile.h"
 %include "IO/VideoFile.h"

@@ -19,9 +19,29 @@ namespace ComputeGraph
 /**
  */
 	
-class Graph: public Node
+class TINKERVISION_EXPORT Graph: public Node
 {
     TNKRVIS_CLONEABLE_MACRO(Graph) 
+    private:
+		static std::map<std::string, Node*> nodeTypes; 
+
+    public:
+        template<class T> static void RegisterType()
+		{
+			T* n = new T();
+			nodeTypes[n->GetTypeName()] = n;
+		}
+
+		static Node* Create(std::string typeName)
+        {
+            if(nodeTypes.count(typeName) != 0)
+            {
+                return nodeTypes[typeName]->CloneType();
+            }
+            return NULL;
+        } 
+
+        static void RegisterNodes();
 
     protected:
         std::vector<Node*> nodes; 
@@ -55,7 +75,7 @@ class Graph: public Node
             dirty = true; 
         }
 
-        void AddNode(Node* n)
+        void AddNode(TnkrVis::ComputeGraph::Node* n)
         {
             nodes.push_back(n); 
         }
@@ -65,12 +85,12 @@ class Graph: public Node
             return nodes.size(); 
         }
 
-        Node* GetNode(int inx)
+        TnkrVis::ComputeGraph::Node* GetNode(int inx)
         {
             return nodes[inx]; 
         }
 
-        inline void AddOutputMapping(Node* n, int outinx=0)
+        inline void AddOutputMapping(TnkrVis::ComputeGraph::Node* n, int outinx=0)
         {
             Connection c;  
             c.outputInx = outinx; 
@@ -83,17 +103,17 @@ class Graph: public Node
             graphOutputMapping.clear(); 
         }
 
-        Data GetOutput(int inx)
+        TnkrVis::ComputeGraph::Node::Data GetOutput(int inx)
         {
             if(inx < 0 || inx >= graphOutputMapping.size()) //range check on input array
             {
-                return Data(NullData, NULL); 
+                return TnkrVis::ComputeGraph::Node::Data(NullData, NULL); 
             }
 
             return graphOutputMapping[inx].node->GetOutput(graphOutputMapping[inx].outputInx); 
         }
 
-        inline void AddInputMapping(Node* n, int graphInInx)
+        inline void AddInputMapping(TnkrVis::ComputeGraph::Node* n, int graphInInx)
         {
             n->AddInputConnection(&graphInputSource, graphInInx); 
         }
@@ -306,7 +326,7 @@ class Graph: public Node
                     std::string type = nodessobj[i]->GetString("type"); 
                     std::string id = nodessobj[i]->GetString("id"); 
 
-                    Node* n = Node::Create(type); 
+                    Node* n = Graph::Create(type); 
                     ptrmap[id] = n; 
                     if(n != NULL)
                     {

@@ -29,25 +29,9 @@ namespace ComputeGraph
 	
 class TINKERVISION_EXPORT Node
 {
-    private:
-		static std::map<std::string, Node*> nodeTypes; 
+    
 
 	public:
-		template<class T> static void RegisterType()
-		{
-			T* n = new T();
-			nodeTypes[n->GetTypeName()] = n;
-		}
-
-		static Node* Create(std::string typeName)
-        {
-            if(nodeTypes.count(typeName) != 0)
-            {
-                return nodeTypes[typeName]->CloneType();
-            }
-            return NULL;
-        } 
-
         virtual Node* CloneType() = 0; 
 		virtual std::string GetTypeName() = 0; 
 

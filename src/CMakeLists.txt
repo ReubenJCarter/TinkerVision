@@ -12,7 +12,6 @@ set(LIBRARYSRCFILES
 
 	ComputeGraph/Graph.cpp
 	ComputeGraph/Node.cpp
-	ComputeGraph/RegisterNodes.cpp
 
 	Core/BoundingBox.cpp
 	Core/ComputeShader.cpp

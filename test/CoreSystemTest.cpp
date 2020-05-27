@@ -48,7 +48,6 @@
 #include "CompositeProcess/ARUCODetector.h"
 #include "CompositeProcess/Sift.h"
 
-#include "ComputeGraph/RegisterNodes.h"
 #include "ComputeGraph/Node.h"
 #include "ComputeGraph/Graph.h"
 #include "ComputeGraph/SourceNodes.h"
@@ -66,7 +65,7 @@ int main(int argc, char *argv[])
 	TnkrVis::Context context; 
 	context.MakeCurrent(); 
 
-	TnkrVis::ComputeGraph::RegisterNodes(); 
+	TnkrVis::ComputeGraph::Graph::RegisterNodes(); 
 
 	if(argc == 2)
 	{

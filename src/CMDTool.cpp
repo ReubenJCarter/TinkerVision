@@ -1,4 +1,3 @@
-#include "ComputeGraph/RegisterNodes.h"
 #include "ComputeGraph/Graph.h"
 
 #include <iostream>
@@ -40,7 +39,7 @@ int main(int argc, char *argv[])
     //Deserialize the graph and run
     std::cout << "Registering Compute Nodes\n"; 
 
-    TnkrVis::ComputeGraph::RegisterNodes(); 
+    TnkrVis::ComputeGraph::Graph::RegisterNodes(); 
 
     std::cout << "Loading json\n"; 
     TnkrVis::SerializedObject graphJson; 
