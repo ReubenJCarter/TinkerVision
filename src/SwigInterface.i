@@ -14,6 +14,7 @@
 #include  "Core/SerializedObject.h"
 #include "Core/Window.h"
 
+#include "IO/CameraCapture.h"
 #include "IO/ImageFile.h"
 #include "IO/VideoFile.h"
 #include "IO/VideoHelper.h"
@@ -130,6 +131,7 @@ namespace std{
 %include "ComputeGraph/Node.h"
 %include "ComputeGraph/Graph.h"
 
+%include "IO/CameraCapture.h"
 %include "IO/ImageFile.h"
 %include "IO/VideoFile.h"
 %include "IO/VideoHelper.h"

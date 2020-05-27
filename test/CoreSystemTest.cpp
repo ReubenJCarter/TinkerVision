@@ -5,6 +5,7 @@
 #include "Core/Contour.h"
 #include "Core/Window.h"
 
+#include "IO/CameraCapture.h"
 #include "IO/ImageFile.h"
 #include "IO/VideoFile.h"
 #include "IO/VideoHelper.h"

@@ -25,6 +25,7 @@ set(LIBRARYSRCFILES
 	Core/ShaderStorageBuffer.cpp
 	Core/Window.cpp
 
+	IO/CameraCapture.cpp
 	IO/ImageFile.cpp
 	IO/VideoFile.cpp
 	IO/VideoHelper.cpp
