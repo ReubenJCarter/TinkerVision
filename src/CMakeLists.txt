@@ -90,6 +90,10 @@ if (USE_FFMPEG)
 	target_link_libraries(${CMAKE_PROJECT_NAME} avcodec avfilter avformat avutil postproc swresample swscale)
 endif() 
 
+if(USE_DSHOW)
+	target_link_libraries(${CMAKE_PROJECT_NAME} strmiids)
+endif()
+
 install(TARGETS ${CMAKE_PROJECT_NAME} 
 		ARCHIVE DESTINATION lib
 		LIBRARY DESTINATION lib

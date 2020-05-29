@@ -741,7 +741,17 @@ int main(int argc, char *argv[])
 
 			graph.Run();
 		}
-		
+		else if(std::string( argv[1] ) == "-cam")
+		{
+			TnkrVis::IO::CameraCapture camCap; 
+			camCap.Open(); 
+			TnkrVis::Window wind(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context);
+			while(!wind.ShouldClose())
+			{
+				wind.Refresh();
+			}
+			camCap.Close(); 
+		}
 	}
 	else if(argc == 4)
 	{

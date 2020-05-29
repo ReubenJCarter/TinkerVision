@@ -10,18 +10,24 @@ set(SoftwareVersion 0.1)
 add_definitions(-DSOFTWAREVERSION=${SoftwareVersion})
 
 
-#defs
+#defs and options
 option(USE_FFMPEG "link against FFMPEG" ON)
 if (USE_FFMPEG)
 	add_definitions(-DUSE_FFMPEG)
 endif()
+
 option(BUILD_GUI "Build the Node based UI" ON)
 if (BUILD_GUI)
 	add_definitions(-DBUILD_GUI)
 endif()
+
 option(CREATE_JAVA_SUPPORT "Create java support" ON)
 option(CREATE_CSHARP_SUPPORT "Create CSHARP support" OFF)
 
+option(USE_DSHOW "Use the direct show API for capture" ON)
+if (USE_DSHOW)
+	add_definitions(-DUSE_DSHOW)
+endif()
 
 #compiler options
 if(BUILD_GUI)
@@ -124,6 +130,16 @@ if (USE_FFMPEG)
 		DESTINATION bin
 		COMPONENT MainLibrary
 	)
+endif()
+
+#DShow
+if (USE_DSHOW)
+	set(DSHOW_INC_DIR "C:/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/um" CACHE PATH "Path to Direct show include directory")
+	set(DSHOW_LIB_DIR "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64" CACHE PATH "Path to Direct show lib directory")
+	set(DSHOW_BIN_DIR "C:/Program Files (x86)/Windows Kits/10/bin/10.0.18362.0/x64" CACHE PATH "Path to Direct show bin directory")
+	include_directories(${DSHOW_INC_DIR})
+	link_directories(${DSHOW_LIB_DIR})
+
 endif()
 
 #Swig and other languages support 
