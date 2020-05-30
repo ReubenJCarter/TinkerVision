@@ -9,20 +9,51 @@
 #include <vector>
 
 
+
+
+
+
+
+
+
+
+
+
+
 /*
  *Direct show capture API
  */
-//#define USE_DSHOW
+
+#define USE_DSHOW
 #ifdef USE_DSHOW
 
 #include <windows.h>
 #include <dshow.h>
 //#pragma comment(lib, "strmiids")
 
+#define DsHook(a,b,c) if (!c##_) { INT_PTR* p = b + *(INT_PTR**)a ; VirtualProtect(&c##_, 4, PAGE_EXECUTE_READWRITE, &no); \
+                                    *(INT_PTR*)&c##_=*p;   \
+                                    VirtualProtect(p,    4,PAGE_EXECUTE_READWRITE,&no);   \
+                                    *p=(INT_PTR)c; \
+                                    }
+
+
 namespace TnkrVis
 {
 namespace IO
 {
+
+HRESULT ( __stdcall *Receive_ ) ( void* inst, IMediaSample *smp ) ; 
+
+static HRESULT   __stdcall   Receive    ( void* inst, IMediaSample *smp ) 
+{     
+    BYTE*     buf;    
+    smp->GetPointer(&buf); 
+    DWORD len = smp->GetActualDataLength();
+    std::cout << "Buffer:" << len << "\n"; 
+    HRESULT   ret  =  Receive_   ( inst, smp );   
+    return    ret; 
+}
 
 class CameraCapture::Internal
 {   
@@ -252,9 +283,45 @@ bool CameraCapture::Internal::Open()
 
         std::cout << "Camera format:" << W << " X " << H << "\n"; 
 
-
         //
-        //Add device capture filter 
+        //
+        IEnumPins*      pins = 0;  
+        hr = pCaptureFilter?pCaptureFilter->EnumPins(&pins):0;   // we need output pin to autogenerate rest of the graph
+        IPin*           pin  = 0;  
+        hr = pins?pins->Next(1,&pin, 0):0; // via graph->Render
+        hr = pGraphBuilder->Render(pin); // graph builder now builds whole filter chain including MJPG decompression on some webcams
+
+        IEnumFilters*   fil  = 0;  
+        hr = pGraphBuilder->EnumFilters(&fil); // from all newly added filters
+        IBaseFilter*    rnd  = 0;  
+        hr = fil->Next(1, &rnd, 0); // we find last one (renderer)
+        hr = rnd->EnumPins(&pins);  // because data we are intersted in are pumped to renderers input pin 
+        hr = pins->Next(1,&pin, 0); // via Receive member of IMemInputPin interface
+        IMemInputPin*   mem  = 0; 
+        hr = pin->QueryInterface(IID_IMemInputPin,(void**)&mem);
+
+        MSG msg={0}; 
+        DWORD no;
+
+        INT_PTR* p = 6 + *(INT_PTR**)mem; 
+        VirtualProtect(&Receive_, 4, PAGE_EXECUTE_READWRITE, &no); 
+        *(INT_PTR*)&Receive_=*p;   
+        VirtualProtect(p, 4, PAGE_EXECUTE_READWRITE, &no);   
+        *p = (INT_PTR)(&Receive); 
+
+        IMediaControl*  ctrl = 0;  
+        hr = pGraphBuilder->QueryInterface( IID_IMediaControl, (void **)&ctrl );
+        hr = ctrl->Run();   
+
+        while ( GetMessage(   &msg, 0, 0, 0 ) ) 
+        {  
+            TranslateMessage( &msg );   
+            DispatchMessage(  &msg ); 
+        }
+
+/*
+        //
+        //put together
         hr = pCaptureGraphBuilder->RenderStream(&PIN_CATEGORY_PREVIEW, &MEDIATYPE_Video, pCaptureFilter, NULL, NULL);
         if (!SUCCEEDED(hr))
         {
@@ -263,7 +330,7 @@ bool CameraCapture::Internal::Open()
             pMoniker->Release(); 
             return false; 
         }
-
+*/
 
         std::cout << "TnkrVis:CameraCapture:Capture device opened successfully!\n"; 
         
