@@ -745,14 +745,37 @@ int main(int argc, char *argv[])
 		{
 			TnkrVis::IO::CameraCapture camCap; 
 			camCap.Open(); 
-			//TnkrVis::Window wind0(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context);
-			//TnkrVis::Window wind1(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context);
+			TnkrVis::Window wind0(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context);
+			TnkrVis::Window wind1(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context);
 			TnkrVis::ImageGPU im0;
-			//TnkrVis::ImageGPU im1;  
-			//TnkrVis::ImageGPU im2; 
-			//TnkrVis::Image imc0; 
-			//TnkrVis::Image imc1; 
+			TnkrVis::ImageGPU im1;  
+			TnkrVis::ImageGPU im2; 
+			TnkrVis::Image imc0; 
+			TnkrVis::Image imc1; 
 			int frameCount = 0; 
+
+			TnkrVis::CompositeProcess::ARUCODetector aruco;
+			std::vector<bool> bitsequence0 = {0, 0, 0, 0, 0, 0, 0, 0,
+											  0, 0, 0, 0, 0, 0, 0, 0,
+											  0, 1, 0, 1, 1, 0, 0, 0, 
+											  0, 0, 0, 1, 0, 0, 1, 0, 
+											  0, 1, 1, 1, 0, 0, 1, 0, 
+											  0, 1, 1, 1, 0, 1, 1, 0, 
+											  0, 1, 0, 1, 0, 1, 1, 0, 
+											  0, 0, 0, 0, 0, 0, 0, 0};
+			aruco.AddDictionaryEntry(&bitsequence0, 8, 1); 
+
+			std::vector<bool> bitsequence1 = {0, 0, 0, 0, 0, 0, 0, 0,
+											  0, 1, 0, 0, 1, 1, 0, 0,
+											  0, 1, 0, 0, 1, 0, 1, 0, 
+											  0, 0, 0, 1, 1, 1, 1, 0, 
+											  0, 0, 1, 1, 0, 0, 1, 0, 
+											  0, 1, 1, 0, 0, 1, 1, 0, 
+											  0, 1, 1, 0, 0, 1, 1, 0, 
+											  0, 0, 0, 0, 0, 0, 0, 0};
+			aruco.AddDictionaryEntry(&bitsequence1, 8, 2); 
+			
+
 			while( true )
 			{
 				camCap.GetFrame(&im0);
@@ -774,22 +797,28 @@ int main(int argc, char *argv[])
 				canny.SetLowEdgeThreshold(0.01);
 				canny.SetHighEdgeThreshold(0.02);
 				canny.Run(&im0, &imc0); 
-				im1.Copy(&imc0); 
+				
 				*/
 				TnkrVis::CompositeProcess::ARUCODetector aruco;
-				//std::vector<TnkrVis::Contour> contours; 
-				//std::vector<int> ids;
-				//aruco.Run(&im0, &contours, &ids, true); 
-				//TnkrVis::Process::Renderer renderer; 
-				//renderer.AddContours(&contours); 
+				std::vector<TnkrVis::Contour> contours; 
+				std::vector<int> ids;
+				aruco.Run(&im0, &contours, &ids, true); 
+				
+				imc0.Copy(&im0); 
+				TnkrVis::Process::Renderer renderer; 
+				for(int i = 0; i < contours.size(); i++)
+				{
+					std::cout << std::flush << "detected" << ids[i];
+					//renderer.AddContour(&contours[i]); 
+				} 
 				//renderer.Run(&imc0, &imc1); 
 				
-				//im1.Copy(&imc1); 
-				//wind0.DrawImage(&im0);
-				//wind1.DrawImage(&im1);
+				im1.Copy(&imc1); 
+				wind0.DrawImage(&im0);
+				wind1.DrawImage(&im1);
 
-				//wind0.Refresh();
-				//wind1.Refresh();
+				wind0.Refresh();
+				wind1.Refresh();
 
 				frameCount++; 
 			}
