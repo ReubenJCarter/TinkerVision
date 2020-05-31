@@ -99,6 +99,7 @@ void Image::Copy(ImageGPU* image)
 {
     if(!(image->GetWidth() > 0 && image->GetHeight() > 0))
     {
+        std::cerr << "TnkrVis:ImageGPU:Copy:w=0||h=0\n"; 
         return; 
     }
     if(!IsSameDimensions(image))
@@ -147,6 +148,7 @@ void Image::Copy(Image* image)
 {
     if(!(image->GetWidth() > 0 && image->GetHeight() > 0))
     {
+        std::cerr << "TnkrVis:ImageGPU:Copy:w=0||h=0\n"; 
         return; 
     }
     if(!IsSameDimensions(image))

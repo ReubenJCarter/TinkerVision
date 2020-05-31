@@ -101,10 +101,16 @@ void ImageGPU::Copy(void* data, int w, int h, int offX, int offY)
     int wfinal = w;
 	int hfinal = h;
 
+    if(w == 0 || h == 0)
+    {
+        std::cerr << "TnkrVis:ImageGPU:Copy:w=0||h=0\n"; 
+        return; 
+    }
+
     //set gl pixel alignment, does this affect perfromance??
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
-
+    
     if(type == GRAYSCALE8)
     {
         glTextureSubImage2D(texture, 0, offX, offY, wfinal, hfinal, GL_RED, GL_UNSIGNED_BYTE, data);

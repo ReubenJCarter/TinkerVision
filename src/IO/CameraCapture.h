@@ -24,12 +24,10 @@ class TINKERVISION_EXPORT CameraCapture
         ~CameraCapture(); 
         bool Open();
         bool Close();
-        bool LoadNextFrame(); 
-        void SwapBuffers(); 
         bool GetFrame(Image* frameImage);
+        bool GetFrame(ImageGPU* frameImage);
         int GetFrameWidth(); 
         int GetFrameHeight(); 
-        bool AtEnd(); 
         bool IsOpen(); 
 };
 	

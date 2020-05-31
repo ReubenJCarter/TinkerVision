@@ -745,10 +745,53 @@ int main(int argc, char *argv[])
 		{
 			TnkrVis::IO::CameraCapture camCap; 
 			camCap.Open(); 
-			TnkrVis::Window wind(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context);
-			while(!wind.ShouldClose())
+			//TnkrVis::Window wind0(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context);
+			//TnkrVis::Window wind1(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context);
+			TnkrVis::ImageGPU im0;
+			//TnkrVis::ImageGPU im1;  
+			//TnkrVis::ImageGPU im2; 
+			//TnkrVis::Image imc0; 
+			//TnkrVis::Image imc1; 
+			int frameCount = 0; 
+			while( true )
 			{
-				wind.Refresh();
+				camCap.GetFrame(&im0);
+				//std::string fn = "TESTCAM" + std::to_string( frameCount ) + ".png";
+				//TnkrVis::IO::ImageFile::Write(fn, &im); 
+				/*
+				TnkrVis::Process::MedianFilter medianFilter;
+				medianFilter.SetSize(5);
+				medianFilter.Run(&im0, &im1);
+				*/
+				/*
+				TnkrVis::Process::Sobel sobel;
+				sobel.SetMode(TnkrVis::Process::Sobel::MAG_ONLY); 
+				sobel.Run(&im0, &im1);
+				*/
+				/*
+				TnkrVis::CompositeProcess::CannyEdgeDetect canny;
+				canny.SetBlurSigma(0.5); 
+				canny.SetLowEdgeThreshold(0.01);
+				canny.SetHighEdgeThreshold(0.02);
+				canny.Run(&im0, &imc0); 
+				im1.Copy(&imc0); 
+				*/
+				TnkrVis::CompositeProcess::ARUCODetector aruco;
+				//std::vector<TnkrVis::Contour> contours; 
+				//std::vector<int> ids;
+				//aruco.Run(&im0, &contours, &ids, true); 
+				//TnkrVis::Process::Renderer renderer; 
+				//renderer.AddContours(&contours); 
+				//renderer.Run(&imc0, &imc1); 
+				
+				//im1.Copy(&imc1); 
+				//wind0.DrawImage(&im0);
+				//wind1.DrawImage(&im1);
+
+				//wind0.Refresh();
+				//wind1.Refresh();
+
+				frameCount++; 
 			}
 			camCap.Close(); 
 		}
