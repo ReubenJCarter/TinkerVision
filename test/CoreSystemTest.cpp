@@ -20,6 +20,7 @@
 #include "Process/GaussianBlur.h"
 #include "Process/Sobel.h"
 #include "Process/Renderer.h"
+#include "Process/Flip.h"
 #include "Process/FindContours.h"
 #include "Process/Invert.h"
 #include "Process/ChannelDemux.h"
@@ -799,23 +800,27 @@ int main(int argc, char *argv[])
 				canny.Run(&im0, &imc0); 
 				
 				*/
+				TnkrVis::Process::Flip flip;
+				flip.SetDirection(true, false); 
+				flip.Run(&im0, &im1); 
+
 				TnkrVis::CompositeProcess::ARUCODetector aruco;
 				std::vector<TnkrVis::Contour> contours; 
 				std::vector<int> ids;
-				aruco.Run(&im0, &contours, &ids, true); 
+				aruco.Run(&im1, &contours, &ids, false); 
 				
-				imc0.Copy(&im0); 
+				imc0.Copy(&im1); 
 				TnkrVis::Process::Renderer renderer; 
 				for(int i = 0; i < contours.size(); i++)
 				{
 					std::cout << std::flush << "detected" << ids[i];
-					//renderer.AddContour(&contours[i]); 
+					renderer.AddContour(&contours[i]); 
 				} 
-				//renderer.Run(&imc0, &imc1); 
+				renderer.Run(&imc0, &imc1); 
 				
-				im1.Copy(&imc1); 
-				wind0.DrawImage(&im0);
-				wind1.DrawImage(&im1);
+				im2.Copy(&imc1); 
+				wind0.DrawImage(&im1);
+				wind1.DrawImage(&im2);
 
 				wind0.Refresh();
 				wind1.Refresh();

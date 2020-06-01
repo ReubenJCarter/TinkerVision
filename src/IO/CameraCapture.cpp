@@ -53,20 +53,13 @@ class CameraCapture::Internal
         static ICaptureGraphBuilder2* pCaptureGraphBuilder; 
         static IGraphBuilder* pGraphBuilder;  
 
+        static BYTE* buf;  
+        static DWORD len; 
+
         static HRESULT __stdcall Receive(void* inst, IMediaSample *smp ) 
         {     
-            BYTE* buf;    
             smp->GetPointer(&buf); 
-            DWORD len = smp->GetActualDataLength();
-           
-            //std::cout << "Buffer:" << len << "\n"; 
-            cameraBufferImage.Allocate(width, height, ImageType::RGB8); 
-            unsigned char* data = cameraBufferImage.GetData();
-            for(int i = 0; i < len; i++)
-            {
-                data[i] = buf[i]; 
-            }
-
+            len = smp->GetActualDataLength();
             HRESULT ret = Receive_(inst, smp);   
             return  ret; 
         }
@@ -95,6 +88,9 @@ IMediaControl* CameraCapture::Internal::ctrl = 0;
 
 ICaptureGraphBuilder2* CameraCapture::Internal::pCaptureGraphBuilder; 
 IGraphBuilder* CameraCapture::Internal::pGraphBuilder;
+
+BYTE* CameraCapture::Internal::buf = NULL;
+DWORD CameraCapture::Internal::len = 0; 
 
 std::string CameraCapture::Internal::BStrToStdStr(BSTR& s)
 {
@@ -403,7 +399,12 @@ bool CameraCapture::Internal::GetFrame(Image* frameImage)
 {
     if(isOpen)
     {
-        frameImage->Copy(&cameraBufferImage); 
+        frameImage->Allocate(width, height, ImageType::RGB8); 
+        unsigned char* data = frameImage->GetData();
+        for(int i = 0; i < len; i++)
+        {
+            data[i] = buf[i]; 
+        }
         return true; 
     }
     return false; 
@@ -413,7 +414,8 @@ bool CameraCapture::Internal::GetFrame(ImageGPU* frameImage)
 {
     if(isOpen)
     {
-        frameImage->Copy(&cameraBufferImage); 
+        frameImage->Allocate(width, height, ImageType::RGB8); 
+        frameImage->Copy(buf, width, height, 0, 0); 
         return true; 
     }
     return false; 
