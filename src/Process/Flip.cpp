@@ -47,15 +47,16 @@ uniform int flipHor;
 uniform int flipVer; 
 
 uniform int texWidth;
-uniform int texHeight
+uniform int texHeight; 
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-    id.x = flipHor == 1 ? (texWidth - 1) - id.x : id.x;
-    id.y = flipVer == 1 ? (texHeight - 1) - id.y : id.y;
-    vec4 d = imageLoad(inputImage, id );
+    ivec2 id2;
+    id2.x = flipHor == 1 ? (texWidth - 1) - id.x : id.x;
+    id2.y = flipVer == 1 ? (texHeight - 1) - id.y : id.y;
+    vec4 d = imageLoad(inputImage, id2 );
     imageStore(outputImage, id, d); 
 }
 
@@ -87,6 +88,9 @@ void Flip::Internal::Run(ImageGPU* input, ImageGPU* output)
 
     computeShader.SetInt("flipHor", flipHorizontal ? 1:0 ); 
     computeShader.SetInt("flipVer", flipVertical ? 1:0 ); 
+    computeShader.SetInt("texWidth", input->GetWidth() ); 
+    computeShader.SetInt("texHeight", input->GetHeight() ); 
+
     computeShader.SetImage("inputImage", input);
     computeShader.SetImage("outputImage", output, ComputeShader::WRITE_ONLY);
 
@@ -115,7 +119,6 @@ void Flip::Internal::Run(Image* input, Image* output)
 Flip::Flip()
 {
     internal = new Internal; 
-
 }
 
 Flip::~Flip()

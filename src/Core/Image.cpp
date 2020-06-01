@@ -27,6 +27,14 @@ Image::Image()
     data = NULL; 
 }
 
+Image::Image(const Image& im) //need a copy constructor as it is a danger to copy images which calll delete on the data buffer. 
+{
+    width = 0; //We could improve this to actually copy data referencce other images data etc.
+    height = 0; 
+    type = im.type; 
+    data = NULL; 
+}
+
 Image::~Image()
 {
     Deallocate();
@@ -85,7 +93,7 @@ void Image::Allocate(unsigned int w, unsigned int h, ImageType t)
 
 void Image::Deallocate()
 {
-    if(width != 0 || height !=0)
+    if(width > 0 && height > 0)
     {
         delete[] data;
     

@@ -54,7 +54,7 @@ class ARUCODetector::Internal
 };
 
 
-ARUCODetector::Internal::Internal()
+ARUCODetector::Internal::Internal():markerDictionary(1000)
 {
 }
 
@@ -82,7 +82,7 @@ void ARUCODetector::Internal::Run(ImageGPU* input, std::vector<TnkrVis::Contour>
     TnkrVis::Contour::ContoursVertCountFilter(&contoursSimplified, &contoursQuads, 4, 4);
 
     temp[1].Copy(input); 
-    markerBitExtract.Run(&temp[1], &contoursQuads, &bitImages);
+    markerBitExtract.Run(&(temp[1]), &contoursQuads, &bitImages);
 
     markerQuads->clear();
     markerIds->clear();
@@ -132,6 +132,8 @@ void ARUCODetector::Internal::AddDictionaryEntry(std::vector<bool>* bitsequence,
             d[i] = 0;
         }
     }
+    //std::string fn = "entry" + std::to_string(id) + ".png"; 
+    //TnkrVis::IO::ImageFile::Write(fn, &entry); 
     markerDictionary.AddEntry(&entry, id); 
 }
 

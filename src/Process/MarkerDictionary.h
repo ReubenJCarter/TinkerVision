@@ -20,7 +20,7 @@ class TINKERVISION_EXPORT MarkerDictionary
         Internal* internal;
 
 	public:
-		MarkerDictionary(); 
+		MarkerDictionary(int count); 
         ~MarkerDictionary(); 
         void AddEntry(Image* im, int id); 
         int Lookup(Image* input); 

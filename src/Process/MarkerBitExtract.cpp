@@ -45,10 +45,14 @@ void MarkerBitExtract::Internal::Run(Image* input, std::vector<Contour>* contour
     ParallelFor& pf = ParallelFor::GetInstance(); 
 
     //Allocate bit image
+	//std::cout << "bitImages->size() " << bitImages->size() << " new size:" << contours->size() << "\n";
+
     if(bitImages->size() != contours->size())    
     {
         bitImages->resize(contours->size()); 
     }
+
+    //std::cout << "Bit image array resized\n" ; 
 
     //Allocate histogram for the otsu threshold
     std::vector<int> hist(256); 

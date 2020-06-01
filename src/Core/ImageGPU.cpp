@@ -17,6 +17,13 @@ ImageGPU::ImageGPU()
     type = ImageType::RGBA8;
 }
 
+ImageGPU::ImageGPU(const ImageGPU& im)
+{
+    width = 0; 
+    height = 0; 
+    type = im.type; 
+}
+
 ImageGPU::~ImageGPU()
 {
     Deallocate();
@@ -87,7 +94,7 @@ void ImageGPU::Allocate(unsigned int w, unsigned int h, ImageType t)
 
 void ImageGPU::Deallocate()
 {
-    if(width != 0 && height != 0)
+    if(width > 0 && height > 0)
     {
         glDeleteTextures(1, &texture);
         width = 0;

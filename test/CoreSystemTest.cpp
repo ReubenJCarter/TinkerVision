@@ -746,8 +746,8 @@ int main(int argc, char *argv[])
 		{
 			TnkrVis::IO::CameraCapture camCap; 
 			camCap.Open(); 
-			TnkrVis::Window wind0(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context);
-			TnkrVis::Window wind1(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context);
+			TnkrVis::Window wind0(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context, "Input");
+			TnkrVis::Window wind1(camCap.GetFrameWidth(), camCap.GetFrameHeight(), &context, "Processes");
 			TnkrVis::ImageGPU im0;
 			TnkrVis::ImageGPU im1;  
 			TnkrVis::ImageGPU im2; 
@@ -755,28 +755,30 @@ int main(int argc, char *argv[])
 			TnkrVis::Image imc1; 
 			int frameCount = 0; 
 
-			TnkrVis::CompositeProcess::ARUCODetector aruco;
 			std::vector<bool> bitsequence0 = {0, 0, 0, 0, 0, 0, 0, 0,
-											  0, 0, 0, 0, 0, 0, 0, 0,
-											  0, 1, 0, 1, 1, 0, 0, 0, 
-											  0, 0, 0, 1, 0, 0, 1, 0, 
+											  0, 0, 0, 1, 0, 0, 0, 0,
+											  0, 1, 1, 0, 0, 1, 1, 0, 
+											  0, 0, 1, 0, 0, 0, 1, 0, 
+											  0, 1, 1, 0, 0, 0, 1, 0, 
 											  0, 1, 1, 1, 0, 0, 1, 0, 
-											  0, 1, 1, 1, 0, 1, 1, 0, 
-											  0, 1, 0, 1, 0, 1, 1, 0, 
+											  0, 1, 1, 0, 1, 0, 1, 0, 
 											  0, 0, 0, 0, 0, 0, 0, 0};
-			aruco.AddDictionaryEntry(&bitsequence0, 8, 1); 
 
 			std::vector<bool> bitsequence1 = {0, 0, 0, 0, 0, 0, 0, 0,
-											  0, 1, 0, 0, 1, 1, 0, 0,
-											  0, 1, 0, 0, 1, 0, 1, 0, 
-											  0, 0, 0, 1, 1, 1, 1, 0, 
-											  0, 0, 1, 1, 0, 0, 1, 0, 
-											  0, 1, 1, 0, 0, 1, 1, 0, 
-											  0, 1, 1, 0, 0, 1, 1, 0, 
+											  0, 1, 1, 0, 0, 0, 0, 0,
+											  0, 1, 1, 1, 1, 0, 0, 0, 
+											  0, 0, 0, 1, 1, 1, 0, 0, 
+											  0, 0, 0, 1, 0, 0, 1, 0, 
+											  0, 0, 1, 0, 1, 1, 0, 0, 
+											  0, 0, 1, 0, 0, 0, 1, 0, 
 											  0, 0, 0, 0, 0, 0, 0, 0};
-			aruco.AddDictionaryEntry(&bitsequence1, 8, 2); 
 			
+			TnkrVis::CompositeProcess::ARUCODetector aruco;
 
+			aruco.AddDictionaryEntry(&bitsequence0, 8, 1); 
+			aruco.AddDictionaryEntry(&bitsequence1, 8, 2); 
+
+			
 			while( true )
 			{
 				camCap.GetFrame(&im0);
@@ -804,18 +806,23 @@ int main(int argc, char *argv[])
 				flip.SetDirection(true, false); 
 				flip.Run(&im0, &im1); 
 
-				TnkrVis::CompositeProcess::ARUCODetector aruco;
 				std::vector<TnkrVis::Contour> contours; 
 				std::vector<int> ids;
 				aruco.Run(&im1, &contours, &ids, false); 
 				
-				imc0.Copy(&im1); 
 				TnkrVis::Process::Renderer renderer; 
 				for(int i = 0; i < contours.size(); i++)
 				{
-					std::cout << std::flush << "detected" << ids[i];
-					renderer.AddContour(&contours[i]); 
+					std::cout << "detected" << ids[i] << "\n";
+					TnkrVis::Color c;
+					if(ids[i] == 1)
+						c = TnkrVis::Color(1.0f, 0, 0); 
+					else if(ids[i] == 2)
+						c = TnkrVis::Color(1.0f, 0, 1.0f); 
+					
+					renderer.AddContour(&contours[i], c); 
 				} 
+				imc0.Copy(&im1); 
 				renderer.Run(&imc0, &imc1); 
 				
 				im2.Copy(&imc1); 

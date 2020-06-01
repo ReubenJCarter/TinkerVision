@@ -24,6 +24,7 @@ class TINKERVISION_EXPORT Image
 
 	public:
 		Image(); 
+        Image(const Image& im);
         ~Image(); 
         inline void AllocateLike(Image* referanceImage){Allocate(referanceImage->GetWidth(), referanceImage->GetHeight(), referanceImage->GetType());}
         void AllocateLike(ImageGPU* referanceImage);

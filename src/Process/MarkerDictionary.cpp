@@ -5,6 +5,8 @@
 
 #include "../Core/ParallelFor.h"
 
+#include "../IO/ImageFile.h"
+
 #include <string>
 #include <iostream>
 #include <map>
@@ -19,18 +21,21 @@ class MarkerDictionary::Internal
     private:
         struct Entry{Image im; int id; }; 
         std::vector<Entry> dict;
-        int maxBitError ; 
+        int maxBitError ;
+        int maxCount;  
 
     public:
-        Internal(); 
+        Internal(int count); 
         int Lookup(Image* input);
         void AddEntry(Image* im, int id); 
         void SetMaxBitError(int mbe); 
 };
 
-MarkerDictionary::Internal::Internal()
+MarkerDictionary::Internal::Internal(int count)
 {
     maxBitError = 3; 
+    dict.reserve(count); 
+    maxCount = count; 
 }
 
 int MarkerDictionary::Internal::Lookup(Image* input)
@@ -42,6 +47,8 @@ int MarkerDictionary::Internal::Lookup(Image* input)
 
     for(int d = 0; d < dict.size(); d++)
     {
+        std::cout << "dict" << d << " " << dict[d].im.GetWidth() << " " << dict[d].im.GetHeight() << "\n"; 
+    
         if(input->GetWidth() != dict[d].im.GetWidth() && input->GetHeight() != dict[d].im.GetHeight())
         {
             continue; 
@@ -170,12 +177,13 @@ int MarkerDictionary::Internal::Lookup(Image* input)
 
 void MarkerDictionary::Internal::AddEntry(Image* im, int id)
 {
-    Entry entry; 
-    dict.push_back(entry);
-    Entry& e = dict[dict.size()-1]; 
-
-    e.im.Copy(im);
-    e.id = id; 
+    if(dict.size() < maxCount)
+    {
+        Entry entry; 
+        dict.push_back(entry);
+        dict[dict.size()-1].im.Copy(im);
+        dict[dict.size()-1].id = id; 
+    }
 }
 
 void MarkerDictionary::Internal::SetMaxBitError(int mbe)
@@ -186,9 +194,9 @@ void MarkerDictionary::Internal::SetMaxBitError(int mbe)
 
 
 
-MarkerDictionary::MarkerDictionary()
+MarkerDictionary::MarkerDictionary(int count)
 {
-    internal = new Internal(); 
+    internal = new Internal(count); 
 }
 
 MarkerDictionary::~MarkerDictionary()
